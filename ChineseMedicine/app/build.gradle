@@ -1,0 +1,44 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.kw.app.chinesemedicine"
+        minSdkVersion 17
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets{
+        main{
+            jniLibs.srcDirs=['libs']
+        }
+    }
+    buildTypes {
+
+        debug {
+            //debug
+        }
+
+        release {
+            //启用代码混淆
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //移除无用的Resource
+            shrinkResources true
+            //资源文件对齐
+            zipAlignEnabled true
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile project(':library')
+    compile 'com.android.support:appcompat-v7:23.4.0'
+
+}

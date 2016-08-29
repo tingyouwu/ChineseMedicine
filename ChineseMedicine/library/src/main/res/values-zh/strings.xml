@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="listview_header_hint_normal">下拉刷新</string>
+    <string name="listview_header_hint_release">释放刷新</string>
+    <string name="listview_loading">正在加载...</string>
+    <string name="nomore_loading">没有了</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="refresh_done">刷新完成</string>
+    <string name="listview_header_last_time">上次更新时间：</string>
+    <string name="preview_num">预览(%1$s)</string>
+    <string name="done_num">完成(%1$s/%2$s)</string>
+    <string name="preview">预览</string>
+    <string name="done">完成</string>
+    <string name="num_postfix">%1$s张</string>
+    <string name="message_max_num">你最多可以选择%1$s张图片</string>
+    <string name="network_failed">当前网络不可用，请检查你的网络设置</string>
+</resources>
