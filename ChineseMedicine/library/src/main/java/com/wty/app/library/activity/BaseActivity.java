@@ -91,10 +91,10 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             tintManager = new SystemBarTintManager(this);
             tintManager.setStatusBarTintEnabled(true);
-            tintManager.setStatusBarTintResource(R.color.blue);
+            tintManager.setStatusBarTintResource(R.color.colorPrimary);
         }
         else if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP && isEnableStatusBar()) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.blue));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
 
     }
