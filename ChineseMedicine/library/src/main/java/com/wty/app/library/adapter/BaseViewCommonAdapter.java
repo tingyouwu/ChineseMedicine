@@ -44,7 +44,7 @@ public abstract class BaseViewCommonAdapter<T> extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return getDefItemViewType(position);
+        return super.getItemViewType(position);
     }
 
     @Override
@@ -96,11 +96,4 @@ public abstract class BaseViewCommonAdapter<T> extends BaseAdapter {
      * 功能描述：绑定数据
      **/
     protected abstract void convert(BaseViewHolder helper, T item);
-
-    /**
-     * 功能描述：item的类型（适用于多布局）
-     **/
-    protected int getDefItemViewType(int position) {
-        return super.getItemViewType(position);
-    }
 }

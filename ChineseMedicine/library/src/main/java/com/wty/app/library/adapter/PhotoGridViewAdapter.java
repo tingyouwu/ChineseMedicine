@@ -40,7 +40,7 @@ public class PhotoGridViewAdapter extends BaseRecyclerViewMultiItemAdapter<Image
 	}
 
 	@Override
-	protected void convert(BaseRecyclerViewHolder helper, ImageUriEntity item,int position) {
+	protected void bindView(BaseRecyclerViewHolder helper, ImageUriEntity item, int position) {
 		switch (helper.getItemViewType()){
 			case ImageUriEntity.TYPE_NORMAL://正常图片
 				setNormaItem(helper,item,position);
@@ -56,6 +56,11 @@ public class PhotoGridViewAdapter extends BaseRecyclerViewMultiItemAdapter<Image
 			default:
 				break;
 		}
+	}
+
+	@Override
+	protected int getItemMultiViewType(int position) {
+		return getItem(position).type;
 	}
 
 	/**
@@ -208,7 +213,7 @@ public class PhotoGridViewAdapter extends BaseRecyclerViewMultiItemAdapter<Image
 	}
 
 	public void remove(int position,ImageUriEntity item) {
-		if(item.getItemType()!=ImageUriEntity.TYPE_NORMAL) return;
+		if(item.type!=ImageUriEntity.TYPE_NORMAL) return;
 		if(count_select ==1){
 			//删除前只有最后一个数据了,那么只需要显示一个 +,需要干掉-
 			super.remove(this.mData.size()-1);

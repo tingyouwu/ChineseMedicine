@@ -71,7 +71,7 @@ public class ImageListAdapter extends BaseRecyclerViewMultiItemAdapter<ImageMode
 	}
 
 	@Override
-	protected void convert(BaseRecyclerViewHolder helper, ImageModel item,int position) {
+	protected void bindView(BaseRecyclerViewHolder helper, ImageModel item, int position) {
 		switch (helper.getItemViewType()){
 			case ImageModel.TYPE_CAMERA:
 				setCameraItem(helper);
@@ -82,6 +82,11 @@ public class ImageListAdapter extends BaseRecyclerViewMultiItemAdapter<ImageMode
 			default:
 				break;
 		}
+	}
+
+	@Override
+	protected int getItemMultiViewType(int position) {
+		return getItem(position).type;
 	}
 
 	/**

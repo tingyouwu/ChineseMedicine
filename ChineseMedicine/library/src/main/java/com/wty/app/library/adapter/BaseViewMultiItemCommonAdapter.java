@@ -5,7 +5,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wty.app.library.entity.IMultiItemEntity;
 import com.wty.app.library.viewholder.BaseViewHolder;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
  * 功能描述：通用 adapter（多布局）
  * @remark getItemViewType不能等于getViewTypeCount
  */
-public abstract class BaseViewMultiItemCommonAdapter<T extends IMultiItemEntity> extends BaseViewCommonAdapter {
+public abstract class BaseViewMultiItemCommonAdapter<T> extends BaseViewCommonAdapter<T> {
 
     /**
      * Map用于存储  类型以及 对应的布局文件  调用addItemType吧少年
@@ -26,9 +25,8 @@ public abstract class BaseViewMultiItemCommonAdapter<T extends IMultiItemEntity>
     }
 
     @Override
-    protected int getDefItemViewType(int position) {
-        //viewtype最好从0开始递增
-        return ((IMultiItemEntity) mData.get(position)).getItemType();
+    public int getItemViewType(int position) {
+        return getItemMultiViewType(position);
     }
 
     @Override
@@ -55,12 +53,19 @@ public abstract class BaseViewMultiItemCommonAdapter<T extends IMultiItemEntity>
 
 
     @Override
-    protected void convert(BaseViewHolder helper, Object item) {
-        convert(helper, (T) item);
+    protected void convert(BaseViewHolder helper, T item) {
+        convert(helper, item);
     }
 
-    protected abstract void convert(BaseViewHolder helper, T item);
+    /**
+     * @Decription 给view绑定数据
+     **/
+    protected abstract void bindView(BaseViewHolder helper, T item);
 
+    /**
+     * @Description 布局类型
+     **/
+    protected abstract int getItemMultiViewType(int position);
 
 }
 

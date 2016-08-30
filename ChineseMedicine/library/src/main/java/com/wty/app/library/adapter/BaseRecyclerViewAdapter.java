@@ -16,11 +16,6 @@ import java.util.List;
  */
 public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private OnRecyclerViewItemClickListener onRecyclerViewItemClickListener;//item点击事件
-    private OnRecyclerViewItemLongClickListener onRecyclerViewItemLongClickListener;//item长按事件
-    private OnRecyclerViewItemChildClickListener mChildClickListener;
-    private OnRecyclerViewItemChildLongClickListener mChildLongClickListener;
-
     protected Context mContext;
     protected int mLayoutResId;//布局文件id
     protected List<T> mData;
@@ -60,7 +55,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
 
     @Override
     public int getItemViewType(int position) {
-        return getDefItemViewType(position);
+        return super.getItemViewType(position);
     }
 
     @Override
@@ -83,69 +78,6 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
             return BaseRecyclerViewHolder.get(mContext,parent,layoutResId);
         }
         return new BaseRecyclerViewHolder(mContentView);
-    }
-
-    /**
-     * 功能描述：注册recyclerview  item点击监听
-     **/
-    public void setOnRecyclerViewItemClickListener(OnRecyclerViewItemClickListener onRecyclerViewItemClickListener) {
-        this.onRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
-    }
-
-
-    public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    /**
-     * 功能描述：注册recyclerview  item长按监听
-     **/
-    public void setOnRecyclerViewItemLongClickListener(OnRecyclerViewItemLongClickListener onRecyclerViewItemLongClickListener) {
-        this.onRecyclerViewItemLongClickListener = onRecyclerViewItemLongClickListener;
-    }
-
-    public interface OnRecyclerViewItemLongClickListener {
-        boolean onItemLongClick(View view, int position);
-    }
-
-    /**
-     * 功能描述：注册item 内某一个 子view的监听
-     */
-    public void setOnRecyclerViewItemChildClickListener(OnRecyclerViewItemChildClickListener childClickListener) {
-        this.mChildClickListener = childClickListener;
-    }
-
-    public interface OnRecyclerViewItemChildClickListener {
-        void onItemChildClick(BaseRecyclerViewAdapter adapter, View view, int position);
-    }
-
-    public class OnItemChildClickListener implements View.OnClickListener {
-        public RecyclerView.ViewHolder mViewHolder;
-
-        @Override
-        public void onClick(View v) {
-            if (mChildClickListener != null)
-                mChildClickListener.onItemChildClick(BaseRecyclerViewAdapter.this, v, mViewHolder.getLayoutPosition());
-        }
-    }
-
-    public void setOnRecyclerViewItemChildLongClickListener(OnRecyclerViewItemChildLongClickListener childLongClickListener) {
-        this.mChildLongClickListener = childLongClickListener;
-    }
-
-    public interface OnRecyclerViewItemChildLongClickListener {
-        boolean onItemChildLongClick(BaseRecyclerViewAdapter adapter, View view, int position);
-    }
-
-    public class OnItemChildLongClickListener implements View.OnLongClickListener {
-        public RecyclerView.ViewHolder mViewHolder;
-        @Override
-        public boolean onLongClick(View v) {
-            if (mChildLongClickListener != null) {
-                return mChildLongClickListener.onItemChildLongClick(BaseRecyclerViewAdapter.this, v, mViewHolder.getLayoutPosition());
-            }
-            return false;
-        }
     }
 
     public void remove(int position) {
@@ -192,13 +124,6 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
      * 功能描述：绑定数据
      **/
     protected abstract void convert(BaseRecyclerViewHolder helper, T item,int position);
-
-    /**
-     * 功能描述：item的类型（适用于多布局）
-     **/
-    protected int getDefItemViewType(int position) {
-        return super.getItemViewType(position);
-    }
 
     public void setScrolling(boolean isScrolling){
         this.isScrolling = isScrolling;

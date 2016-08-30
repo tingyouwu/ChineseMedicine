@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * @Decription 图片model
  */
-public class ImageModel implements Serializable,IMultiItemEntity {
+public class ImageModel implements Serializable{
 
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
@@ -35,10 +35,5 @@ public class ImageModel implements Serializable,IMultiItemEntity {
     public boolean equals(Object o) {
         ImageModel other = (ImageModel) o;
         return TextUtils.equals(this.path, other.path);
-    }
-
-    @Override
-    public int getItemType() {
-        return this.type;
     }
 }

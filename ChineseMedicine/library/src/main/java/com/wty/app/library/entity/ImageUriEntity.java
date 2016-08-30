@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @Decription 图片实体
  * @author wty
  **/
-public class ImageUriEntity implements Serializable,IMultiItemEntity {
+public class ImageUriEntity implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	public static final int TYPE_NORMAL = 0;//正常的图片
@@ -41,9 +41,4 @@ public class ImageUriEntity implements Serializable,IMultiItemEntity {
     public boolean isEmpty(){
         return TextUtils.isEmpty(uri) && TextUtils.isEmpty(uploadUrl);
     }
-
-	@Override
-	public int getItemType() {
-		return type;
-	}
 }

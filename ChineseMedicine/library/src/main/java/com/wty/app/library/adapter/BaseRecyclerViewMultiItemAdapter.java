@@ -4,16 +4,14 @@ import android.content.Context;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import com.wty.app.library.entity.IMultiItemEntity;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
-import com.wty.app.library.viewholder.BaseViewHolder;
 
 import java.util.List;
 
 /**
  * 功能描述：通用recyclerview adapter（多布局）
  */
-public abstract class BaseRecyclerViewMultiItemAdapter<T extends IMultiItemEntity> extends BaseRecyclerViewAdapter {
+public abstract class BaseRecyclerViewMultiItemAdapter<T> extends BaseRecyclerViewAdapter<T> {
 
     /**
      * Map用于存储  类型以及 对应的布局文件  调用addItemType吧少年
@@ -29,8 +27,8 @@ public abstract class BaseRecyclerViewMultiItemAdapter<T extends IMultiItemEntit
     }
 
     @Override
-    protected int getDefItemViewType(int position) {
-        return ((IMultiItemEntity) mData.get(position)).getItemType();
+    public int getItemViewType(int position) {
+        return getItemMultiViewType(position);
     }
 
     @Override
@@ -54,14 +52,19 @@ public abstract class BaseRecyclerViewMultiItemAdapter<T extends IMultiItemEntit
 
 
     @Override
-    protected void convert(BaseRecyclerViewHolder helper, Object item,int position) {
-        convert(helper, (T) item,position);
+    protected void convert(BaseRecyclerViewHolder helper, T item,int position) {
+        bindView(helper, item, position);
     }
 
     /**
      * @Decription 绑定数据
      **/
-    protected abstract void convert(BaseRecyclerViewHolder helper, T item,int position);
+    protected abstract void bindView(BaseRecyclerViewHolder helper, T item,int position);
+
+    /**
+     * @Description 布局类型
+     **/
+    protected abstract int getItemMultiViewType(int position);
 
 }
 
