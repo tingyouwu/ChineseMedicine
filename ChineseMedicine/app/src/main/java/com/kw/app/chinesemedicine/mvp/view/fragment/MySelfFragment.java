@@ -1,4 +1,4 @@
-package com.kw.app.chinesemedicine.fragment;
+package com.kw.app.chinesemedicine.mvp.view.fragment;
 
 import android.os.Bundle;
 

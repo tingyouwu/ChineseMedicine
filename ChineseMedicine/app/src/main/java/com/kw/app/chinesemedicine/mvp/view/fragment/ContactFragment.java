@@ -1,4 +1,4 @@
-package com.kw.app.chinesemedicine.fragment;
+package com.kw.app.chinesemedicine.mvp.view.fragment;
 
 import android.os.Bundle;
 
@@ -7,10 +7,10 @@ import com.wty.app.library.fragment.BaseFragment;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 
 /**
- * 朋友圈
+ * 通讯录
  * @author wty
  */
-public class DynamicFragment extends BaseFragment {
+public class ContactFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -2,9 +2,9 @@ package com.kw.app.chinesemedicine.activity;
 
 import android.os.Bundle;
 import com.kw.app.chinesemedicine.R;
-import com.kw.app.chinesemedicine.fragment.ContactFragment;
-import com.kw.app.chinesemedicine.fragment.DynamicFragment;
-import com.kw.app.chinesemedicine.fragment.MySelfFragment;
+import com.kw.app.chinesemedicine.mvp.view.fragment.ContactFragment;
+import com.kw.app.chinesemedicine.mvp.view.fragment.DynamicFragment;
+import com.kw.app.chinesemedicine.mvp.view.fragment.MySelfFragment;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 import com.wty.app.library.widget.TabStripView;
