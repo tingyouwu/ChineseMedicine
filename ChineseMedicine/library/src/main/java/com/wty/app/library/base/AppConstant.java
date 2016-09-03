@@ -6,8 +6,8 @@ package com.wty.app.library.base;
  **/
 public class AppConstant {
 
-    public static final String Bmob_ApplicationId = "38f52b3f41666fb3eb216c0b343ba22b";
-    public static final String SD_PATH = "com.wty.app";
+    public static final String Bmob_ApplicationId = "23913c4360866d3d50aee19a56fa24ff";
+    public static final String SD_PATH = "com.kw.app";
     public static final String PATH = android.os.Environment.getExternalStorageDirectory().getPath() + "/"+SD_PATH;
     public static final String SAVEIMAGEPATH = PATH + "/SaveImages";
     public static final String IMAGEPATH = PATH + "/Images";
