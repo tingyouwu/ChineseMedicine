@@ -9,9 +9,11 @@ import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.adapter.DynamicAdapter;
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
 import com.kw.app.chinesemedicine.mvp.presenter.DynamicPresenter;
+import com.kw.app.chinesemedicine.mvp.view.activity.DynamicAddActivity;
 import com.kw.app.chinesemedicine.mvp.view.impl.IDynamicView;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.fragment.BaseFragment;
+import com.wty.app.library.utils.NetWorkUtils;
 import com.wty.app.library.widget.DivItemDecoration;
 import com.wty.app.library.widget.loadingview.LoadingState;
 import com.wty.app.library.widget.loadingview.LoadingView;
@@ -89,12 +91,18 @@ public class DynamicFragment extends BaseFragment<DynamicPresenter> implements I
     @Override
     public void initFragmentActionBar(String title) {
         super.initFragmentActionBar(title);
+        activity.getDefaultNavigation().setRightButton("发布", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DynamicAddActivity.startDynamicAddActivity(getActivity());
+            }
+        });
     }
 
 
     @Override
     public boolean checkNet() {
-        return false;
+        return NetWorkUtils.isNetworkConnected(getContext());
     }
 
     @Override
@@ -123,7 +131,7 @@ public class DynamicFragment extends BaseFragment<DynamicPresenter> implements I
 
     @Override
     public void loadMore(List<DynamicDALEx> list) {
-
+        if(list.size()==0)return;
     }
 
     @Override
@@ -150,7 +158,7 @@ public class DynamicFragment extends BaseFragment<DynamicPresenter> implements I
     @Override
     public void onLoadMoreComplete(int result) {
         listview.loadMoreComplete();
-        if(result == 0 && adapter.getItemCount()!=0){
+        if(result == 0){
             listview.setNoMore("亲,已经是最后一页了！");
         }
     }
