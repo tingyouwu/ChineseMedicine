@@ -14,10 +14,9 @@ import android.widget.TextView;
 import com.kw.app.chinesemedicine.R;
 
 /**
- * @Description:右侧的sideBar,显示的是二十六个字母，和#号，
+ * @Description:右侧的sideBar
  * 点击字母，自动导航到相应拼音的汉字上
- * @author http://blog.csdn.net/finddreams
- */ 
+ */
 public class SideBar extends View {
 	private int Max = 27;
 	private int start = 0;
@@ -54,7 +53,7 @@ public class SideBar extends View {
 			paint.setColor(getResources().getColor(R.color.gray));
 			paint.setTypeface(Typeface.DEFAULT_BOLD);
 			paint.setAntiAlias(true);
-			paint.setTextSize(30);
+			paint.setTextSize(35);
 			// 选中的状态
 			if ((Max-letters.length)/2+i == choose) {
 				paint.setColor(getResources().getColor(R.color.blue));
