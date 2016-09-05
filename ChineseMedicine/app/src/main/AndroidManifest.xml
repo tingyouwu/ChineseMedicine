@@ -47,6 +47,10 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <activity
+            android:name=".mvp.view.activity.ContactAddActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+
+        <activity
             android:name=".activity.ImagePagerActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 

@@ -1,9 +1,11 @@
 package com.kw.app.chinesemedicine.mvp.view.fragment;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.mvp.view.activity.ContactAddActivity;
 import com.kw.app.chinesemedicine.widget.ClearEditText;
 import com.kw.app.chinesemedicine.widget.SideBar;
 import com.wty.app.library.fragment.BaseFragment;
@@ -54,5 +56,12 @@ public class ContactFragment extends BaseFragment {
     @Override
     public void initFragmentActionBar(String title) {
         super.initFragmentActionBar(title);
+        activity.getDefaultNavigation().setRightButton("添加", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContactAddActivity.startContactAddActivity(getContext());
+            }
+        });
     }
+
 }
