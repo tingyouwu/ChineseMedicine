@@ -1,40 +1,35 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
-import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
-import com.kw.app.chinesemedicine.mvp.model.DynamicModel;
-import com.kw.app.chinesemedicine.mvp.model.impl.IDynamicModel;
-import com.kw.app.chinesemedicine.mvp.view.impl.IDynamicView;
+import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.mvp.model.ContactModel;
+import com.kw.app.chinesemedicine.mvp.model.impl.IContactModel;
+import com.kw.app.chinesemedicine.mvp.view.impl.IContactView;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 
 import java.util.List;
 
-import rx.Observable;
-
 /**
  * @author wty
  */
-public class DynamicPresenter extends BasePresenter<IDynamicView> {
+public class ContactPresenter extends BasePresenter<IContactView> {
 
-    private IDynamicModel mDynamicModel;
+    private IContactModel mContactModel;
 
-    public DynamicPresenter(){
-        mDynamicModel = new DynamicModel();
+    public ContactPresenter(){
+        mContactModel = new ContactModel();
     }
 
-    /**
-     * @Description 刷新更多朋友圈动态
-     **/
-    public void refreshMoreDynamic(){
+    public void refreshMoreContact(){
         if(!mView.checkNet()){
             mView.showNoNet();
             mView.onRefreshComplete();
             return;
         }
 
-        mDynamicModel.refreshMoreDynamic(new DynamicDALEx(), new ICallBack<List<DynamicDALEx>>() {
+        mContactModel.refreshMoreContact(new ContactDALEx(), new ICallBack<List<ContactDALEx>>() {
             @Override
-            public void onSuccess(List<DynamicDALEx> data) {
+            public void onSuccess(List<ContactDALEx> data) {
                 mView.onRefreshComplete(data.size());
                 mView.refreshMore(data);
             }
@@ -56,9 +51,9 @@ public class DynamicPresenter extends BasePresenter<IDynamicView> {
             return;
         }
 
-        mDynamicModel.loadMoreDynamic(new DynamicDALEx(), new ICallBack<List<DynamicDALEx>>() {
+        mContactModel.loadMoreContact(new ContactDALEx(), new ICallBack<List<ContactDALEx>>() {
             @Override
-            public void onSuccess(List<DynamicDALEx> data) {
+            public void onSuccess(List<ContactDALEx> data) {
                 mView.onLoadMoreComplete(data.size());
                 mView.loadMore(data);
             }
@@ -70,12 +65,24 @@ public class DynamicPresenter extends BasePresenter<IDynamicView> {
         });
     }
 
-    public void loadDynamicFirst(){
+    public void loadContactFirst(){
         if(!mView.checkNet()){
             mView.showNoNet();
             mView.onLoadMoreComplete();
             return;
         }
+//        mContactModel.loadContactFirst(new ICallBack<List<ContactDALEx>>() {
+//            @Override
+//            public void onSuccess(List<ContactDALEx> data) {
+//                mView.onLoadMoreComplete(data.size());
+//                mView.loadMore(data);
+//            }
+//
+//            @Override
+//            public void onFaild(String msg) {
+//
+//            }
+//        });
         mView.onRefreshComplete(0);
     }
 

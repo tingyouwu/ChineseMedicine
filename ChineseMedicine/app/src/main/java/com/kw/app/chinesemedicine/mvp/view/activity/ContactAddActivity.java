@@ -3,39 +3,47 @@ package com.kw.app.chinesemedicine.mvp.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
-import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.mvp.presenter.ContactAddPresenter;
 import com.kw.app.chinesemedicine.mvp.presenter.DynamicAddPresenter;
-import com.kw.app.chinesemedicine.mvp.view.impl.IDynamicAddView;
+import com.kw.app.chinesemedicine.mvp.view.impl.IContactAddView;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.activity.ImageSelectorActivity;
 import com.wty.app.library.base.AppConstant;
 import com.wty.app.library.utils.NetWorkUtils;
+import com.wty.app.library.widget.formitem.FormItemView;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 
 /**
- * @Description 添加联系人
  * @author wty
+ * @Description 添加联系人
  **/
-public class ContactAddActivity extends BaseActivity<DynamicAddPresenter> implements IDynamicAddView{
+public class ContactAddActivity extends BaseActivity<ContactAddPresenter> implements IContactAddView {
 
-    public static void startContactAddActivity(Context context){
-        Intent intent = new Intent(context,ContactAddActivity.class);
+
+    @Bind(R.id.item_name)
+    FormItemView itemName;
+    @Bind(R.id.item_age)
+    FormItemView itemAge;
+    @Bind(R.id.item_mobile)
+    FormItemView itemMobile;
+    @Bind(R.id.item_tel)
+    FormItemView itemTel;
+
+    public static void startContactAddActivity(Context context) {
+        Intent intent = new Intent(context, ContactAddActivity.class);
         context.startActivity(intent);
     }
 
     @Override
-    public DynamicAddPresenter getPresenter() {
-        return new DynamicAddPresenter();
+    public ContactAddPresenter getPresenter() {
+        return new ContactAddPresenter();
     }
 
     @Override
@@ -48,7 +56,6 @@ public class ContactAddActivity extends BaseActivity<DynamicAddPresenter> implem
                 submit();
             }
         });
-        getDefaultNavigation().getRightButton().setEnabled(false);
     }
 
     @Override
@@ -65,7 +72,7 @@ public class ContactAddActivity extends BaseActivity<DynamicAddPresenter> implem
 
     @Override
     protected boolean submit() {
-        if(super.submit()){
+        if (super.submit()) {
             mPresenter.submit(getSubmitData());
         }
         return true;
@@ -81,9 +88,12 @@ public class ContactAddActivity extends BaseActivity<DynamicAddPresenter> implem
         return R.layout.activity_contact_add;
     }
 
-    private DynamicDALEx getSubmitData() {
-        DynamicDALEx dalex = DynamicDALEx.get();
-
+    private ContactDALEx getSubmitData() {
+        ContactDALEx dalex = ContactDALEx.get();
+        dalex.setUsername(itemName.getContent().getValue());
+        dalex.setMobilephone(itemMobile.getContent().getValue());
+        dalex.setAge(Integer.parseInt(itemAge.getContent().getValue()));
+        dalex.setTel(itemTel.getContent().getValue());
         return dalex;
     }
 

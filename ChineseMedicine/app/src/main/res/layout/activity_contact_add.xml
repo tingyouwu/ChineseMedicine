@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="fill_parent">
 
   <LinearLayout
     android:layout_width="match_parent"
@@ -10,24 +10,28 @@
     android:orientation="vertical">
 
     <com.wty.app.library.widget.formitem.FormItemView
+        android:id="@+id/item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:formContentType="Text"
         app:formLabel="姓名"/>
 
     <com.wty.app.library.widget.formitem.FormItemView
+        android:id="@+id/item_age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:formContentType="Text"
         app:formLabel="年龄"/>
 
     <com.wty.app.library.widget.formitem.FormItemView
+        android:id="@+id/item_mobile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:formContentType="Text"
         app:formLabel="手机号码"/>
 
     <com.wty.app.library.widget.formitem.FormItemView
+        android:id="@+id/item_tel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:formContentType="Text"

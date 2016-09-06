@@ -35,6 +35,9 @@ public class ContactDALEx extends SqliteBaseDALEx {
 	@DatabaseField(Type = FieldType.VARCHAR)
 	private String email; // 电子邮箱
 
+	@DatabaseField(Type = FieldType.INT)
+	private int age;//年龄
+
 	public static ContactDALEx get() {
 		return SqliteDao.getDao(ContactDALEx.class);
 	}
@@ -101,5 +104,13 @@ public class ContactDALEx extends SqliteBaseDALEx {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 }

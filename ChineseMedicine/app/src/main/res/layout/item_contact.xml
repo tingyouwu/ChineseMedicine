@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <com.wty.app.library.widget.imageview.CircleImageView
+        android:id="@+id/iv_contact_header"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:src="@drawable/icon_launcher"
+        app:civ_border_width="1dp"
+        app:civ_border_color="@color/list_line"/>
+
+    <ImageView
+        android:id="@+id/iv_phone"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_phone"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+    
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_toRightOf="@id/iv_contact_header"
+        android:layout_toLeftOf="@id/iv_phone"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/black"
+        android:layout_centerVertical="true"
+        android:singleLine="true"
+        android:textSize="16sp"/>
+
+</RelativeLayout>
