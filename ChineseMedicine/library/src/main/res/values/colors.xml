@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">@color/colorGreenPrimary</color>
     <color name="colorAccent">@color/colorGreenPrimary</color>
     <color name="blue">#25B6ed</color>
+    <color name="light_blue">#5bb5f0</color>
     <color name="alpha_blue">#6625B6ed</color>
 
     <array name="colors">
