@@ -5,12 +5,13 @@
     android:layout_height="wrap_content"
     android:paddingLeft="10dp"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:background="@color/white">
 
     <com.wty.app.library.widget.imageview.CircleImageView
         android:id="@+id/iv_contact_header"
-        android:layout_width="60dip"
-        android:layout_height="60dip"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
         android:src="@drawable/icon_launcher"
         app:civ_border_width="1dp"
         app:civ_border_color="@color/list_line"/>

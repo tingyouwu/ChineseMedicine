@@ -64,7 +64,7 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
     public void onInitView(Bundle savedInstanceState) {
         adapter = new ContactAdapter(getContext(),mDataList);
         listview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        listview.addItemDecoration(new DivItemDecoration(10, false));
+        listview.addItemDecoration(new DivItemDecoration(2, true));
         listview.setLoadingMoreProgressStyle(ProgressStyle.LineSpinFadeLoader);
         listview.setRefreshProgressStyle(ProgressStyle.BallClipRotatePulse);
         listview.setLoadingListener(new XRecyclerView.LoadingListener() {

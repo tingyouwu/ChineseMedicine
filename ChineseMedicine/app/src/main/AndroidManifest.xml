@@ -33,7 +33,7 @@
             android:value="1" />
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.LoginActivity"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,6 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <activity
             android:name=".mvp.view.activity.DynamicAddActivity"
