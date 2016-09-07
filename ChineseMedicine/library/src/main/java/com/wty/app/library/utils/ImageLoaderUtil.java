@@ -50,17 +50,6 @@ public class ImageLoaderUtil {
         Glide.with(fragment).load(resId).crossFade().into(imageView);
     }
 
-    /**
-     * 加载SD卡图片文件
-     * @param activity
-     * @param file
-     * @param imageView
-     */
-    public static void load(Activity activity,File file, ImageView imageView) {
-        if(null!=file && file.isFile() && file.exists()){
-            Glide.with(activity).load(file).crossFade().into(imageView);
-        }
-    }
 
     /**
      * 加载SD卡图片文件
@@ -74,37 +63,39 @@ public class ImageLoaderUtil {
         }
     }
 
-    /**
-     * 加载SD卡图片文件
-     * @param fragment
-     * @param file
-     * @param imageView
-     */
-    public static void load(Fragment fragment,File file, ImageView imageView) {
-        if(null!=file && file.isFile() && file.exists()){
-            Glide.with(fragment).load(file).crossFade().into(imageView);
-        }
-    }
+
+//    /**
+//     * 加载网络图片(防止错位)
+//     * @param activity
+//     * @param url
+//     * @param imageView
+//     */
+//    public static void load(Activity activity,final String url,final ImageView imageView) {
+//        if(!TextUtils.isEmpty(url)){
+//            Glide.with(activity).load(url).crossFade().into(
+//                    new ImageViewTarget<GlideDrawable>(imageView) {
+//                        @Override protected void setResource(GlideDrawable resource) {
+//                            final Object tag = view.getTag(imageView.getId());
+//                            if(null!=tag && tag.toString().equals(url)){
+//                                view.setImageDrawable(resource);
+//                            }
+//                        }
+//                    }
+//            );
+//        }
+//    }
 
     /**
-     * 加载网络图片(防止错位)
-     * @param activity
+     * 标准图片
      * @param url
-     * @param imageView
+     * @param view the imageView.
      */
-    public static void load(Activity activity,final String url,final ImageView imageView) {
-        if(!TextUtils.isEmpty(url)){
-            Glide.with(activity).load(url).crossFade().into(
-                    new ImageViewTarget<GlideDrawable>(imageView) {
-                        @Override protected void setResource(GlideDrawable resource) {
-                            final Object tag = view.getTag(imageView.getId());
-                            if(null!=tag && tag.toString().equals(url)){
-                                view.setImageDrawable(resource);
-                            }
-                        }
-                    }
-            );
-        }
+    public static void load(Activity activity, String url, ImageView view) {
+        Glide.with(activity)
+                .load(url)
+                .placeholder(R.drawable.img_default_loading)
+                .error(R.drawable.img_error_fail)
+                .into(view);
     }
 
     /**

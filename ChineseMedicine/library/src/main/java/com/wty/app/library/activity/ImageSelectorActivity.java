@@ -122,7 +122,7 @@ public class ImageSelectorActivity extends BaseActivity {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, ScreenUtil.dp2px(this, 2), false));
         recyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
         imageAdapter = new ImageListAdapter(this, maxSelectNum, selectMode, showCamera,enablePreview);
-        if(selectImages.size()!=0){
+        if(selectImages != null && selectImages.size()!=0){
             imageAdapter.setSelectedImages(selectImages);
             updateState(selectImages.size());
         }
