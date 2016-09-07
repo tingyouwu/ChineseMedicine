@@ -100,9 +100,9 @@ public class LoginInputView extends LinearLayout implements OnClickListener{
 		String validate = "";
 		// 帐号要在6-13位之间
 		if (uin.length() == 0) {
-			validate = "请输入帐号";
+			validate = "请填写帐号";
 		} else if (pwd.length() == 0) {
-			validate = "请输入密码";
+			validate = "请填写密码";
 		}
 		else if (!NetWorkUtils.isNetworkConnected(getContext())) {
 			validate = getContext().getString(R.string.network_failed);

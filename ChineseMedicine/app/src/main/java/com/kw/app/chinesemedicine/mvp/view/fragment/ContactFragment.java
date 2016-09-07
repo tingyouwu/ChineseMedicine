@@ -93,6 +93,7 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
         }).build();
 
         mPresenter.loadContactFirst();
+        filter_letters.setTextView(tv_letter);
     }
 
     @Override

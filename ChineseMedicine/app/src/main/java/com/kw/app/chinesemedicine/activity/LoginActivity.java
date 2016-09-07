@@ -36,7 +36,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_signup)
     void goToRegisterActivity(){
-
+        UserRegisterActivity.startUserRegisterActivity(this);
     }
     @OnClick(R.id.login_forgetpsw)
     void showForgetPswMenu(){
