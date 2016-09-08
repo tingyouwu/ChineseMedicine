@@ -150,7 +150,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             showFailed(validate.get(0));
             return false;
         }else if(!NetWorkUtils.isNetworkConnected(this)){
-            showSuccess(getString(R.string.network_failed));
+            showFailed(getString(R.string.network_failed));
             return false;
         }else{
             return true;
@@ -162,6 +162,13 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
      **/
     public boolean checkNet() {
         return NetWorkUtils.isNetworkConnected(this);
+    }
+
+    /**
+     * @Decription 显示无网络
+     **/
+    public void showNoNet(){
+        showFailed(getString(R.string.network_failed));
     }
 
     /**
