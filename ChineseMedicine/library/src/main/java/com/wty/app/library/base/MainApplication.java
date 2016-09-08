@@ -3,6 +3,7 @@ package com.wty.app.library.base;
 import android.app.Application;
 import android.content.Context;
 
+import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.PreferenceUtil;
 
 public class MainApplication extends Application {
@@ -14,6 +15,7 @@ public class MainApplication extends Application {
 		super.onCreate();
 		mApplication = this.getApplicationContext();
 		PreferenceUtil.init(this);
+		AppLogUtil.init();
 	}
 
 	/**

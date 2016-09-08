@@ -9,7 +9,7 @@ import com.wty.app.library.BuildConfig;
  */
 public class AppLogUtil {
 
-    private static final String TAG = "wtyApps";
+    private static final String TAG = "老中医";
 
     /**
      * initialize the logger.
