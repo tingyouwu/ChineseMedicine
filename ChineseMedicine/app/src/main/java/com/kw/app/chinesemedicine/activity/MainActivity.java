@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.mvp.view.fragment.ContactFragment;
@@ -23,6 +25,11 @@ public class MainActivity extends BaseActivity {
     @Override
     public BasePresenter getPresenter() {
         return null;
+    }
+
+    public static void startMainActivity(Activity activity) {
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
     }
 
     @Override

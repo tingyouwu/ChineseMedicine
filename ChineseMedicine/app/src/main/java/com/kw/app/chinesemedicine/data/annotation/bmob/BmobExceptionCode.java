@@ -5,6 +5,7 @@ package com.kw.app.chinesemedicine.data.annotation.bmob;
  **/
 public enum  BmobExceptionCode{
 
+	UsernameOrPswError(101,"登录用户名或密码不正确"),
 	UsernameTaken(202,"该昵称已经注册过"),
 	EmailTake(203,"该邮箱已经注册过"),
 	PhoneTaken(209,"该手机号码已经存在"),

@@ -1,11 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/login_inputlayout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/login_icon"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/login_relationlayout"
@@ -35,7 +36,7 @@
             android:layout_centerInParent="true"
             android:layout_toRightOf="@id/label_e"
             android:background="@drawable/bg_edittext"
-            android:hint="请填写手机号/昵称"
+            android:hint="请填写邮箱/昵称"
             android:imeOptions="actionNext"
             android:saveEnabled="true"
             android:singleLine="true"
@@ -75,7 +76,6 @@
             android:imeOptions="actionGo"
             android:inputType="textPassword"
             android:maxLength="16"
-            android:password="true"
             android:saveEnabled="true"
             android:singleLine="true"
             android:textSize="15sp" />
@@ -100,7 +100,7 @@
             android:gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="记住密码"
+            app:label = "自动登录"
             android:textSize="15sp" />
 
         <Button

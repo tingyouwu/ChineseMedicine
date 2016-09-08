@@ -3,7 +3,11 @@ package com.kw.app.chinesemedicine.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.Selection;
 import android.text.TextUtils;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -76,7 +80,23 @@ public class UserRegisterActivity extends BaseActivity<UserRegisterPresenter> im
     @Override
     public void onInitView(Bundle savedInstanceState) {
         getDefaultNavigation().setTitle("注册账号");
-        getDefaultNavigation().getLeftButton().hide();
+        getDefaultNavigation().getLeftButton().setText("老中医");
+
+        btnShowpsw.setOnCheckChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked) {
+                    // 显示为普通文本
+                    etPsw.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    // 显示为密码
+                    etPsw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+                Editable etable = etPsw.getText();
+                Selection.setSelection(etable, etable.length());
+            }
+        });
 
         tb_role.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
@@ -133,11 +153,6 @@ public class UserRegisterActivity extends BaseActivity<UserRegisterPresenter> im
         user.setLogourl(path_header);
         user.setEmail(etEmail.getText().toString());
         return user;
-    }
-
-    @Override
-    public void showNoNet() {
-        showFailed("当前网络无法连接，请检查");
     }
 
     @Override

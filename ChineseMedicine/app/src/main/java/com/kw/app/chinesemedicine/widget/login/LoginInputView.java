@@ -122,4 +122,9 @@ public class LoginInputView extends LinearLayout implements OnClickListener{
 	public EditText getAccountInput(){
 		return et_account;
 	}
+
+	public EditText getPswInput(){
+		return et_password;
+	}
+
 }

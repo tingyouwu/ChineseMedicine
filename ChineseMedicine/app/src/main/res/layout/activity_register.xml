@@ -97,7 +97,7 @@
             android:padding="5dp"
             android:textColor="@color/black"
             android:hint="填写邮箱，以便找回密码"
-            android:maxLength="11"
+            android:maxLength="50"
             android:textColorHint="@color/gray_font_3"/>
 
     </RelativeLayout>
@@ -138,10 +138,13 @@
             android:padding="5dp"
             android:textColor="@color/black"
             android:hint="填写密码"
-            android:maxLength="11"
+            android:maxLength="20"
+            android:inputType="textPassword"
             android:textColorHint="@color/gray_font_3"/>
 
     </RelativeLayout>
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
