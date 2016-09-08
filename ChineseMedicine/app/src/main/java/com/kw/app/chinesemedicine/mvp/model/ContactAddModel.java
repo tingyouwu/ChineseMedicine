@@ -2,7 +2,7 @@ package com.kw.app.chinesemedicine.mvp.model;
 
 import com.kw.app.chinesemedicine.data.dalex.bmob.ContactBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
-import com.kw.app.chinesemedicine.mvp.model.impl.IContactAddModel;
+import com.kw.app.chinesemedicine.mvp.contract.IContactAddContract;
 import com.wty.app.library.callback.ICallBack;
 
 import cn.bmob.v3.exception.BmobException;
@@ -11,7 +11,7 @@ import cn.bmob.v3.listener.SaveListener;
 /**
  * @author wty
  */
-public class ContactAddModel implements IContactAddModel{
+public class ContactAddModel implements IContactAddContract.IContactAddModel {
 
     @Override
     public void submit(final ContactDALEx data, final ICallBack<String> callBack) {

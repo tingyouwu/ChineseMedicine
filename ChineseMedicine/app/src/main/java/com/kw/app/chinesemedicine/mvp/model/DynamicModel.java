@@ -2,7 +2,7 @@ package com.kw.app.chinesemedicine.mvp.model;
 
 import com.kw.app.chinesemedicine.data.dalex.bmob.DynamicBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
-import com.kw.app.chinesemedicine.mvp.model.impl.IDynamicModel;
+import com.kw.app.chinesemedicine.mvp.contract.IDynamicContract;
 import com.wty.app.library.callback.ICallBack;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import cn.bmob.v3.listener.FindListener;
 /**
  * @author wty
  */
-public class DynamicModel implements IDynamicModel {
+public class DynamicModel implements IDynamicContract.IDynamicModel {
 
     @Override
     public void loadMoreDynamic(DynamicDALEx data, ICallBack<List<DynamicDALEx>> callBack) {

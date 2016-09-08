@@ -7,9 +7,9 @@ import android.view.View;
 
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IContactAddContract;
 import com.kw.app.chinesemedicine.mvp.presenter.ContactAddPresenter;
 import com.kw.app.chinesemedicine.mvp.presenter.DynamicAddPresenter;
-import com.kw.app.chinesemedicine.mvp.view.impl.IContactAddView;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.activity.ImageSelectorActivity;
 import com.wty.app.library.base.AppConstant;
@@ -24,7 +24,7 @@ import butterknife.Bind;
  * @author wty
  * @Description 添加联系人
  **/
-public class ContactAddActivity extends BaseActivity<ContactAddPresenter> implements IContactAddView {
+public class ContactAddActivity extends BaseActivity<ContactAddPresenter> implements IContactAddContract.IContactAddView {
 
 
     @Bind(R.id.item_name)

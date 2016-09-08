@@ -9,6 +9,7 @@ import com.kw.app.chinesemedicine.widget.login.LoginInputView;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.base.AppConstant;
 import com.wty.app.library.mvp.presenter.BasePresenter;
+import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.CommonUtil;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
@@ -53,6 +54,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onInitView(Bundle savedInstanceState) {
+
         getDefaultNavigation().setTitle("老中医");
         getDefaultNavigation().getLeftButton().hide();
 

@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IDynamicAddContract;
 import com.kw.app.chinesemedicine.mvp.presenter.DynamicAddPresenter;
-import com.kw.app.chinesemedicine.mvp.view.impl.IDynamicAddView;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.activity.ImageSelectorActivity;
 import com.wty.app.library.adapter.PhotoGridViewAdapter;
@@ -34,7 +34,7 @@ import butterknife.Bind;
  * @Description 添加动态
  * @author wty
  **/
-public class DynamicAddActivity extends BaseActivity<DynamicAddPresenter> implements IDynamicAddView{
+public class DynamicAddActivity extends BaseActivity<DynamicAddPresenter> implements IDynamicAddContract.IDynamicAddView {
 
     @Bind(R.id.et_content)
     EditText et_content;

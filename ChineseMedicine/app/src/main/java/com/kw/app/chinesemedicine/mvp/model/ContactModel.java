@@ -1,10 +1,8 @@
 package com.kw.app.chinesemedicine.mvp.model;
 
 import com.kw.app.chinesemedicine.data.dalex.bmob.ContactBmob;
-import com.kw.app.chinesemedicine.data.dalex.bmob.DynamicBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
-import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
-import com.kw.app.chinesemedicine.mvp.model.impl.IContactModel;
+import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
 import com.wty.app.library.callback.ICallBack;
 
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ import cn.bmob.v3.listener.FindListener;
 /**
  * @author wty
  */
-public class ContactModel implements IContactModel {
+public class ContactModel implements IContactContract.IContactModel {
 
     @Override
     public void loadMoreContact(ContactDALEx data, ICallBack<List<ContactDALEx>> callBack) {

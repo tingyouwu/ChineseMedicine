@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.kw.app.chinesemedicine.data.dalex.bmob.DynamicBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
-import com.kw.app.chinesemedicine.mvp.model.impl.IDynamicAddModel;
+import com.kw.app.chinesemedicine.mvp.contract.IDynamicAddContract;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.utils.PhotoUtils;
 import com.wty.app.library.utils.luban.Luban;
@@ -22,7 +22,7 @@ import cn.bmob.v3.listener.UploadBatchListener;
 /**
  * @author wty
  */
-public class DynamicAddModel implements IDynamicAddModel{
+public class DynamicAddModel implements IDynamicAddContract.IDynamicAddModel {
 
     @Override
     public void submit(final DynamicDALEx data, final ICallBack<String> callBack) {

@@ -1,9 +1,8 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IContactAddContract;
 import com.kw.app.chinesemedicine.mvp.model.ContactAddModel;
-import com.kw.app.chinesemedicine.mvp.model.impl.IContactAddModel;
-import com.kw.app.chinesemedicine.mvp.view.impl.IContactAddView;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 import com.wty.app.library.widget.sweetdialog.OnDismissCallbackListener;
@@ -13,9 +12,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * @author wty
  */
-public class ContactAddPresenter extends BasePresenter<IContactAddView> {
+public class ContactAddPresenter extends BasePresenter<IContactAddContract.IContactAddView> {
 
-    private IContactAddModel mContactAddModel;
+    private IContactAddContract.IContactAddModel mContactAddModel;
 
     public ContactAddPresenter(){
         mContactAddModel = new ContactAddModel();

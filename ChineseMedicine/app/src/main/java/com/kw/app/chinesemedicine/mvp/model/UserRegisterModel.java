@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.kw.app.chinesemedicine.data.annotation.bmob.BmobExceptionCode;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
-import com.kw.app.chinesemedicine.mvp.model.impl.IUserRegisterModel;
+import com.kw.app.chinesemedicine.mvp.contract.IUserRegisterContract;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.utils.luban.Luban;
 import com.wty.app.library.utils.luban.OnCompressListener;
@@ -21,7 +21,7 @@ import cn.bmob.v3.listener.UploadBatchListener;
 /**
  * @author wty
  */
-public class UserRegisterModel implements IUserRegisterModel{
+public class UserRegisterModel implements IUserRegisterContract.IUserRegisterModel {
 
     @Override
     public void register(final UserDALEx user, final ICallBack<String> callBack) {

@@ -1,9 +1,8 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
 import com.kw.app.chinesemedicine.mvp.model.ContactModel;
-import com.kw.app.chinesemedicine.mvp.model.impl.IContactModel;
-import com.kw.app.chinesemedicine.mvp.view.impl.IContactView;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 
@@ -12,9 +11,9 @@ import java.util.List;
 /**
  * @author wty
  */
-public class ContactPresenter extends BasePresenter<IContactView> {
+public class ContactPresenter extends BasePresenter<IContactContract.IContactView> {
 
-    private IContactModel mContactModel;
+    private IContactContract.IContactModel mContactModel;
 
     public ContactPresenter(){
         mContactModel = new ContactModel();

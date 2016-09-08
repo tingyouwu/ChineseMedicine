@@ -9,14 +9,13 @@ import com.devspark.appmsg.AppMsg;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.adapter.ContactAdapter;
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
 import com.kw.app.chinesemedicine.mvp.presenter.ContactPresenter;
 import com.kw.app.chinesemedicine.mvp.view.activity.ContactAddActivity;
-import com.kw.app.chinesemedicine.mvp.view.impl.IContactView;
 import com.kw.app.chinesemedicine.widget.ClearEditText;
 import com.kw.app.chinesemedicine.widget.SideBar;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.fragment.BaseFragment;
-import com.wty.app.library.utils.NetWorkUtils;
 import com.wty.app.library.widget.DivItemDecoration;
 import com.wty.app.library.widget.loadingview.LoadingState;
 import com.wty.app.library.widget.loadingview.LoadingView;
@@ -34,7 +33,7 @@ import butterknife.Bind;
  * 通讯录
  * @author wty
  */
-public class ContactFragment extends BaseFragment<ContactPresenter> implements IContactView{
+public class ContactFragment extends BaseFragment<ContactPresenter> implements IContactContract.IContactView {
 
     @Bind(R.id.filter_edit)
     ClearEditText et_filter;

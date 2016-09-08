@@ -1,9 +1,8 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IUserRegisterContract;
 import com.kw.app.chinesemedicine.mvp.model.UserRegisterModel;
-import com.kw.app.chinesemedicine.mvp.model.impl.IUserRegisterModel;
-import com.kw.app.chinesemedicine.mvp.view.impl.IUserRegisterView;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 import com.wty.app.library.widget.sweetdialog.OnDismissCallbackListener;
@@ -13,9 +12,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * @author wty
  */
-public class UserRegisterPresenter extends BasePresenter<IUserRegisterView> {
+public class UserRegisterPresenter extends BasePresenter<IUserRegisterContract.IUserRegisterView> {
 
-    private IUserRegisterModel mUserRegisterModel;
+    private IUserRegisterContract.IUserRegisterModel mUserRegisterModel;
 
     public UserRegisterPresenter(){
         mUserRegisterModel = new UserRegisterModel();

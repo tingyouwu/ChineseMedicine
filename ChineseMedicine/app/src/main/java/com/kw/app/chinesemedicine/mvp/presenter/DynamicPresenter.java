@@ -1,9 +1,8 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IDynamicContract;
 import com.kw.app.chinesemedicine.mvp.model.DynamicModel;
-import com.kw.app.chinesemedicine.mvp.model.impl.IDynamicModel;
-import com.kw.app.chinesemedicine.mvp.view.impl.IDynamicView;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 
@@ -14,9 +13,9 @@ import rx.Observable;
 /**
  * @author wty
  */
-public class DynamicPresenter extends BasePresenter<IDynamicView> {
+public class DynamicPresenter extends BasePresenter<IDynamicContract.IDynamicView> {
 
-    private IDynamicModel mDynamicModel;
+    private IDynamicContract.IDynamicModel mDynamicModel;
 
     public DynamicPresenter(){
         mDynamicModel = new DynamicModel();

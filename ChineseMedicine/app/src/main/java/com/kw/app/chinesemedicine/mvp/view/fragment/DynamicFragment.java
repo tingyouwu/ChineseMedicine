@@ -8,12 +8,11 @@ import com.devspark.appmsg.AppMsg;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.adapter.DynamicAdapter;
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IDynamicContract;
 import com.kw.app.chinesemedicine.mvp.presenter.DynamicPresenter;
 import com.kw.app.chinesemedicine.mvp.view.activity.DynamicAddActivity;
-import com.kw.app.chinesemedicine.mvp.view.impl.IDynamicView;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.fragment.BaseFragment;
-import com.wty.app.library.utils.NetWorkUtils;
 import com.wty.app.library.widget.DivItemDecoration;
 import com.wty.app.library.widget.loadingview.LoadingState;
 import com.wty.app.library.widget.loadingview.LoadingView;
@@ -31,7 +30,7 @@ import butterknife.Bind;
  * 朋友圈
  * @author wty
  */
-public class DynamicFragment extends BaseFragment<DynamicPresenter> implements IDynamicView{
+public class DynamicFragment extends BaseFragment<DynamicPresenter> implements IDynamicContract.IDynamicView {
 
     BaseRecyclerViewAdapter adapter;
     private List<DynamicDALEx> mDataList = new ArrayList<>();

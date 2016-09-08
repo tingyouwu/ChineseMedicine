@@ -9,8 +9,8 @@ import android.widget.ImageView;
 
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
+import com.kw.app.chinesemedicine.mvp.contract.IUserRegisterContract;
 import com.kw.app.chinesemedicine.mvp.presenter.UserRegisterPresenter;
-import com.kw.app.chinesemedicine.mvp.view.impl.IUserRegisterView;
 import com.kw.app.chinesemedicine.widget.CheckBoxLabel;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.activity.ImageSelectorActivity;
@@ -28,7 +28,7 @@ import butterknife.OnClick;
  * @author wty
  * @Description 用户注册页面
  **/
-public class UserRegisterActivity extends BaseActivity<UserRegisterPresenter> implements IUserRegisterView{
+public class UserRegisterActivity extends BaseActivity<UserRegisterPresenter> implements IUserRegisterContract.IUserRegisterView {
 
     public static final String USERNAME = "username";
     public static final String PSW = "psw";
