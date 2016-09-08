@@ -21,6 +21,7 @@ public class AppConstant {
         public final static int Request_Camera = 100;
         public final static int Request_Image = 101;
         public final static int Request_Preview = 102;
+        public final static int Request_Register = 103;
     }
 
 }

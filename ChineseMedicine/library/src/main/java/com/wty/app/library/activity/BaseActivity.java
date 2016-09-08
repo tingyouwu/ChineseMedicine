@@ -158,6 +158,13 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     }
 
     /**
+     * @Decription 检查网络是否连接
+     **/
+    public boolean checkNet() {
+        return NetWorkUtils.isNetworkConnected(this);
+    }
+
+    /**
      * @Decription 弹框提示
      **/
     public void onToast(OnDismissCallbackListener callback){

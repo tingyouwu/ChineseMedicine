@@ -11,6 +11,7 @@ import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.mvp.IBase;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 import com.wty.app.library.mvp.view.IBaseView;
+import com.wty.app.library.utils.NetWorkUtils;
 import com.wty.app.library.widget.sweetdialog.OnDismissCallbackListener;
 
 import butterknife.ButterKnife;
@@ -139,6 +140,13 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
             }
             onInitView(bundle);
         }
+    }
+
+    /**
+     * @Decription 检查网络是否连接
+     **/
+    public boolean checkNet() {
+        return activity.checkNet();
     }
 
     /**
