@@ -99,12 +99,6 @@ public class DynamicFragment extends BaseFragment<DynamicPresenter> implements I
         });
     }
 
-
-    @Override
-    public boolean checkNet() {
-        return NetWorkUtils.isNetworkConnected(getContext());
-    }
-
     @Override
     public void showNoNet() {
         if(adapter.getItemCount()==0){

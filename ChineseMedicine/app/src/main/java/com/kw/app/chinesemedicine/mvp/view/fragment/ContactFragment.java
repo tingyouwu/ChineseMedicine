@@ -113,11 +113,6 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
     }
 
     @Override
-    public boolean checkNet() {
-        return NetWorkUtils.isNetworkConnected(getContext());
-    }
-
-    @Override
     public void showNoNet() {
         if(adapter.getItemCount()==0){
             mLoadingView.setState(LoadingState.STATE_NO_NET);

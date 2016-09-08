@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#f1f4f7"
     android:orientation="vertical">
 
@@ -73,71 +74,20 @@
             android:layout_alignParentTop="true"/>
 
         <TextView
-            android:id="@+id/tv_mobile"
+            android:id="@+id/tv_email"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:padding="10dp"
-            android:text="手机"
+            android:text="邮箱"
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/et_mobile"
-            android:layout_toRightOf="@id/tv_mobile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_marginLeft="5dp"
-            android:layout_centerVertical="true"
-            android:background="@drawable/bg_edittext"
-            android:padding="5dp"
-            android:textColor="@color/black"
-            android:hint="填写11位手机号码"
-            android:maxLength="11"
-            android:layout_marginRight="10dp"
-            android:textColorHint="@color/gray_font_3"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/white">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="20dp"
-            android:background="@color/list_line"
-            android:layout_alignParentTop="true"/>
-
-        <TextView
-            android:id="@+id/tv_check"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:padding="10dp"
-            android:text="验证码"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-        <com.kw.app.chinesemedicine.widget.CheckCodeButton
-            android:id="@+id/checkcode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:layout_centerVertical="true"/>
         
         <EditText
-            android:id="@+id/et_check"
-            android:layout_toRightOf="@id/tv_check"
-            android:layout_toLeftOf="@id/checkcode"
+            android:id="@+id/et_email"
+            android:layout_toRightOf="@id/tv_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
@@ -146,7 +96,7 @@
             android:background="@drawable/bg_edittext"
             android:padding="5dp"
             android:textColor="@color/black"
-            android:hint="填写验证码"
+            android:hint="填写邮箱，以便找回密码"
             android:maxLength="11"
             android:textColorHint="@color/gray_font_3"/>
 
@@ -193,6 +143,58 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/list_line"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/tv_role"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:text="角色"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <com.wty.app.library.widget.ToggleButton
+            android:id="@+id/tb_role"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:layout_marginRight="10dp"
+            android:tag="postage"
+            app:bordWidth="0.3dp"
+            app:onColor="@color/blue"/>
+
+        <TextView
+            android:id="@+id/tv_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_role"
+            android:layout_toLeftOf="@id/tb_role"
+            android:padding="10dp"
+            android:text="如果您是医生，请点击右边"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/gray_font_3"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
     <com.kw.app.chinesemedicine.widget.CheckBoxLabel
         android:id="@+id/btn_showpsw"
         android:layout_width="wrap_content"
@@ -202,7 +204,8 @@
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="显示密码"
+        android:layout_marginRight="10dp"
+        app:label="显示密码"
         android:layout_gravity="right"
         android:textSize="15sp" />
 

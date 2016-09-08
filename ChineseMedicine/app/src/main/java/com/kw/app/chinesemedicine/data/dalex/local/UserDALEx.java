@@ -6,79 +6,107 @@ import com.wty.app.library.data.annotation.SqliteDao;
 import com.wty.app.library.data.dalex.SqliteBaseDALEx;
 
 /**
- * @Decription 联系人通讯录
+ * 用户信息
  * @author wty
  */
 public class UserDALEx extends SqliteBaseDALEx {
 
+	public static final int User_Doctor = 1;//医生
+	public static final int User_Not_Doctor = 0;//非医生
+
 	@DatabaseField(primaryKey = true,Type = FieldType.VARCHAR)
-	private String contactid;//动态id
+	private String userid;
 
 	@DatabaseField(Type = FieldType.VARCHAR)
-	private String username; // 姓名
+	private String username; // 用户的用户名
 
 	@DatabaseField(Type = FieldType.VARCHAR)
-	private String mobilephone; // 手机号码
+	private String password;
 
 	@DatabaseField(Type = FieldType.VARCHAR)
-	private String logourl; // 头像
+	private String email;
 
 	@DatabaseField(Type = FieldType.VARCHAR)
-	private String sex; // 性别
+	private String mobilePhoneNumber;
+
+	@DatabaseField(Type = FieldType.INT)
+	private int sex; // 性别  1男 0女
 
 	@DatabaseField(Type = FieldType.VARCHAR)
 	private String pinyin; // 名字拼音
 
-	@DatabaseField(Type = FieldType.VARCHAR)
-	private String tel; // 固定电话
-
-	@DatabaseField(Type = FieldType.VARCHAR)
-	private String email; // 电子邮箱
-
 	@DatabaseField(Type = FieldType.INT)
 	private int age;//年龄
+
+	@DatabaseField(Type = FieldType.INT)
+	private int role;// 角色  1医生 0非医生
+
+	@DatabaseField(Type = FieldType.VARCHAR)
+	private String createAt;//创建时间
+
+	@DatabaseField(Type = FieldType.VARCHAR)
+	private String updateAt;//修改时间
+
+	@DatabaseField(Type = FieldType.VARCHAR)
+	private String logourl;//头像
 
 	public static UserDALEx get() {
 		return SqliteDao.getDao(UserDALEx.class);
 	}
 
-	public String getContactid() {
-		return contactid;
+	public String getCreateAt() {
+		return createAt;
 	}
 
-	public void setContactid(String contactid) {
-		this.contactid = contactid;
+	public void setCreateAt(String createAt) {
+		this.createAt = createAt;
 	}
 
-	public String getUsername() {
+	public String getUpdateAt() {
+		return updateAt;
+	}
+
+	public void setUpdateAt(String updateAt) {
+		this.updateAt = updateAt;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	public String getNickname() {
 		return username;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setNickname(String nickname) {
+		this.username = nickname;
 	}
 
-	public String getMobilephone() {
-		return mobilephone;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setMobilephone(String mobilephone) {
-		this.mobilephone = mobilephone;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public String getLogourl() {
-		return logourl;
+	public String getMobilePhoneNumber() {
+		return mobilePhoneNumber;
 	}
 
-	public void setLogourl(String logourl) {
-		this.logourl = logourl;
+	public void setMobilePhoneNumber(String mobilePhoneNumber) {
+		this.mobilePhoneNumber = mobilePhoneNumber;
 	}
 
-	public String getSex() {
+	public int getSex() {
 		return sex;
 	}
 
-	public void setSex(String sex) {
+	public void setSex(int sex) {
 		this.sex = sex;
 	}
 
@@ -90,27 +118,35 @@ public class UserDALEx extends SqliteBaseDALEx {
 		this.pinyin = pinyin;
 	}
 
-	public String getTel() {
-		return tel;
-	}
-
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public int getAge() {
 		return age;
 	}
 
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getLogourl() {
+		return logourl;
+	}
+
+	public void setLogourl(String logourl) {
+		this.logourl = logourl;
 	}
 }

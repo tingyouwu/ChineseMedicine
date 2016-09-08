@@ -1,11 +1,13 @@
 package com.kw.app.chinesemedicine.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.widget.login.LoginInputView;
 import com.wty.app.library.activity.BaseActivity;
+import com.wty.app.library.base.AppConstant;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 import com.wty.app.library.utils.CommonUtil;
 import com.wty.app.library.utils.ImageLoaderUtil;
@@ -36,7 +38,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_signup)
     void goToRegisterActivity(){
-        UserRegisterActivity.startUserRegisterActivity(this);
+        UserRegisterActivity.startUserRegisterActivity(this, AppConstant.ActivityResult.Request_Register);
     }
     @OnClick(R.id.login_forgetpsw)
     void showForgetPswMenu(){
@@ -91,5 +93,14 @@ public class LoginActivity extends BaseActivity {
     @Override
     public int getLayoutResource() {
         return R.layout.activity_login;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {//从选择图片页面返回
+            if (requestCode == AppConstant.ActivityResult.Request_Register) {
+
+            }
+        }
     }
 }
