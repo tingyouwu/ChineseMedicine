@@ -13,7 +13,7 @@ public class PreferenceUtil {
 
 	private static String PREFERENCES_NAME = "Preferences";//preference名字
 	public static String LastPassword = "lastPassword";//登陆密码
-	public static String LastAccount = "lastAccount";//登陆账号
+	public static String LastName = "lastname";//登陆名字
 	public static String IsAutoLogin = "IsAutoLogin";//是否自动登陆
 
 	private SharedPreferences mSharedPreferences;
@@ -62,11 +62,12 @@ public class PreferenceUtil {
         return mSharedPreferences.getString(LastPassword, null);
 	}
 
+
 	public boolean isAutoLogin(){
 	    return mSharedPreferences.getBoolean(IsAutoLogin, false);
 	}
 
-	public String getLastAccount(){
-		return mSharedPreferences.getString(LastAccount, null);
+	public String getLastName(){
+		return mSharedPreferences.getString(LastName, null);
 	}
 }

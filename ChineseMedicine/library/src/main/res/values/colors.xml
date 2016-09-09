@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/colorGreenPrimary</color>
-    <color name="colorPrimaryDark">@color/colorGreenPrimary</color>
-    <color name="colorAccent">@color/colorGreenPrimary</color>
+    <color name="colorPrimary">@color/blue</color>
+    <color name="colorPrimaryDark">@color/blue</color>
+    <color name="colorAccent">@color/blue</color>
     <color name="blue">#25B6ed</color>
     <color name="light_blue">#5bb5f0</color>
     <color name="alpha_blue">#6625B6ed</color>

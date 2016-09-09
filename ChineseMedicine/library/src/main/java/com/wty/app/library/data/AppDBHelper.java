@@ -16,7 +16,7 @@ public class AppDBHelper extends SQLiteOpenHelper  {
 	private Context context;
 
 	public AppDBHelper(Context context) {
-		super(context, CommonUtil.getApplicationName(context) + "_" + PreferenceUtil.getInstance().getLastAccount(), null, CommonUtil.getDbVersion(context));
+		super(context, CommonUtil.getApplicationName(context) + "_" + PreferenceUtil.getInstance().getLastName(), null, CommonUtil.getDbVersion(context));
 		this.context=context;
 		getWritableDatabase();
 	}

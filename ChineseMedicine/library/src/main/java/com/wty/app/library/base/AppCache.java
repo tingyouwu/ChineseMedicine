@@ -56,7 +56,7 @@ public class AppCache {
 	 * 功能描述：获取数据库
 	 **/
 	public AppDBHelper getDBFromUserAccunt(){
-		String account = PreferenceUtil.getInstance().getLastAccount();
+		String account = PreferenceUtil.getInstance().getLastName();
 		return getDBFromUserAccunt(account);
 	}
 

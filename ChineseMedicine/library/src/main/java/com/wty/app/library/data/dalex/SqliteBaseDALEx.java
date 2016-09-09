@@ -63,7 +63,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 	 **/
 	public static AppDBHelper getDB(){
 		//先获取账号
-		String lastAccount =  PreferenceUtil.getInstance().getLastAccount();
+		String lastAccount =  PreferenceUtil.getInstance().getLastName();
 		//通过账号来获取对应的DB
 		return AppCache.getInstance().getDBFromUserAccunt(lastAccount);
 	}
