@@ -14,7 +14,9 @@ public class PreferenceUtil {
 	private static String PREFERENCES_NAME = "Preferences";//preference名字
 	public static String LastPassword = "lastPassword";//登陆密码
 	public static String LastName = "lastname";//登陆名字
+	public static String LastAccount = "laseAccount";//由服务器分配的表示账号唯一性
 	public static String IsAutoLogin = "IsAutoLogin";//是否自动登陆
+	public static String LogoUrl = "logourl";//头像
 
 	private SharedPreferences mSharedPreferences;
 
@@ -26,7 +28,6 @@ public class PreferenceUtil {
 		if (sInstance == null) {
 			throw new RuntimeException("please init first!");
 		}
-
 		return sInstance;
 	}
 
@@ -58,10 +59,15 @@ public class PreferenceUtil {
 		mSharedPreferences.edit().putBoolean(key, value).commit();// 提交修改;
 	}
 
+	public String getLogoUrl(){
+		return mSharedPreferences.getString(LogoUrl,null);
+	}
+
 	public String getLastPassword(){
         return mSharedPreferences.getString(LastPassword, null);
 	}
 
+	public String getLastAccount(){return mSharedPreferences.getString(LastAccount,null);}
 
 	public boolean isAutoLogin(){
 	    return mSharedPreferences.getBoolean(IsAutoLogin, false);

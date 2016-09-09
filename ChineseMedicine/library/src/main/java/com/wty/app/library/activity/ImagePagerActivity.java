@@ -42,7 +42,7 @@ public class ImagePagerActivity extends BaseActivity {
 
     @Override
     public int getLayoutResource() {
-        return com.wty.app.library.R.layout.activity_imagepager;
+        return R.layout.activity_imagepager;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ImagePagerActivity extends BaseActivity {
         guideGroup = (LinearLayout)findViewById(R.id.guideGroup);
         viewPager = (ImageViewPager) findViewById(R.id.pager);
         //全屏  隐藏状态栏
-        setStatusBarTintRes(com.wty.app.library.R.color.black);
+        setStatusBarTintRes(R.color.black);
         getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
 
         startPos = getIntent().getIntExtra(INTENT_POSITION, 0);
