@@ -58,6 +58,10 @@
             android:name=".mvp.view.activity.ContactAddActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
+        <activity
+            android:name=".activity.UserEmailResetPSWActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+
     </application>
 
 </manifest>

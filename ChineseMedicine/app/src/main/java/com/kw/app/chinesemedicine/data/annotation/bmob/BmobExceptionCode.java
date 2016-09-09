@@ -8,6 +8,7 @@ public enum  BmobExceptionCode{
 	UsernameOrPswError(101,"登录用户名或密码不正确"),
 	UsernameTaken(202,"该昵称已经注册过"),
 	EmailTake(203,"该邮箱已经注册过"),
+	EmailNotExist(205,"没有找到此邮件的用户"),
 	PhoneTaken(209,"该手机号码已经存在"),
 	PswInCorrect(210,"旧密码不正确"),
 	EmailError(301,"邮箱格式不正确"),
@@ -16,7 +17,8 @@ public enum  BmobExceptionCode{
 	UpLoadFileFailure(9004,"上传文件失败"),
 	FileSize10M(9007,"文件大小超过10M"),
 	FileNotExist(9008,"上传文件不存在"),
-	TimeOut(9010,"网络超时");
+	TimeOut(9010,"网络超时"),
+	DataNull(9018,"输入数据为空");
 
 	public int code;
 	public String msg;

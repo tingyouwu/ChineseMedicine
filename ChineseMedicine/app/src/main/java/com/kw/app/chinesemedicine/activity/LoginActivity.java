@@ -33,10 +33,6 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     LoginInputView mloginInputview;
     @Bind(R.id.login_version)
     TextView tv_version;
-    @Bind(R.id.login_forgetpsw)
-    TextView tv_forgetpsw;
-    @Bind(R.id.login_signup)
-    TextView tv_signup;
 
     @OnClick(R.id.login_signup)
     void goToRegisterActivity(){
@@ -44,7 +40,7 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     }
     @OnClick(R.id.login_forgetpsw)
     void showForgetPswMenu(){
-
+        UserEmailResetPSWActivity.startUserEmailResetPSWActivity(LoginActivity.this);
     }
 
     private String name;
@@ -60,46 +56,44 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
 
         getDefaultNavigation().setTitle("老中医");
         getDefaultNavigation().getLeftButton().hide();
+        CommonUtil.keyboardControl(LoginActivity.this, false, mloginInputview.getAccountInput());
 
-        //最近登录的帐号
-        String lastOriginalAccount = PreferenceUtil.getInstance().getLastName();
-        //登录密码
-        String lastPsw = PreferenceUtil.getInstance().getLastPassword();
-        //是否记住了密码  是就自动登陆
         final boolean isAutoLogin = PreferenceUtil.getInstance().isAutoLogin();
 
-        if(isAutoLogin){
-            //自动登录就调整到主页面
+        if(isAutoLogin){//自动登录就调整到主页面
             finishActivity();
-        }
 
-        //点击登陆后做的事情
-        mloginInputview.setOnLoginAction(new LoginInputView.OnLoginActionListener() {
-            @Override
-            public void onLogin() {
-                CommonUtil.keyboardControl(LoginActivity.this,false,mloginInputview.getAccountInput());
-                if(submit()){
-                    mPresenter.login(mloginInputview.getAccount().toString(),mloginInputview.getPassword().toString(),mloginInputview.isRememberPsw());
+        }else{
+            String lastOriginalAccount = PreferenceUtil.getInstance().getLastName();
+            String lastPsw = PreferenceUtil.getInstance().getLastPassword();
+            String logourl = PreferenceUtil.getInstance().getLogoUrl();
+            //点击登陆后做的事情
+            mloginInputview.setOnLoginAction(new LoginInputView.OnLoginActionListener() {
+                @Override
+                public void onLogin() {
+                    CommonUtil.keyboardControl(LoginActivity.this, false, mloginInputview.getAccountInput());
+                    if (submit()) {
+                        mPresenter.login(mloginInputview.getAccount().toString(), mloginInputview.getPassword().toString(), mloginInputview.isRememberPsw());
+                    }
                 }
+            });
+
+            if(!TextUtils.isEmpty(logourl)){
+                ImageLoaderUtil.load(mloginIcon.getContext(),logourl,mloginIcon);
             }
-        });
+            tv_version.setText("V"+ CommonUtil.getVersion(this)+"."+CommonUtil.getVersionCode(this));
 
-        ImageLoaderUtil.load(this, R.drawable.icon_launcher, mloginIcon);
-        tv_version.setText("V"+ CommonUtil.getVersion(this)+"."+CommonUtil.getVersionCode(this));
-
-        if (lastOriginalAccount != null) {
-            mloginInputview.setAccount(lastOriginalAccount);
-            mloginInputview.setPassword(lastPsw);
-            if (!TextUtils.isEmpty(lastPsw)) {
-                // 记住密码
+            if (lastOriginalAccount != null) {
+                mloginInputview.setAccount(lastOriginalAccount);
+                mloginInputview.setPassword(lastPsw);
+                if (!TextUtils.isEmpty(lastPsw)) {
+                    mloginInputview.setIsRememberPsw(true);
+                } else {
+                    mloginInputview.setIsRememberPsw(false);
+                }
+            } else {// 第一次使用，默认记住密码
                 mloginInputview.setIsRememberPsw(true);
-            } else {
-                // 不记住密码
-                mloginInputview.setIsRememberPsw(false);
             }
-        } else {
-            // 第一次使用，默认记住密码
-            mloginInputview.setIsRememberPsw(true);
         }
     }
 
@@ -130,6 +124,11 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
 
                 mloginInputview.getAccountInput().setText(name);
                 mloginInputview.getPswInput().setText(psw);
+
+                String logourl = PreferenceUtil.getInstance().getLogoUrl();
+                if(!TextUtils.isEmpty(logourl)){
+                    ImageLoaderUtil.load(mloginIcon.getContext(),logourl,mloginIcon);
+                }
             }
         }
     }

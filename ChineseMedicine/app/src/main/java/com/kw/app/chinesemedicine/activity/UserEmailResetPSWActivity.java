@@ -4,15 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.data.annotation.bmob.BmobExceptionCode;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.mvp.presenter.BasePresenter;
+import com.wty.app.library.widget.sweetdialog.OnDismissCallbackListener;
 
 import java.util.List;
 
 import butterknife.Bind;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * @author wty
@@ -37,7 +44,28 @@ public class UserEmailResetPSWActivity extends BaseActivity {
     public void onInitView(Bundle savedInstanceState) {
         getDefaultNavigation().setTitle("重置密码");
         getDefaultNavigation().getLeftButton().setText("老中医");
-//        getDefaultNavigation().
+        getDefaultNavigation().getRightButton().setButton("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String email = etEmail.getText().toString();
+                showLoading("请稍候,正在请求...");
+                BmobUser.resetPasswordByEmail(email, new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if(e == null){
+                            dismissLoading(new OnDismissCallbackListener("发送成功") {
+                                @Override
+                                public void onCallback() {
+                                    finish();
+                                }
+                            });
+                        }else{
+                            dismissLoading(new OnDismissCallbackListener(BmobExceptionCode.match(e.getErrorCode()), SweetAlertDialog.ERROR_TYPE));
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override

@@ -160,7 +160,7 @@ public class UserRegisterActivity extends BaseActivity<UserRegisterPresenter> im
         Intent intent = new Intent();
         intent.putExtra(USERNAME,etName.getText().toString());
         intent.putExtra(PSW, etPsw.getText().toString());
-        setResult(RESULT_OK,intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

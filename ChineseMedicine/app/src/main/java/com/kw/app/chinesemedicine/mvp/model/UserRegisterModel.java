@@ -7,6 +7,7 @@ import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IUserRegisterContract;
 import com.wty.app.library.callback.ICallBack;
+import com.wty.app.library.utils.PreferenceUtil;
 import com.wty.app.library.utils.luban.Luban;
 import com.wty.app.library.utils.luban.OnCompressListener;
 
@@ -84,6 +85,7 @@ public class UserRegisterModel implements IUserRegisterContract.IUserRegisterMod
                 } else {
                     data.setUserid(bmob.getObjectId());
                     data.saveOrUpdate();
+                    PreferenceUtil.getInstance().writePreferences(PreferenceUtil.LogoUrl, bmob.getLogourl());
                     callBack.onSuccess(bmob.getObjectId());
                 }
             }

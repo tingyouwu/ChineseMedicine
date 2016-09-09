@@ -11,7 +11,7 @@ import com.wty.app.library.widget.sweetdialog.OnDismissCallbackListener;
 public interface IUserLoginContract {
 
     interface IUserLoginModel extends IBaseModel {
-        void login(String name,String psw, ICallBack<String> callBack);
+        void login(String name,String psw,boolean isAutoLogin, ICallBack<String> callBack);
     }
 
     interface IUserLoginView extends IBaseView {
