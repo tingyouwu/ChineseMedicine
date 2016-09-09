@@ -7,11 +7,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
-import com.kw.app.chinesemedicine.activity.ImagePagerActivity;
-import com.kw.app.chinesemedicine.bean.ImageSizeBean;
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
+import com.wty.app.library.activity.ImagePagerActivity;
 import com.wty.app.library.adapter.BaseRecyclerViewMultiItemAdapter;
 import com.wty.app.library.adapter.NineGridImageViewAdapter;
+import com.wty.app.library.bean.ImageSizeBean;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.ScreenUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
@@ -72,7 +72,7 @@ public class DynamicAdapter extends BaseRecyclerViewMultiItemAdapter<DynamicDALE
                     @Override
                     public void onClick(View v) {
                         ImageSizeBean imageSize = new ImageSizeBean(v.getMeasuredWidth(),v.getMeasuredHeight());
-                        ImagePagerActivity.startImagePagerActivity(mContext,listOne,0,imageSize);
+                        ImagePagerActivity.startImagePagerActivity(mContext, listOne, 0, imageSize);
                     }
                 });
                 break;

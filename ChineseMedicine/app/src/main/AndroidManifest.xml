@@ -58,20 +58,6 @@
             android:name=".mvp.view.activity.ContactAddActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
-        <activity
-            android:name=".activity.ImagePagerActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity
-            android:name="com.wty.app.library.activity.ImageSelectorActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name="com.wty.app.library.activity.ImagePreviewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-
     </application>
 
 </manifest>

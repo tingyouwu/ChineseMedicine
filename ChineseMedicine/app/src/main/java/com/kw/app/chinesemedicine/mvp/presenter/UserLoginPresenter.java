@@ -31,7 +31,7 @@ public class UserLoginPresenter extends BasePresenter<IUserLoginContract.IUserLo
             @Override
             public void onSuccess(String data) {
                 mView.dismissLoading(null);
-                PreferenceUtil.getInstance().writePreferences(PreferenceUtil.LastAccount,name);
+                PreferenceUtil.getInstance().writePreferences(PreferenceUtil.LastName, name);
                 if(isAutoLogin){
                     PreferenceUtil.getInstance().writePreferences(PreferenceUtil.IsAutoLogin, true);
                     PreferenceUtil.getInstance().writePreferences(PreferenceUtil.LastPassword,psw);

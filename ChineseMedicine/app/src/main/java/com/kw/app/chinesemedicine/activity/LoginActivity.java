@@ -47,6 +47,8 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
 
     }
 
+    private String name;
+    private String psw;
 
     @Override
     public UserLoginPresenter getPresenter() {
@@ -60,7 +62,7 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
         getDefaultNavigation().getLeftButton().hide();
 
         //最近登录的帐号
-        String lastOriginalAccount = PreferenceUtil.getInstance().getLastAccount();
+        String lastOriginalAccount = PreferenceUtil.getInstance().getLastName();
         //登录密码
         String lastPsw = PreferenceUtil.getInstance().getLastPassword();
         //是否记住了密码  是就自动登陆
@@ -77,7 +79,7 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
             public void onLogin() {
                 CommonUtil.keyboardControl(LoginActivity.this,false,mloginInputview.getAccountInput());
                 if(submit()){
-                    mPresenter.login(mloginInputview.getAccount(),mloginInputview.getPassword(),mloginInputview.isRememberPsw());
+                    mPresenter.login(mloginInputview.getAccount().toString(),mloginInputview.getPassword().toString(),mloginInputview.isRememberPsw());
                 }
             }
         });
@@ -123,8 +125,9 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {//从选择图片页面返回
             if (requestCode == AppConstant.ActivityResult.Request_Register) {
-                String name = data.getStringExtra(UserRegisterActivity.USERNAME);
-                String psw = data.getStringExtra(UserRegisterActivity.PSW);
+                name = data.getStringExtra(UserRegisterActivity.USERNAME);
+                psw = data.getStringExtra(UserRegisterActivity.PSW);
+
                 mloginInputview.getAccountInput().setText(name);
                 mloginInputview.getPswInput().setText(psw);
             }
