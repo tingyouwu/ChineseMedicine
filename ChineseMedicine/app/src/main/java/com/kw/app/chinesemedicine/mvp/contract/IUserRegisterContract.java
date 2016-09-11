@@ -21,7 +21,7 @@ public interface IUserRegisterContract {
         void dismissLoading(OnDismissCallbackListener callback);
         boolean checkNet();
         void showNoNet();
-        void finishActivity();
+        void finishActivity(String userid);
     }
 
 }

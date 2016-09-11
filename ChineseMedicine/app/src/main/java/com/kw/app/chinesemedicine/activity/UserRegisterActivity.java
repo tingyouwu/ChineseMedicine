@@ -34,8 +34,7 @@ import butterknife.OnClick;
  **/
 public class UserRegisterActivity extends BaseActivity<UserRegisterPresenter> implements IUserRegisterContract.IUserRegisterView {
 
-    public static final String USERNAME = "username";
-    public static final String PSW = "psw";
+    public static final String USERID = "userid";
 
     @Bind(R.id.img_camera)
     ImageView imgCamera;
@@ -139,7 +138,7 @@ public class UserRegisterActivity extends BaseActivity<UserRegisterPresenter> im
                 if(images != null && images.size()>0){
                     this.path_header = images.get(0);
                     imgCamera.setPadding(0,0,0,0);
-                    ImageLoaderUtil.load(this,this.path_header,imgCamera);
+                    ImageLoaderUtil.load(imgCamera.getContext(),this.path_header,imgCamera);
                 }
             }
         }
@@ -156,10 +155,9 @@ public class UserRegisterActivity extends BaseActivity<UserRegisterPresenter> im
     }
 
     @Override
-    public void finishActivity() {
+    public void finishActivity(String userid) {
         Intent intent = new Intent();
-        intent.putExtra(USERNAME,etName.getText().toString());
-        intent.putExtra(PSW, etPsw.getText().toString());
+        intent.putExtra(USERID,userid);
         setResult(RESULT_OK, intent);
         finish();
     }

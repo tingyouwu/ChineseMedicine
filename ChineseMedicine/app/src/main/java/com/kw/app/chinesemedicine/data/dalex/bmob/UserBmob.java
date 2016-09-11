@@ -1,6 +1,7 @@
 package com.kw.app.chinesemedicine.data.dalex.bmob;
 
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
+import com.wty.app.library.utils.HanziToPinyinUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,22 @@ public class UserBmob extends BmobUser {
 		this.logourl = logourl;
 	}
 
+	public void save(final UserBmob bmob){
+		UserDALEx dalex = new UserDALEx();
+		dalex.setUserid(bmob.getObjectId());
+		dalex.setNickname(bmob.getUsername());
+		dalex.setEmail(bmob.getEmail());
+		dalex.setMobilePhoneNumber(bmob.getMobilePhoneNumber());
+		dalex.setAge(bmob.getAge());
+		dalex.setRole(bmob.getRole());
+		dalex.setPinyin(bmob.getPinyin());
+		dalex.setCreateAt(bmob.getCreatedAt());
+		dalex.setUpdateAt(bmob.getUpdatedAt());
+		dalex.setSex(bmob.getSex());
+		dalex.setLogourl(bmob.getLogourl());
+		dalex.saveOrUpdate();
+	}
+
 	public void save(final List<UserBmob> list){
 		List<UserDALEx> localdalex = bmobToLocal(list);
 		UserDALEx.get().saveOrUpdate(localdalex);
@@ -96,8 +113,9 @@ public class UserBmob extends BmobUser {
 
 	public void setAnnotationField(UserDALEx user){
 		setMobilePhoneNumber(user.getMobilePhoneNumber());
-		setPassword(user.getPassword());
 		setUsername(user.getNickname());
+		setPassword(user.getPassword());
+		setPinyin(HanziToPinyinUtil.getShortPinyin(user.getNickname()));
 		setAge(user.getAge());
 		setRole(user.getRole());
 		setSex(user.getSex());

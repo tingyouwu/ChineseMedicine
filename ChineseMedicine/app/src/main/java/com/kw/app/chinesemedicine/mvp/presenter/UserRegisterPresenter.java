@@ -29,11 +29,11 @@ public class UserRegisterPresenter extends BasePresenter<IUserRegisterContract.I
 
         mUserRegisterModel.register(data, new ICallBack<String>() {
             @Override
-            public void onSuccess(String data) {
+            public void onSuccess(final String userid) {
                 mView.dismissLoading(new OnDismissCallbackListener("注册成功") {
                     @Override
                     public void onCallback() {
-                        mView.finishActivity();
+                        mView.finishActivity(userid);
                     }
                 });
             }

@@ -3,9 +3,11 @@ package com.kw.app.chinesemedicine.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.kw.app.chinesemedicine.mvp.presenter.UserLoginPresenter;
 import com.kw.app.chinesemedicine.widget.login.LoginInputView;
@@ -14,7 +16,6 @@ import com.wty.app.library.base.AppConstant;
 import com.wty.app.library.utils.CommonUtil;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
-import com.wty.app.library.widget.imageview.CircleImageView;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity<UserLoginPresenter> implements IUserLoginContract.IUserLoginView{
 
     @Bind(R.id.login_icon)
-    CircleImageView mloginIcon;
+    ImageView mloginIcon;
     @Bind(R.id.login_inputview)
     LoginInputView mloginInputview;
     @Bind(R.id.login_version)
@@ -43,8 +44,7 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
         UserEmailResetPSWActivity.startUserEmailResetPSWActivity(LoginActivity.this);
     }
 
-    private String name;
-    private String psw;
+    private String userid;
 
     @Override
     public UserLoginPresenter getPresenter() {
@@ -79,7 +79,7 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
             });
 
             if(!TextUtils.isEmpty(logourl)){
-                ImageLoaderUtil.load(mloginIcon.getContext(),logourl,mloginIcon);
+                ImageLoaderUtil.loadCircle(mloginIcon.getContext(),logourl,mloginIcon);
             }
             tv_version.setText("V"+ CommonUtil.getVersion(this)+"."+CommonUtil.getVersionCode(this));
 
@@ -119,15 +119,11 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {//从选择图片页面返回
             if (requestCode == AppConstant.ActivityResult.Request_Register) {
-                name = data.getStringExtra(UserRegisterActivity.USERNAME);
-                psw = data.getStringExtra(UserRegisterActivity.PSW);
-
-                mloginInputview.getAccountInput().setText(name);
-                mloginInputview.getPswInput().setText(psw);
-
-                String logourl = PreferenceUtil.getInstance().getLogoUrl();
-                if(!TextUtils.isEmpty(logourl)){
-                    ImageLoaderUtil.load(mloginIcon.getContext(),logourl,mloginIcon);
+                userid = data.getStringExtra(UserRegisterActivity.USERID);
+                UserDALEx user = UserDALEx.get().findById(userid);
+                mloginInputview.getAccountInput().setText(user.getNickname());
+                if(!TextUtils.isEmpty(user.getLogourl())){
+                    ImageLoaderUtil.load(mloginIcon.getContext(),user.getLogourl(),mloginIcon);
                 }
             }
         }

@@ -83,9 +83,7 @@ public class UserRegisterModel implements IUserRegisterContract.IUserRegisterMod
                 if (e != null) {
                     callBack.onFaild(BmobExceptionCode.match(e.getErrorCode()));
                 } else {
-                    data.setUserid(bmob.getObjectId());
-                    data.saveOrUpdate();
-                    PreferenceUtil.getInstance().writePreferences(PreferenceUtil.LogoUrl, bmob.getLogourl());
+                    bmob.save(bmob);
                     callBack.onSuccess(bmob.getObjectId());
                 }
             }
