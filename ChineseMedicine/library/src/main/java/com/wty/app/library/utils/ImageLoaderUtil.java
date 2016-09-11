@@ -3,15 +3,13 @@ package com.wty.app.library.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.target.ImageViewTarget;
 import com.wty.app.library.R;
 
 import java.io.File;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 
 /**
@@ -28,7 +26,6 @@ import java.io.File;
  * 支持GIF格式图片加载
  */
 public class ImageLoaderUtil {
-
 
     /**
      * 加载项目内的图片
@@ -50,7 +47,6 @@ public class ImageLoaderUtil {
         Glide.with(fragment).load(resId).crossFade().into(imageView);
     }
 
-
     /**
      * 加载SD卡图片文件
      * @param context
@@ -61,41 +57,6 @@ public class ImageLoaderUtil {
         if(null!=file && file.isFile() && file.exists()){
             Glide.with(context).load(file).crossFade().centerCrop().into(imageView);
         }
-    }
-
-
-//    /**
-//     * 加载网络图片(防止错位)
-//     * @param activity
-//     * @param url
-//     * @param imageView
-//     */
-//    public static void load(Activity activity,final String url,final ImageView imageView) {
-//        if(!TextUtils.isEmpty(url)){
-//            Glide.with(activity).load(url).crossFade().into(
-//                    new ImageViewTarget<GlideDrawable>(imageView) {
-//                        @Override protected void setResource(GlideDrawable resource) {
-//                            final Object tag = view.getTag(imageView.getId());
-//                            if(null!=tag && tag.toString().equals(url)){
-//                                view.setImageDrawable(resource);
-//                            }
-//                        }
-//                    }
-//            );
-//        }
-//    }
-
-    /**
-     * 标准图片
-     * @param url
-     * @param view the imageView.
-     */
-    public static void load(Activity activity, String url, ImageView view) {
-        Glide.with(activity)
-                .load(url)
-                .placeholder(R.drawable.img_default_loading)
-                .error(R.drawable.img_error_fail)
-                .into(view);
     }
 
     /**
@@ -113,24 +74,17 @@ public class ImageLoaderUtil {
     }
 
     /**
-     * 加载网络图片
-     * @param context
+     * 加载圆形图片
+     * @param context context.
      * @param url
-     * @param defaultResId 默认的图片
-     * @param imageView
+     * @param view the imageView.
      */
-    public static void load(Context context,final String url,int defaultResId, final ImageView imageView) {
-        if(!TextUtils.isEmpty(url)){
-            Glide.with(context).load(url).placeholder(defaultResId).crossFade().into(new ImageViewTarget<GlideDrawable>(imageView) {
-                @Override protected void setResource(GlideDrawable resource) {
-                    final Object tag = view.getTag(imageView.getId());
-                    if(null!=tag && tag.toString().equals(url)){
-                        view.setImageDrawable(resource);
-                    }
-                }
-            });
-        }
+    public static void loadCircle(Context context, String url, ImageView view) {
+        Glide.with(context)
+                .load(url)
+                .bitmapTransform(new CropCircleTransformation(context))
+                .placeholder(R.drawable.img_default_loading)
+                .error(R.drawable.img_error_fail)
+                .into(view);
     }
-
-
 }

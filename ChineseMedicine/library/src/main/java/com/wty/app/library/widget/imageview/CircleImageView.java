@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.wty.app.library.R;
+import com.wty.app.library.utils.ImageLoaderUtil;
 
 /**
  * @Description 圆形imageview
@@ -449,7 +450,8 @@ public class CircleImageView extends ImageView {
      * 功能描述：设置图片
      **/
     public void setIcon(String url){
-
+        ImageLoaderUtil.load(getContext(),url,this);
+        invalidate();
     }
 
 }
