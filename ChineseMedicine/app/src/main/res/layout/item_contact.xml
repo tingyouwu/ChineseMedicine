@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="70dp"
     android:paddingLeft="10dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
     android:background="@color/white">
 
-    <com.wty.app.library.widget.imageview.CircleImageView
+    <ImageView
         android:id="@+id/iv_contact_header"
         android:layout_width="50dip"
         android:layout_height="50dip"
-        android:src="@drawable/icon_launcher"
-        app:civ_border_width="1dp"
-        app:civ_border_color="@color/list_line"/>
+        android:layout_centerVertical="true"
+        android:src="@drawable/icon_launcher"/>
 
     <ImageView
         android:id="@+id/iv_phone"
