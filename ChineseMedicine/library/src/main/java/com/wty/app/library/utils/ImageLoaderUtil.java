@@ -10,6 +10,7 @@ import com.wty.app.library.R;
 
 import java.io.File;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.CropSquareTransformation;
 
 
 /**
@@ -83,6 +84,21 @@ public class ImageLoaderUtil {
         Glide.with(context)
                 .load(url)
                 .bitmapTransform(new CropCircleTransformation(context))
+                .placeholder(R.drawable.img_default_loading)
+                .error(R.drawable.img_error_fail)
+                .into(view);
+    }
+
+    /**
+     * 加载圆形图片
+     * @param context context.
+     * @param url
+     * @param view the imageView.
+     */
+    public static void loadSquare(Context context, String url, ImageView view) {
+        Glide.with(context)
+                .load(url)
+                .bitmapTransform(new CropSquareTransformation(context))
                 .placeholder(R.drawable.img_default_loading)
                 .error(R.drawable.img_error_fail)
                 .into(view);
