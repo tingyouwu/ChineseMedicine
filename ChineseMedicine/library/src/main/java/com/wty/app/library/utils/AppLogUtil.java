@@ -9,13 +9,11 @@ import com.wty.app.library.BuildConfig;
  */
 public class AppLogUtil {
 
-    private static final String TAG = "老中医";
-
     /**
      * initialize the logger.
      */
-    public static void init() {
-        Logger.init(TAG);
+    public static void init(String Tag) {
+        Logger.init(Tag);
     }
 
     /**
