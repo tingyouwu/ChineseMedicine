@@ -70,7 +70,7 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
             @Override
             public void onRefresh() {
                 // 下拉刷新根据最近修改时间这个限定去服务端拿
-                mPresenter.refreshMoreContact();
+                mPresenter.refreshMoreContact(getContext());
             }
 
             @Override

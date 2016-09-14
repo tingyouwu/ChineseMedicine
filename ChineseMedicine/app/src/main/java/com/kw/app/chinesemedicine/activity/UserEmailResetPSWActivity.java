@@ -18,6 +18,7 @@ import java.util.List;
 import butterknife.Bind;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.ResetPasswordByEmailListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -49,19 +50,20 @@ public class UserEmailResetPSWActivity extends BaseActivity {
             public void onClick(View v) {
                 final String email = etEmail.getText().toString();
                 showLoading("请稍候,正在请求...");
-                BmobUser.resetPasswordByEmail(email, new UpdateListener() {
+                BmobUser.resetPasswordByEmail(v.getContext(), email, new ResetPasswordByEmailListener() {
                     @Override
-                    public void done(BmobException e) {
-                        if(e == null){
-                            dismissLoading(new OnDismissCallbackListener("发送成功") {
-                                @Override
-                                public void onCallback() {
-                                    finish();
-                                }
-                            });
-                        }else{
-                            dismissLoading(new OnDismissCallbackListener(BmobExceptionCode.match(e.getErrorCode()), SweetAlertDialog.ERROR_TYPE));
-                        }
+                    public void onSuccess() {
+                        dismissLoading(new OnDismissCallbackListener("发送成功") {
+                            @Override
+                            public void onCallback() {
+                                finish();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(int errorcode, String s) {
+                        dismissLoading(new OnDismissCallbackListener(BmobExceptionCode.match(errorcode), SweetAlertDialog.ERROR_TYPE));
                     }
                 });
             }

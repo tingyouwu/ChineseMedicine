@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.mvp.model;
 
+import android.content.Context;
+
 import com.kw.app.chinesemedicine.data.dalex.bmob.DynamicBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IDynamicContract;
@@ -18,30 +20,31 @@ import cn.bmob.v3.listener.FindListener;
 public class DynamicModel implements IDynamicContract.IDynamicModel {
 
     @Override
-    public void loadMoreDynamic(DynamicDALEx data, ICallBack<List<DynamicDALEx>> callBack) {
+    public void loadMoreDynamic(Context context, DynamicDALEx data, ICallBack<List<DynamicDALEx>> callBack) {
         List<DynamicDALEx> list = new ArrayList<DynamicDALEx>();
         callBack.onSuccess(list);
     }
 
     @Override
-    public void refreshMoreDynamic(DynamicDALEx data, final ICallBack<List<DynamicDALEx>> callBack) {
+    public void refreshMoreDynamic(Context context,DynamicDALEx data, final ICallBack<List<DynamicDALEx>> callBack) {
         BmobQuery<DynamicBmob> query = new BmobQuery<DynamicBmob>();
 
-        query.findObjects(new FindListener<DynamicBmob>() {
+        query.findObjects(context, new FindListener<DynamicBmob>() {
             @Override
-            public void done(List<DynamicBmob> list, BmobException e) {
-                if(e != null){
-                    callBack.onFaild(e.getMessage());
-                }else{
-                    List<DynamicDALEx> newlist = DynamicBmob.get().saveReturn(list);
-                    callBack.onSuccess(newlist);
-                }
+            public void onSuccess(List<DynamicBmob> list) {
+                List<DynamicDALEx> newlist = DynamicBmob.get().saveReturn(list);
+                callBack.onSuccess(newlist);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                callBack.onFaild(s);
             }
         });
     }
 
     @Override
-    public void loadDynamicFirst(ICallBack<List<DynamicDALEx>> callBack) {
+    public void loadDynamicFirst(Context context,ICallBack<List<DynamicDALEx>> callBack) {
 
     }
 }

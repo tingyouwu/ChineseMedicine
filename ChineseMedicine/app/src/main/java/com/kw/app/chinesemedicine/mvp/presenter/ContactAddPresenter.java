@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
+import android.content.Context;
+
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IContactAddContract;
 import com.kw.app.chinesemedicine.mvp.model.ContactAddModel;
@@ -20,14 +22,14 @@ public class ContactAddPresenter extends BasePresenter<IContactAddContract.ICont
         mContactAddModel = new ContactAddModel();
     }
 
-    public void submit(final ContactDALEx data){
+    public void submit(Context context, final ContactDALEx data){
         if(!mView.checkNet()){
             mView.showNoNet();
             return;
         }
         mView.showLoading("请稍候，正在添加...");
 
-        mContactAddModel.submit(data, new ICallBack<String>() {
+        mContactAddModel.submit(context,data, new ICallBack<String>() {
             @Override
             public void onSuccess(String objectid) {
                 mView.dismissLoading(new OnDismissCallbackListener("添加成功"){

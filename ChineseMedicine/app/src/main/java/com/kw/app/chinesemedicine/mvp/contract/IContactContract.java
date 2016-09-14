@@ -1,6 +1,8 @@
 package com.kw.app.chinesemedicine.mvp.contract;
 
 
+import android.content.Context;
+
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.model.IBaseModel;
@@ -14,9 +16,9 @@ import java.util.List;
 public interface IContactContract {
 
     interface IContactModel extends IBaseModel {
-        void loadMoreContact(ContactDALEx data, ICallBack<List<ContactDALEx>> callBack);
-        void refreshMoreContact(ContactDALEx data, ICallBack<List<ContactDALEx>> callBack);
-        void loadContactFirst(ICallBack<List<ContactDALEx>> callBack);
+        void loadMoreContact(Context context,ContactDALEx data, ICallBack<List<ContactDALEx>> callBack);
+        void refreshMoreContact(Context context,ContactDALEx data, ICallBack<List<ContactDALEx>> callBack);
+        void loadContactFirst(Context context,ICallBack<List<ContactDALEx>> callBack);
     }
 
     interface IContactView extends IBaseView {

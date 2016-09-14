@@ -1,5 +1,6 @@
 package com.kw.app.chinesemedicine.mvp.contract;
 
+import android.content.Context;
 
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
 import com.wty.app.library.callback.ICallBack;
@@ -13,7 +14,7 @@ import com.wty.app.library.widget.sweetdialog.OnDismissCallbackListener;
 public interface IDynamicAddContract {
 
     interface IDynamicAddModel extends IBaseModel {
-        void submit(DynamicDALEx data, ICallBack<String> callBack);
+        void submit(Context context,DynamicDALEx data, ICallBack<String> callBack);
     }
 
     interface IDynamicAddView extends IBaseView {

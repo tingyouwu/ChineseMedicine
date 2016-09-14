@@ -55,12 +55,12 @@ public class DynamicFragment extends BaseFragment<DynamicPresenter> implements I
         listview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                mPresenter.refreshMoreDynamic();
+                mPresenter.refreshMoreDynamic(getContext());
             }
 
             @Override
             public void onLoadMore() {
-                mPresenter.loadMoreDynamic();
+                mPresenter.loadMoreDynamic(getContext());
             }
 
         });
@@ -69,12 +69,12 @@ public class DynamicFragment extends BaseFragment<DynamicPresenter> implements I
         mLoadingView.withOnEmptyListener(new OnEmptyListener() {
             @Override
             public void onClick() {
-                mPresenter.refreshMoreDynamic();
+                mPresenter.refreshMoreDynamic(getContext());
             }
         }).withOnRetryListener(new OnRetryListener() {
             @Override
             public void onRetry() {
-                mPresenter.refreshMoreDynamic();
+                mPresenter.refreshMoreDynamic(getContext());
             }
         }).build();
 

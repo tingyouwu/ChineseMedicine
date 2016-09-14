@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
+import android.content.Context;
+
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
 import com.kw.app.chinesemedicine.mvp.model.ContactModel;
@@ -19,14 +21,14 @@ public class ContactPresenter extends BasePresenter<IContactContract.IContactVie
         mContactModel = new ContactModel();
     }
 
-    public void refreshMoreContact(){
+    public void refreshMoreContact(Context context){
         if(!mView.checkNet()){
             mView.showNoNet();
             mView.onRefreshComplete();
             return;
         }
 
-        mContactModel.refreshMoreContact(new ContactDALEx(), new ICallBack<List<ContactDALEx>>() {
+        mContactModel.refreshMoreContact(context,new ContactDALEx(), new ICallBack<List<ContactDALEx>>() {
             @Override
             public void onSuccess(List<ContactDALEx> data) {
                 mView.onRefreshComplete(data.size());
@@ -43,14 +45,14 @@ public class ContactPresenter extends BasePresenter<IContactContract.IContactVie
     /**
      * @Description 加载更多朋友圈动态
      **/
-    public void loadMoreDynamic(){
+    public void loadMoreDynamic(Context context){
         if(!mView.checkNet()){
             mView.showNoNet();
             mView.onLoadMoreComplete();
             return;
         }
 
-        mContactModel.loadMoreContact(new ContactDALEx(), new ICallBack<List<ContactDALEx>>() {
+        mContactModel.loadMoreContact(context,new ContactDALEx(), new ICallBack<List<ContactDALEx>>() {
             @Override
             public void onSuccess(List<ContactDALEx> data) {
                 mView.onLoadMoreComplete(data.size());

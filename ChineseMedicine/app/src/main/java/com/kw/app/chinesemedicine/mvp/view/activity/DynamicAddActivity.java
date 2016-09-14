@@ -19,8 +19,8 @@ import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.activity.ImageSelectorActivity;
 import com.wty.app.library.adapter.PhotoGridViewAdapter;
 import com.wty.app.library.base.AppConstant;
-import com.wty.app.library.entity.ImageModel;
-import com.wty.app.library.entity.ImageUriEntity;
+import com.wty.app.library.bean.ImageModel;
+import com.wty.app.library.bean.ImageUriEntity;
 import com.wty.app.library.utils.NetWorkUtils;
 import com.wty.app.library.widget.MyTextWatcher;
 
@@ -93,7 +93,7 @@ public class DynamicAddActivity extends BaseActivity<DynamicAddPresenter> implem
     @Override
     protected boolean submit() {
         if(super.submit()){
-            mPresenter.submit(getSubmitData());
+            mPresenter.submit(DynamicAddActivity.this,getSubmitData());
         }
         return true;
     }

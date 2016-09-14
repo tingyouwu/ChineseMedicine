@@ -73,7 +73,7 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
                 public void onLogin() {
                     CommonUtil.keyboardControl(LoginActivity.this, false, mloginInputview.getAccountInput());
                     if (submit()) {
-                        mPresenter.login(mloginInputview.getAccount().toString(), mloginInputview.getPassword().toString(), mloginInputview.isRememberPsw());
+                        mPresenter.login(LoginActivity.this,mloginInputview.getAccount().toString(), mloginInputview.getPassword().toString(), mloginInputview.isRememberPsw());
                     }
                 }
             });

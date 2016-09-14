@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
+import android.content.Context;
+
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.kw.app.chinesemedicine.mvp.model.UserLoginModel;
 import com.wty.app.library.callback.ICallBack;
@@ -19,14 +21,14 @@ public class UserLoginPresenter extends BasePresenter<IUserLoginContract.IUserLo
         mUserLoginModel = new UserLoginModel();
     }
 
-    public void login(final String name, final String psw, final boolean isAutoLogin){
+    public void login(Context context,final String name, final String psw, final boolean isAutoLogin){
         if(!mView.checkNet()){
             mView.showNoNet();
             return;
         }
 
         mView.showLoading("请稍候，登录中...");
-        mUserLoginModel.login(name, psw, isAutoLogin,new ICallBack<String>() {
+        mUserLoginModel.login(context,name, psw, isAutoLogin,new ICallBack<String>() {
             @Override
             public void onSuccess(String objectid) {
                 mView.dismissLoading(null);

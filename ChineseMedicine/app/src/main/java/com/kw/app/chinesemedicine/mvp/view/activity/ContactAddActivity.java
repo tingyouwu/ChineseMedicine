@@ -73,7 +73,7 @@ public class ContactAddActivity extends BaseActivity<ContactAddPresenter> implem
     @Override
     protected boolean submit() {
         if (super.submit()) {
-            mPresenter.submit(getSubmitData());
+            mPresenter.submit(ContactAddActivity.this,getSubmitData());
         }
         return true;
     }

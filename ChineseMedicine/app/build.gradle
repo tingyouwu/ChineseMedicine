@@ -38,6 +38,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    releaseCompile project(path: ':library', configuration: 'release')
-    debugCompile project(path: ':library', configuration: 'debug')
+    compile project(':bmobim')
 }

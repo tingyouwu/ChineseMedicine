@@ -59,7 +59,7 @@ public class UserAddActivity extends BaseActivity<UserRegisterPresenter> impleme
     void sign(){
         //注册
         if(super.submit()){
-            mPresenter.register(getSubmitData());
+            mPresenter.register(UserAddActivity.this,getSubmitData());
         }
     }
 

@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
+import android.content.Context;
+
 import com.kw.app.chinesemedicine.data.dalex.local.DynamicDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IDynamicAddContract;
 import com.kw.app.chinesemedicine.mvp.model.DynamicAddModel;
@@ -20,14 +22,14 @@ public class DynamicAddPresenter extends BasePresenter<IDynamicAddContract.IDyna
         mDynamicAddModel = new DynamicAddModel();
     }
 
-    public void submit(final DynamicDALEx data){
+    public void submit(Context context,final DynamicDALEx data){
         if(!mView.checkNet()){
             mView.showNoNet();
             return;
         }
         mView.showLoading("请稍候，正在发布...");
 
-        mDynamicAddModel.submit(data, new ICallBack<String>() {
+        mDynamicAddModel.submit(context,data, new ICallBack<String>() {
             @Override
             public void onSuccess(String objectid) {
                 mView.dismissLoading(new OnDismissCallbackListener("提交成功"){

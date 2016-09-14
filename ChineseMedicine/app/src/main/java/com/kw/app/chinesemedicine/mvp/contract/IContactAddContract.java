@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.mvp.contract;
 
+import android.content.Context;
+
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.model.IBaseModel;
@@ -20,6 +22,6 @@ public interface IContactAddContract{
     }
 
     interface IContactAddModel extends IBaseModel {
-        void submit(ContactDALEx data, ICallBack<String> callBack);
+        void submit(Context context, ContactDALEx data, ICallBack<String> callBack);
     }
 }

@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
+import android.content.Context;
+
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IUserRegisterContract;
 import com.kw.app.chinesemedicine.mvp.model.UserRegisterModel;
@@ -20,14 +22,14 @@ public class UserRegisterPresenter extends BasePresenter<IUserRegisterContract.I
         mUserRegisterModel = new UserRegisterModel();
     }
 
-    public void register(final UserDALEx data){
+    public void register(Context context,final UserDALEx data){
         if(!mView.checkNet()){
             mView.showNoNet();
             return;
         }
         mView.showLoading("请稍候，正在注册中...");
 
-        mUserRegisterModel.register(data, new ICallBack<String>() {
+        mUserRegisterModel.register(context,data, new ICallBack<String>() {
             @Override
             public void onSuccess(final String userid) {
                 mView.dismissLoading(new OnDismissCallbackListener("注册成功") {

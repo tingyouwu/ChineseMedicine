@@ -1,5 +1,6 @@
 package com.kw.app.chinesemedicine.mvp.contract;
 
+import android.content.Context;
 
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.wty.app.library.callback.ICallBack;
@@ -13,7 +14,7 @@ import com.wty.app.library.widget.sweetdialog.OnDismissCallbackListener;
 public interface IUserRegisterContract {
 
     interface IUserRegisterModel extends IBaseModel {
-        void register(UserDALEx user, ICallBack<String> callBack);
+        void register(Context context,UserDALEx user, ICallBack<String> callBack);
     }
 
     interface IUserRegisterView extends IBaseView {
