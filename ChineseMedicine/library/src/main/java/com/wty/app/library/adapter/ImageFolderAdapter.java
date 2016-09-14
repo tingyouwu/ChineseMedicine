@@ -6,8 +6,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wty.app.library.R;
-import com.wty.app.library.entity.FolderModel;
-import com.wty.app.library.entity.ImageModel;
+import com.wty.app.library.bean.FolderModel;
+import com.wty.app.library.bean.ImageModel;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 

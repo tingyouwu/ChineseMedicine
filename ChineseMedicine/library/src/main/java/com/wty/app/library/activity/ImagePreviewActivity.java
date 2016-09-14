@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
@@ -12,7 +11,7 @@ import android.widget.Toast;
 import com.wty.app.library.R;
 import com.wty.app.library.adapter.ImagePreviewPagerAdapter;
 import com.wty.app.library.base.AppConstant;
-import com.wty.app.library.entity.ImageModel;
+import com.wty.app.library.bean.ImageModel;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 import com.wty.app.library.widget.viewpager.ImageViewPager;
 

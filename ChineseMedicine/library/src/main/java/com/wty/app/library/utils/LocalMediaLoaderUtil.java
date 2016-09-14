@@ -9,8 +9,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 
-import com.wty.app.library.entity.FolderModel;
-import com.wty.app.library.entity.ImageModel;
+import com.wty.app.library.bean.FolderModel;
+import com.wty.app.library.bean.ImageModel;
 
 import java.io.File;
 import java.util.ArrayList;

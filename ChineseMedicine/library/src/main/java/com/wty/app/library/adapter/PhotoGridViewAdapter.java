@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.wty.app.library.R;
-import com.wty.app.library.entity.ImageUriEntity;
+import com.wty.app.library.bean.ImageUriEntity;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 
@@ -203,12 +203,12 @@ public class PhotoGridViewAdapter extends BaseRecyclerViewMultiItemAdapter<Image
 		if(old_count_select>=Max_num)return;
 		if(old_count_select == 0){
 			//添加前一个数据都没有,默认只有一个+
-			super.add(this.mData.size(), new ImageUriEntity(ImageUriEntity.TYPE_DELETE, ""));
+			super.addOne(this.mData.size(), new ImageUriEntity(ImageUriEntity.TYPE_DELETE, ""));
 		}else if(old_count_select == Max_num - 1){
 			//干掉 +
 			super.remove(getItemCount()-2);
 		}
-		super.add(old_count_select,new ImageUriEntity(path));
+		super.addOne(old_count_select,new ImageUriEntity(path));
 		this.count_select ++;
 	}
 
@@ -219,7 +219,7 @@ public class PhotoGridViewAdapter extends BaseRecyclerViewMultiItemAdapter<Image
 			super.remove(this.mData.size()-1);
 		}else if(count_select == Max_num){
 			//删除前已经到达最大值,这时只显示一个- 需要把加号也显示出来
-			super.add(this.mData.size()-1,new ImageUriEntity(ImageUriEntity.TYPE_ADD, ""));
+			super.addOne(this.mData.size()-1,new ImageUriEntity(ImageUriEntity.TYPE_ADD, ""));
 		}
 
 		count_select --;//真实数据少一个

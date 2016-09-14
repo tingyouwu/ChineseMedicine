@@ -13,7 +13,7 @@ import android.widget.PopupWindow;
 
 import com.wty.app.library.R;
 import com.wty.app.library.adapter.ImageFolderAdapter;
-import com.wty.app.library.entity.FolderModel;
+import com.wty.app.library.bean.FolderModel;
 import com.wty.app.library.utils.ScreenUtil;
 import com.wty.app.library.utils.StatusBarUtil;
 

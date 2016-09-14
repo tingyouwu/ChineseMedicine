@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.devspark.appmsg.AppMsg;
 import com.wty.app.library.R;
 import com.wty.app.library.mvp.IBase;
 import com.wty.app.library.mvp.presenter.BasePresenter;
@@ -269,6 +270,13 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             }
         });
         dialog.show();
+    }
+
+    /**
+     * @Decription 显示Toast
+     **/
+    protected void showAppToast(String msg){
+        AppMsg.makeText(this,msg,AppMsg.STYLE_INFO).show();
     }
 
 }

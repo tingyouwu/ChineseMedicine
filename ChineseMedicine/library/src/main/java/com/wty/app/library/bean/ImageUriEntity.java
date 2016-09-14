@@ -1,6 +1,7 @@
-package com.wty.app.library.entity;
+package com.wty.app.library.bean;
 
 import android.text.TextUtils;
+
 import java.io.Serializable;
 
 /**

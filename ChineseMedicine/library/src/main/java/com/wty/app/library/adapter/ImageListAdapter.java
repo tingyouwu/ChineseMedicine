@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.wty.app.library.R;
 import com.wty.app.library.activity.ImageSelectorActivity;
-import com.wty.app.library.entity.ImageModel;
+import com.wty.app.library.bean.ImageModel;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wty.app.library.R;
-import com.wty.app.library.entity.ImageModel;
+import com.wty.app.library.bean.ImageModel;
 
 import java.util.ArrayList;
 import java.util.List;

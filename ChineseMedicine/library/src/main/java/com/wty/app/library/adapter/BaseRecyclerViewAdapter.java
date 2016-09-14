@@ -87,7 +87,12 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
 
     }
 
-    public void add(int position, T item) {
+    public void addOne(T item) {
+        mData.add(item);
+        notifyItemInserted(mData.size());
+    }
+
+    public void addOne(int position, T item) {
         mData.add(position, item);
         notifyItemInserted(position);
     }
