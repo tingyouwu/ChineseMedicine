@@ -17,6 +17,7 @@ import java.util.List;
 public class NewFriendDALEx extends SqliteBaseDALEx{
 
     public static final String STATUS = "status";
+    public static final String TIME = "time";
 
     @DatabaseField(primaryKey = true,Type = FieldType.VARCHAR)
     private String msgid;
@@ -35,6 +36,17 @@ public class NewFriendDALEx extends SqliteBaseDALEx{
 
     public static NewFriendDALEx get() {
         return SqliteDao.getDao(NewFriendDALEx.class);
+    }
+
+    /**获取本地所有的邀请信息
+     * @return
+     */
+    public List<NewFriendDALEx> getAllNewFriend(){
+
+        return findList(new QueryBuilder().selectAll()
+                .from(TABLE_NAME)
+                .orderBy(desc(NewFriendDALEx.TIME))
+                .build());
     }
 
     /**

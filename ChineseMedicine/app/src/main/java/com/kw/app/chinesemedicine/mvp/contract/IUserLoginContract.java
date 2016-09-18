@@ -2,6 +2,7 @@ package com.kw.app.chinesemedicine.mvp.contract;
 
 import android.content.Context;
 
+import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.model.IBaseModel;
 import com.wty.app.library.mvp.view.IBaseView;
@@ -13,7 +14,7 @@ import com.wty.app.library.widget.sweetdialog.OnDismissCallbackListener;
 public interface IUserLoginContract {
 
     interface IUserLoginModel extends IBaseModel {
-        void login(Context context,String name, String psw, boolean isAutoLogin, ICallBack<String> callBack);
+        void login(Context context,String name, String psw, boolean isAutoLogin, ICallBack<UserBmob> callBack);
     }
 
     interface IUserLoginView extends IBaseView {
@@ -21,7 +22,7 @@ public interface IUserLoginContract {
         void dismissLoading(OnDismissCallbackListener callback);
         boolean checkNet();
         void showNoNet();
-        void finishActivity();
+        void finishActivity(UserBmob user);
     }
 
 }

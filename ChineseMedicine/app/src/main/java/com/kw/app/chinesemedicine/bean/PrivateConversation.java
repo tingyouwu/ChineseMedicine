@@ -21,6 +21,8 @@ import cn.bmob.newim.bean.BmobIMMessageType;
  */
 public class PrivateConversation extends Conversation{
 
+    public static final int PRIVATE = 1;
+
     private BmobIMConversation conversation;
     private BmobIMMessage lastMsg;
 

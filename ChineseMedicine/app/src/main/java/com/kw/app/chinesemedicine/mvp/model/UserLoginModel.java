@@ -18,7 +18,7 @@ import cn.bmob.v3.listener.SaveListener;
 public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
 
     @Override
-    public void login(final Context context, final String name, final String psw, final boolean isAutoLogin, final ICallBack<String> callBack) {
+    public void login(final Context context, final String name, final String psw, final boolean isAutoLogin, final ICallBack<UserBmob> callBack) {
         final UserBmob bu2 = new UserBmob();
         bu2.setUsername(name);
         bu2.setPassword(psw);
@@ -27,7 +27,7 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
         bu2.login(context, new SaveListener() {
             @Override
             public void onSuccess() {
-                callBack.onSuccess(bu2.getObjectId());
+                callBack.onSuccess(bu2);
                 saveUserPreference(isAutoLogin,psw,bu2);
             }
 
@@ -38,7 +38,7 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
                     @Override
                     public void done(UserBmob bmobUser, BmobException e) {
                         if(bmobUser!=null){
-                            callBack.onSuccess(bmobUser.getObjectId());
+                            callBack.onSuccess(bmobUser);
                             saveUserPreference(isAutoLogin,psw,bmobUser);
                         }else{
                             callBack.onFaild(BmobExceptionCode.match(e.getErrorCode()));

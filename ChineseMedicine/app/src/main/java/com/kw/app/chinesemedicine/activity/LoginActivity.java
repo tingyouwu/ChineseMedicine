@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.kw.app.chinesemedicine.mvp.presenter.UserLoginPresenter;
@@ -21,6 +22,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMUserInfo;
 
 /**
  * @author wty
@@ -61,8 +64,8 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
         final boolean isAutoLogin = PreferenceUtil.getInstance().isAutoLogin();
 
         if(isAutoLogin){//自动登录就调整到主页面
-            finishActivity();
-
+            MainActivity.startMainActivity(this);
+            finish();
         }else{
             String lastOriginalAccount = PreferenceUtil.getInstance().getLastName();
             String lastPsw = PreferenceUtil.getInstance().getLastPassword();
@@ -130,7 +133,8 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     }
 
     @Override
-    public void finishActivity() {
+    public void finishActivity(UserBmob user) {
+        BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getLogourl()));
         MainActivity.startMainActivity(this);
         finish();
     }

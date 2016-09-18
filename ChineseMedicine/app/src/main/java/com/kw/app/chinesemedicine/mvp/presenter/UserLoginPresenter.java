@@ -2,6 +2,7 @@ package com.kw.app.chinesemedicine.mvp.presenter;
 
 import android.content.Context;
 
+import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.kw.app.chinesemedicine.mvp.model.UserLoginModel;
 import com.wty.app.library.callback.ICallBack;
@@ -28,11 +29,11 @@ public class UserLoginPresenter extends BasePresenter<IUserLoginContract.IUserLo
         }
 
         mView.showLoading("请稍候，登录中...");
-        mUserLoginModel.login(context,name, psw, isAutoLogin,new ICallBack<String>() {
+        mUserLoginModel.login(context,name, psw, isAutoLogin,new ICallBack<UserBmob>() {
             @Override
-            public void onSuccess(String objectid) {
+            public void onSuccess(UserBmob user) {
                 mView.dismissLoading(null);
-                mView.finishActivity();
+                mView.finishActivity(user);
             }
 
             @Override

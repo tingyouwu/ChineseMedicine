@@ -7,6 +7,7 @@ import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.mvp.view.fragment.ContactFragment;
 import com.kw.app.chinesemedicine.mvp.view.fragment.DynamicFragment;
+import com.kw.app.chinesemedicine.mvp.view.fragment.MessageFragment;
 import com.kw.app.chinesemedicine.mvp.view.fragment.MySelfFragment;
 import com.orhanobut.logger.Logger;
 import com.wty.app.bmobim.event.RefreshEvent;
@@ -56,8 +57,9 @@ public class MainActivity extends BaseActivity {
         //恢复选项状态
         navigateTabBar.onRestoreInstanceState(savedInstanceState);
 
-        navigateTabBar.addTab(DynamicFragment.class, new TabStripView.TabParam(R.drawable.ic_tab_home_normal, R.drawable.ic_tab_home_pressed, "发现"));
+        navigateTabBar.addTab(MessageFragment.class, new TabStripView.TabParam(R.drawable.ic_tab_home_normal, R.drawable.ic_tab_home_pressed, "消息"));
         navigateTabBar.addTab(ContactFragment.class, new TabStripView.TabParam(R.drawable.ic_tab_contact_normal, R.drawable.ic_tab_contact_pressed, "通讯录"));
+        navigateTabBar.addTab(DynamicFragment.class, new TabStripView.TabParam(R.drawable.ic_tab_home_normal, R.drawable.ic_tab_home_pressed, "发现"));
         navigateTabBar.addTab(MySelfFragment.class,new TabStripView.TabParam(R.drawable.ic_tab_setting_normal,R.drawable.ic_tab_setting_pressed,"设置"));
 
         UserBmob user = BmobUser.getCurrentUser(this, UserBmob.class);
