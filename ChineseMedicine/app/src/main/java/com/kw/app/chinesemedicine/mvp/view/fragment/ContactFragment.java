@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.devspark.appmsg.AppMsg;
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.activity.SearchUserActivity;
 import com.kw.app.chinesemedicine.adapter.ContactAdapter;
 import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
@@ -106,7 +107,7 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
         activity.getDefaultNavigation().setRightButton("添加", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContactAddActivity.startContactAddActivity(getContext());
+                SearchUserActivity.startSearchUserActivity(getActivity());
             }
         });
     }
