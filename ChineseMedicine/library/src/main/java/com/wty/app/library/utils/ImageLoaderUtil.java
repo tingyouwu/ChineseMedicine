@@ -3,6 +3,7 @@ package com.wty.app.library.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -11,6 +12,7 @@ import com.wty.app.library.R;
 import java.io.File;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.CropSquareTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 
 /**
@@ -81,6 +83,7 @@ public class ImageLoaderUtil {
      * @param view the imageView.
      */
     public static void loadCircle(Context context, String url, ImageView view) {
+        if(TextUtils.isEmpty(url))return;
         Glide.with(context)
                 .load(url)
                 .bitmapTransform(new CropCircleTransformation(context))
@@ -96,9 +99,10 @@ public class ImageLoaderUtil {
      * @param view the imageView.
      */
     public static void loadSquare(Context context, String url, ImageView view) {
+        if(TextUtils.isEmpty(url))return;
         Glide.with(context)
                 .load(url)
-                .bitmapTransform(new CropSquareTransformation(context))
+                .bitmapTransform(new RoundedCornersTransformation(context,5,0))
                 .placeholder(R.drawable.img_default_loading)
                 .error(R.drawable.img_error_fail)
                 .into(view);

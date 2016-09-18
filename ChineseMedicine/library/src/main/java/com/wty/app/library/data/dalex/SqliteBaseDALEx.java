@@ -31,7 +31,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 	private static final long serialVersionUID = 1L;
 	protected String TABLE_NAME = "";
 	protected String SQL_CREATETABLE = "";
-	protected int indexId;
+	protected long indexId;
 
 	public SqliteBaseDALEx() {
 		if(TextUtils.isEmpty(TABLE_NAME)){
@@ -103,14 +103,14 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 	 * @Decription 判断表是否没有任何数据
 	 **/
 	public boolean isTableEmpty(){
-		int count = 0;
+		long count = 0;
 		Cursor cursor = null;
         try {
 			AppDBHelper db = getDB();
             if (db.isTableExits(TABLE_NAME)) {
                 cursor = db.find("select count(*) from "+ TABLE_NAME,new String[] {});
                 if (cursor != null && cursor.moveToNext()) {
-                	count = cursor.getInt(0);
+                	count = cursor.getLong(0);
                 }
             }
         } catch (Exception e) {
@@ -210,7 +210,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 					if (value.equals("")) {
 						f.set(this, 0);
 					} else {
-						f.set(this, Integer.valueOf(value));
+						f.set(this, Long.valueOf(value));
 					}
 				} else if (type == DatabaseField.FieldType.VARCHAR) {
 					f.set(this, value);
@@ -257,7 +257,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
             int indexId_InCursor = cursorIndex.get("id");
 
             if(indexId_InCursor!= -1 ){
-                this.indexId = cursor.getInt(indexId_InCursor);
+                this.indexId = cursor.getLong(indexId_InCursor);
             }
 
 			for (Map.Entry<String, Integer> entry : cursorIndex.entrySet()) {
@@ -269,7 +269,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 					if (t == DatabaseField.FieldType.VARCHAR) {
 						f.set(this, cursor.getString(entry.getValue()));
 					} else if (t == DatabaseField.FieldType.INT) {
-						f.set(this, cursor.getInt(entry.getValue()));
+						f.set(this, cursor.getLong(entry.getValue()));
 					} else if (t == DatabaseField.FieldType.REAL) {
 						f.set(this, cursor.getFloat(entry.getValue()));
 					}
@@ -393,7 +393,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 	/**
 	 * @Decription 获取索引id
 	 **/
-    public int getIndexId() {
+    public long getIndexId() {
         return indexId;
     }
 

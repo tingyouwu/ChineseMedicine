@@ -103,4 +103,8 @@
         <attr name="animate" format="reference|boolean"></attr>
     </declare-styleable>
 
+    <declare-styleable name="UnreadView">
+        <attr name="unread" format="integer" />
+    </declare-styleable>
+
 </resources>
