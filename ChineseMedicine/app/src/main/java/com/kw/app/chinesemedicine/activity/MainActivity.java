@@ -52,39 +52,25 @@ public class MainActivity extends BaseActivity implements ObseverListener {
     public void onInitView(Bundle savedInstanceState) {
         //对应xml中的containerId
 
-        UserBmob user = BmobUser.getCurrentUser(CMApplication.getInstance(), UserBmob.class);
-        BmobIM.connect(user.getObjectId(), new ConnectListener() {
+        //监听连接状态，也可通过BmobIM.getInstance().getCurrentStatus()来获取当前的长连接状态
+        BmobIM.getInstance().setOnConnectStatusChangeListener(new ConnectStatusChangeListener() {
             @Override
-            public void done(String uid, BmobException e) {
-                if (e == null) {
-                    Logger.i("connect success");
-                    //服务器连接成功就发送一个更新事件，同步更新会话及主页的小红点
+            public void onChange(ConnectionStatus status) {
+
+                if(status.getCode()==ConnectionStatus.CONNECTED.getCode()){
+                    //连接成功
 //                    EventBus.getDefault().post(new RefreshEvent());
-                } else {
-                    AppLogUtil.e(e.getErrorCode() + "/" + e.getMessage());
+                }else if(status.getCode()==ConnectionStatus.CONNECTING.getCode()){
+                    //正在连接
+                }else if(status.getCode()==ConnectionStatus.DISCONNECT.getCode()){
+                    //断开连接
+                }else if(status.getCode()==ConnectionStatus.KICK_ASS.getCode()){
+                    //被人踢下线
                 }
+
+                showAppToast("" + status.getMsg());
             }
         });
-
-//        //监听连接状态，也可通过BmobIM.getInstance().getCurrentStatus()来获取当前的长连接状态
-//        BmobIM.getInstance().setOnConnectStatusChangeListener(new ConnectStatusChangeListener() {
-//            @Override
-//            public void onChange(ConnectionStatus status) {
-//
-//                if(status.getCode()==ConnectionStatus.CONNECTED.getCode()){
-//                    //连接成功
-////                    EventBus.getDefault().post(new RefreshEvent());
-//                }else if(status.getCode()==ConnectionStatus.CONNECTING.getCode()){
-//                    //正在连接
-//                }else if(status.getCode()==ConnectionStatus.DISCONNECT.getCode()){
-//                    //断开连接
-//                }else if(status.getCode()==ConnectionStatus.KICK_ASS.getCode()){
-//                    //被人踢下线
-//                }
-//
-//                showAppToast("" + status.getMsg());
-//            }
-//        });
 
         navigateTabBar.setFrameLayoutId(R.id.main_container);
         //对应xml中的navigateTabTextColor
@@ -130,6 +116,7 @@ public class MainActivity extends BaseActivity implements ObseverListener {
     protected void onDestroy() {
         super.onDestroy();
         //清理导致内存泄露的资源
+        BmobIM.getInstance().disConnect();
         BmobIM.getInstance().clear();
     }
 }

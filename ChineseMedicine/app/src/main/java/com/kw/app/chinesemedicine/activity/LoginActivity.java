@@ -13,8 +13,10 @@ import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.kw.app.chinesemedicine.mvp.presenter.UserLoginPresenter;
 import com.kw.app.chinesemedicine.widget.login.LoginInputView;
+import com.orhanobut.logger.Logger;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.base.AppConstant;
+import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.CommonUtil;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
@@ -25,6 +27,9 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMUserInfo;
+import cn.bmob.newim.listener.ConnectListener;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
 
 /**
  * @author wty
@@ -65,8 +70,19 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
         final boolean isAutoLogin = PreferenceUtil.getInstance().isAutoLogin();
 
         if(isAutoLogin){//自动登录就调整到主页面
-            MainActivity.startMainActivity(this);
-            finish();
+            BmobIM.connect(PreferenceUtil.getInstance().getLastAccount(), new ConnectListener() {
+                @Override
+                public void done(String uid, BmobException e) {
+                    if (e == null) {
+                        AppLogUtil.i("connect success");
+                        MainActivity.startMainActivity(LoginActivity.this);
+                        finish();
+                    } else {
+                        AppLogUtil.e(e.getErrorCode() + "/" + e.getMessage());
+                    }
+                }
+            });
+
         }else{
             String lastOriginalAccount = PreferenceUtil.getInstance().getLastName();
             String lastPsw = PreferenceUtil.getInstance().getLastPassword();
@@ -135,7 +151,18 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
 
     @Override
     public void finishActivity(UserBmob user) {
-        MainActivity.startMainActivity(this);
-        finish();
+
+        BmobIM.connect(user.getObjectId(), new ConnectListener() {
+            @Override
+            public void done(String uid, BmobException e) {
+                if (e == null) {
+                    AppLogUtil.i("connect success");
+                    MainActivity.startMainActivity(LoginActivity.this);
+                    finish();
+                } else {
+                    AppLogUtil.e(e.getErrorCode() + "/" + e.getMessage());
+                }
+            }
+        });
     }
 }
