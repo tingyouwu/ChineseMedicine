@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.kw.app.chinesemedicine"
-    android:installLocation="auto">
+    package="com.kw.app.chinesemedicine">
 
     <!--允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,12 +11,17 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--获取sd卡写的权限，用于文件上传和下载-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--允许读取手机状态 用于创建BmobInstallation-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!-- 摄像头 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 录音 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 通知震动 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".base.CMApplication"
@@ -31,6 +35,10 @@
         <meta-data
             android:name="dbversion"
             android:value="1" />
+
+        <meta-data
+            android:name="Bmob_APP_KEY"
+            android:value="23913c4360866d3d50aee19a56fa24ff" />
 
         <activity
             android:name=".activity.LoginActivity"
@@ -69,6 +77,29 @@
         <activity
             android:name=".activity.UserInfoActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+        <activity
+            android:name=".activity.ChatActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+
+        <!-- bmobim start -->
+        <receiver android:name="cn.bmob.newim.core.ConnectChangeReceiver">
+            <intent-filter>
+                <action android:name="cn.bmob.action.RECONNECT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="cn.bmob.newim.core.service.BmobIMService"
+            android:process=":bmobcore" />
+        <service
+            android:name="cn.bmob.newim.core.service.NotifyService"
+            android:process=":bmobcore" />
+        <service android:name="cn.bmob.newim.core.service.ReConnectService" />
+        <service android:name="cn.bmob.newim.core.service.HeartBeatService" />
 
     </application>
 

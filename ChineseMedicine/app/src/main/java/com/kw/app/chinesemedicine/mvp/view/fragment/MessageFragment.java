@@ -8,9 +8,9 @@ import com.devspark.appmsg.AppMsg;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.adapter.ConversationAdapter;
 import com.kw.app.chinesemedicine.bean.Conversation;
+import com.kw.app.chinesemedicine.event.RefreshEvent;
 import com.kw.app.chinesemedicine.mvp.contract.IMessageContract;
 import com.kw.app.chinesemedicine.mvp.presenter.MessagePresenter;
-import com.wty.app.bmobim.event.RefreshEvent;
 import com.wty.app.library.fragment.BaseFragment;
 import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.widget.loadingview.LoadingState;
@@ -58,7 +58,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
         listview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                mPresenter.refreshMessage(getContext());
+                mPresenter.refreshConversations(getContext());
             }
 
             @Override
@@ -68,15 +68,19 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
         });
         listview.setAdapter(adapter);
 
-        mLoadingView.withOnEmptyListener(new OnEmptyListener() {
-            @Override
-            public void onClick() {
-            }
-        }).withOnRetryListener(new OnRetryListener() {
-            @Override
-            public void onRetry() {
-            }
-        }).build();
+        mLoadingView.withLoadedEmptyText("暂时没有新消息")
+                    .withOnEmptyListener(new OnEmptyListener() {
+                        @Override
+                        public void onClick() {
+                            mPresenter.getAllConversations(getContext());
+                        }
+                    })
+                    .withOnRetryListener(new OnRetryListener() {
+                        @Override
+                        public void onRetry() {
+                            mPresenter.getAllConversations(getContext());
+                        }
+                    }).build();
     }
 
     @Override
@@ -87,11 +91,6 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     @Override
     public void initFragmentActionBar(String title) {
         super.initFragmentActionBar(title);
-        activity.getDefaultNavigation().setRightButton("发布", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
     }
 
     @Override
@@ -107,7 +106,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     @Override
     public void refreshMessage(List<Conversation> list) {
         if(list.size()!=0){
-            adapter.addData(list);
+            adapter.retsetData(list);
             mLoadingView.setVisibility(View.GONE);
         }else{
             if(adapter.getItemCount()==0){
@@ -116,6 +115,11 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
                 mLoadingView.setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    public void doWorkOnResume() {
+        mPresenter.getAllConversations(getContext());
     }
 
     @Override
@@ -142,7 +146,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     public void onEventMainThread(RefreshEvent event){
         AppLogUtil.i("---会话页接收到自定义消息---");
         //因为新增`新朋友`这种会话类型
-        adapter.retsetData(mPresenter.getConversations(getContext()));
+        mPresenter.refreshConversations(getContext());
     }
 
     /**注册离线消息接收事件
@@ -151,7 +155,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     @Subscribe
     public void onEventMainThread(OfflineMessageEvent event){
         //重新刷新列表
-        adapter.retsetData(mPresenter.getConversations(getContext()));
+        mPresenter.refreshConversations(getContext());
     }
 
     /**注册消息接收事件
@@ -162,7 +166,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     @Subscribe
     public void onEventMainThread(MessageEvent event){
         //重新获取本地消息并刷新列表
-        adapter.retsetData(mPresenter.getConversations(getContext()));
+        mPresenter.refreshConversations(getContext());
     }
 
 }

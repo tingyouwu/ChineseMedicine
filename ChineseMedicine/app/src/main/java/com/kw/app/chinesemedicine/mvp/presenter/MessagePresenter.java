@@ -22,32 +22,34 @@ public class MessagePresenter extends BasePresenter<IMessageContract.IMessageVie
     }
 
     /**
-     * @Description 刷新更多朋友圈动态
+     * @Description 加载所有对话
      **/
-    public List<Conversation> refreshMessage(Context context){
+    public void getAllConversations(Context context){
         List<Conversation> conversation = new ArrayList<Conversation>();
+        conversation.clear();
+        if(!mView.checkNet()){
+            mView.showNoNet();
+            return ;
+        }
+
+        conversation =  mMessageModel.refreshMessage(context);
+        mView.refreshMessage(conversation);
+    }
+
+    /**
+     * @Description 刷新所有对话
+     **/
+    public void refreshConversations(Context context){
+        List<Conversation> conversation = new ArrayList<Conversation>();
+        conversation.clear();
         if(!mView.checkNet()){
             mView.showNoNet();
             mView.onRefreshComplete();
-            return conversation;
+            return ;
         }
 
         conversation =  mMessageModel.refreshMessage(context);
         mView.onRefreshComplete();
-        return conversation;
-    }
-
-    /**
-     * @Description 加载所有对话
-     **/
-    public List<Conversation> getConversations(Context context){
-        List<Conversation> conversation = new ArrayList<Conversation>();
-        if(!mView.checkNet()){
-            mView.showNoNet();
-            return conversation;
-        }
-
-        conversation =  mMessageModel.refreshMessage(context);
-        return conversation;
+        mView.refreshMessage(conversation);
     }
 }

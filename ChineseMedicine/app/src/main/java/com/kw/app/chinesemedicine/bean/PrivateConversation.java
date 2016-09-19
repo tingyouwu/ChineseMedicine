@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.kw.app.chinesemedicine.R;
-import com.wty.app.bmobim.ui.ChatActivity;
+import com.kw.app.chinesemedicine.activity.ChatActivity;
 
 import java.util.List;
 

@@ -82,15 +82,16 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
         });
         listview.setAdapter(adapter);
 
-        mLoadingView.withOnEmptyListener(new OnEmptyListener() {
-            @Override
-            public void onClick() {
-            }
-        }).withOnRetryListener(new OnRetryListener() {
-            @Override
-            public void onRetry() {
-            }
-        }).build();
+        mLoadingView.withLoadedEmptyText("暂时没有联系人")
+                    .withOnEmptyListener(new OnEmptyListener() {
+                        @Override
+                        public void onClick() {
+                        }
+                    }).withOnRetryListener(new OnRetryListener() {
+                        @Override
+                        public void onRetry() {
+                        }
+                    }).build();
 
         mPresenter.loadContactFirst();
         filter_letters.setTextView(tv_letter);

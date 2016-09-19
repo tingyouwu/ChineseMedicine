@@ -12,9 +12,9 @@ import com.kw.app.chinesemedicine.bean.AddFriendMessage;
 import com.kw.app.chinesemedicine.bean.AgreeAddFriendMessage;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
+import com.kw.app.chinesemedicine.event.RefreshEvent;
 import com.kw.app.chinesemedicine.listener.UpdateCacheListener;
 import com.orhanobut.logger.Logger;
-import com.wty.app.bmobim.event.RefreshEvent;
 import com.wty.app.library.utils.AppLogUtil;
 
 import org.greenrobot.eventbus.EventBus;
