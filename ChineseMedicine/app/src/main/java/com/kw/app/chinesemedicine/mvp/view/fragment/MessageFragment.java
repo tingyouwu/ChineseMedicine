@@ -146,7 +146,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     public void onEventMainThread(RefreshEvent event){
         AppLogUtil.i("---会话页接收到自定义消息---");
         //因为新增`新朋友`这种会话类型
-        mPresenter.refreshConversations(getContext());
+//        mPresenter.refreshConversations(getContext());
     }
 
     /**注册离线消息接收事件
@@ -155,7 +155,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     @Subscribe
     public void onEventMainThread(OfflineMessageEvent event){
         //重新刷新列表
-        mPresenter.refreshConversations(getContext());
+//        mPresenter.refreshConversations(getContext());
     }
 
     /**注册消息接收事件
@@ -166,7 +166,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     @Subscribe
     public void onEventMainThread(MessageEvent event){
         //重新获取本地消息并刷新列表
-        mPresenter.refreshConversations(getContext());
+//        mPresenter.refreshConversations(getContext());
     }
 
 }

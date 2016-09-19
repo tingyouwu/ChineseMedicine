@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.base.CMApplication;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
@@ -76,7 +77,7 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
                 public void onLogin() {
                     CommonUtil.keyboardControl(LoginActivity.this, false, mloginInputview.getAccountInput());
                     if (submit()) {
-                        mPresenter.login(LoginActivity.this,mloginInputview.getAccount().toString(), mloginInputview.getPassword().toString(), mloginInputview.isRememberPsw());
+                        mPresenter.login(CMApplication.getInstance(),mloginInputview.getAccount().toString(), mloginInputview.getPassword().toString(), mloginInputview.isRememberPsw());
                     }
                 }
             });
@@ -134,7 +135,6 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
 
     @Override
     public void finishActivity(UserBmob user) {
-        BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getLogourl()));
         MainActivity.startMainActivity(this);
         finish();
     }

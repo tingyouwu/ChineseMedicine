@@ -8,6 +8,8 @@ import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.utils.PreferenceUtil;
 
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -28,6 +30,7 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
             @Override
             public void onSuccess() {
                 callBack.onSuccess(bu2);
+                //BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(bu2.getObjectId(), bu2.getUsername(), bu2.getLogourl()));
                 saveUserPreference(isAutoLogin,psw,bu2);
             }
 
@@ -39,6 +42,7 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
                     public void done(UserBmob bmobUser, BmobException e) {
                         if(bmobUser!=null){
                             callBack.onSuccess(bmobUser);
+                            //BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(bu2.getObjectId(), bu2.getUsername(), bu2.getLogourl()));
                             saveUserPreference(isAutoLogin,psw,bmobUser);
                         }else{
                             callBack.onFaild(BmobExceptionCode.match(e.getErrorCode()));

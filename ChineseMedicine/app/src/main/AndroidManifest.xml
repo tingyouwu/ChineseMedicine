@@ -3,19 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kw.app.chinesemedicine">
 
-    <!--允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--获取GSM（2g）、WCDMA（联通3g）等网络状态的信息  -->
+    <!-- 监听网络的变化 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--获取wifi网络状态的信息 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--允许读取手机状态 用于创建BmobInstallation-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!-- 设备休眠 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- sd卡存储 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 摄像头 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- 录音 -->
@@ -35,10 +32,6 @@
         <meta-data
             android:name="dbversion"
             android:value="1" />
-
-        <meta-data
-            android:name="Bmob_APP_KEY"
-            android:value="23913c4360866d3d50aee19a56fa24ff" />
 
         <activity
             android:name=".activity.LoginActivity"
@@ -100,6 +93,10 @@
             android:process=":bmobcore" />
         <service android:name="cn.bmob.newim.core.service.ReConnectService" />
         <service android:name="cn.bmob.newim.core.service.HeartBeatService" />
+
+        <meta-data
+            android:name="Bmob_APP_KEY"
+            android:value="23913c4360866d3d50aee19a56fa24ff" />
 
     </application>
 
