@@ -164,6 +164,10 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         onToast(new OnDismissCallbackListener(msg, SweetAlertDialog.ERROR_TYPE));
     }
 
+    public void showAppToast(final String msg){
+        activity.showAppToast(msg);
+    }
+
     /**
      * @Decription 提示加载中
      **/

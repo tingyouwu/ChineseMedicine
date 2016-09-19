@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -44,9 +45,9 @@ public class LoadingView extends FrameLayout {
     public boolean btn_error_ennable = true;
     public boolean btn_nonet_ennable = true;
 
-    public String btn_empty_text = "再试一次";
-    public String btn_error_text = "再试一次";
-    public String btn_nonet_text = "再试一次";
+    public String btn_empty_text = "刷新一下";
+    public String btn_error_text = "刷新一下";
+    public String btn_nonet_text = "刷新一下";
 
     public LoadingView(Context context) {
         this(context,null);
@@ -279,5 +280,15 @@ public class LoadingView extends FrameLayout {
         } else {
             setState(LoadingState.STATE_NO_NET);
         }
+
+        /**
+         * 禁止手指滑动事件被底层view接收
+         **/
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
     }
 }

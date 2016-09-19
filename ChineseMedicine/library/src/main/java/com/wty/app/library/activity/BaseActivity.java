@@ -275,7 +275,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     /**
      * @Decription 显示Toast
      **/
-    protected void showAppToast(String msg){
+    public void showAppToast(String msg){
         AppMsg.makeText(this,msg,AppMsg.STYLE_INFO).show();
     }
 
