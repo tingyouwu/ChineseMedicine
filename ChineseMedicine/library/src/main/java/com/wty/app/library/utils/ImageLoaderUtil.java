@@ -51,6 +51,20 @@ public class ImageLoaderUtil {
     }
 
     /**
+     * 加载圆形图片
+     * @param context context.
+     * @param view the imageView.
+     */
+    public static void loadCircle(Context context, int resId, ImageView view) {
+        Glide.with(context)
+                .load(resId)
+                .bitmapTransform(new CropCircleTransformation(context))
+                .placeholder(R.drawable.img_default_loading)
+                .error(R.drawable.img_error_fail)
+                .into(view);
+    }
+
+    /**
      * 加载SD卡图片文件
      * @param context
      * @param file
@@ -89,6 +103,21 @@ public class ImageLoaderUtil {
                 .bitmapTransform(new CropCircleTransformation(context))
                 .placeholder(R.drawable.img_default_loading)
                 .error(R.drawable.img_error_fail)
+                .into(view);
+    }
+
+    /**
+     * 加载圆形图片
+     * @param context context.
+     * @param url
+     * @param view the imageView.
+     */
+    public static void loadCircle(Context context, String url, int defaulticon,ImageView view) {
+        Glide.with(context)
+                .load(url)
+                .bitmapTransform(new CropCircleTransformation(context))
+                .placeholder(defaulticon)
+                .error(defaulticon)
                 .into(view);
     }
 

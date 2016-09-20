@@ -30,7 +30,9 @@ public class SqliteAnnotationTable {
 	}
 
 	public SqliteAnnotationField getField(String name){
-		if(fieldMaps==null)fieldMaps = new HashMap<String,SqliteAnnotationField>();
+		if(fieldMaps==null){
+			getFields();
+		}
 		return fieldMaps.get(name);
 	}
 

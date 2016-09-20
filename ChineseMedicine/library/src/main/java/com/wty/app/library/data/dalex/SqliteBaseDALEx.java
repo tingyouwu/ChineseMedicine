@@ -261,6 +261,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
             }
 
 			for (Map.Entry<String, Integer> entry : cursorIndex.entrySet()) {
+				if(entry.getKey().equals("id"))continue;
 				SqliteAnnotationField saf = table.getField(entry.getKey());
 				DatabaseField.FieldType t = saf.getType();
 				Field f = saf.getField();

@@ -35,10 +35,10 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  **/
 public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity implements IBase<P> {
 
-    private NavigationText navigation;
+    protected NavigationText navigation;
     protected P mPresenter;
     protected View mRootView;
-    private SystemBarTintManager tintManager;//沉浸式状态栏
+    protected SystemBarTintManager tintManager;//沉浸式状态栏
     public SweetAlertDialog loadingdialog;
 
 
@@ -86,7 +86,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     }
 
     @TargetApi(19)
-    private void initStatusBar() {
+    protected void initStatusBar() {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && isEnableStatusBar()) {
             getWindow().addFlags(
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
