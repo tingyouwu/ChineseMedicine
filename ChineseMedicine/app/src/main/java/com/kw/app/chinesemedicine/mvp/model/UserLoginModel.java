@@ -10,6 +10,7 @@ import com.wty.app.library.utils.PreferenceUtil;
 
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMUserInfo;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -25,13 +26,12 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
         bu2.setUsername(name);
         bu2.setPassword(psw);
         //首先尝试用户名+密码登陆
-
         bu2.login(context, new SaveListener() {
             @Override
             public void onSuccess() {
                 callBack.onSuccess(bu2);
                 //BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(bu2.getObjectId(), bu2.getUsername(), bu2.getLogourl()));
-                saveUserPreference(isAutoLogin,psw,bu2);
+                saveUserPreference(isAutoLogin,psw, BmobUser.getCurrentUser(context, UserBmob.class));
             }
 
             @Override
@@ -43,7 +43,7 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
                         if(bmobUser!=null){
                             callBack.onSuccess(bmobUser);
                             //BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(bu2.getObjectId(), bu2.getUsername(), bu2.getLogourl()));
-                            saveUserPreference(isAutoLogin,psw,bmobUser);
+                            saveUserPreference(isAutoLogin,psw,BmobUser.getCurrentUser(context,UserBmob.class));
                         }else{
                             callBack.onFaild(BmobExceptionCode.match(e.getErrorCode()));
                         }

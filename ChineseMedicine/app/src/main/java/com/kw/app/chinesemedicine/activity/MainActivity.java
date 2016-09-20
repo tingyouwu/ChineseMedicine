@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity implements ObseverListener {
                     //被人踢下线
                 }
 
-                showAppToast("" + status.getMsg());
+                showAppToast("connectionStatus:" + status.getMsg());
             }
         });
 

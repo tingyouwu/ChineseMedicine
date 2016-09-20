@@ -1,9 +1,15 @@
 package com.kw.app.chinesemedicine.adapter;
 
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.wty.app.bmobim.R;
 import com.wty.app.library.adapter.BaseRecyclerViewMultiItemAdapter;
+import com.wty.app.library.utils.ImageLoaderUtil;
+import com.wty.app.library.utils.TimeUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 
 import java.util.List;
@@ -11,6 +17,7 @@ import java.util.List;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.newim.bean.BmobIMMessageType;
+import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.v3.BmobUser;
 
 /**
@@ -60,7 +67,7 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
         addItemType(TYPE_RECEIVER_VOICE,R.layout.item_chat_received_voice);
         addItemType(TYPE_SEND_VIDEO, R.layout.item_chat_sent_message);
         addItemType(TYPE_RECEIVER_VIDEO, R.layout.item_chat_received_message);
-        addItemType(TYPE_AGREE,R.layout.item_chat_agree);
+        addItemType(TYPE_AGREE,R.layout.item_chat_received_message);
     }
 
     public int findPosition(BmobIMMessage message) {
@@ -97,14 +104,25 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
 
     @Override
     protected void bindView(BaseRecyclerViewHolder helper, BmobIMMessage item, int position) {
+
+        //首先处理一下头像
+        ImageView icon = helper.getView(R.id.iv_avatar);
+        final BmobIMUserInfo info = item.getBmobIMUserInfo();
+        ImageLoaderUtil.loadCircle(mContext,info.getAvatar(),R.mipmap.img_contact_default,icon);
+
+        TextView tv_time = helper.getView(R.id.tv_time);
+        tv_time.setText(TimeUtil.getChatTime(false, item.getCreateTime()));
+        tv_time.setVisibility(shouldShowTime(position)? View.VISIBLE:View.GONE);
+
         switch (helper.getItemViewType()){
             case TYPE_AGREE:
+            case TYPE_RECEIVER_TXT:
+                TextView txt = helper.getView(R.id.tv_message);
+                txt.setText(item.getContent());
                 break;
             case TYPE_RECEIVER_IMAGE:
                 break;
             case TYPE_RECEIVER_LOCATION:
-                break;
-            case TYPE_RECEIVER_TXT:
                 break;
             case TYPE_RECEIVER_VIDEO:
                 break;

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_message"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -70,11 +71,12 @@
             android:textSize="@dimen/ts_10" />
 
         <com.wty.app.library.widget.UnreadTextView
+            android:id="@+id/tv_recent_unread"
             android:layout_alignParentRight="true"
             android:layout_below="@id/tv_recent_time"
             style="@style/style_text_white"
             android:layout_marginRight="10.0dip"
-            app:unread="999"
+            app:unread="10"
             android:textSize="13.0dip" />
 
     </RelativeLayout>

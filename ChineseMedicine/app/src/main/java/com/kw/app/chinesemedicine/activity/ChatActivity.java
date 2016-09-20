@@ -80,12 +80,7 @@ public class ChatActivity extends BaseActivity implements MessageListHandler {
 
     private List<BmobIMMessage> msgs = new ArrayList<BmobIMMessage>();
 
-    private Drawable[] drawable_Anims = new Drawable[] {
-            getResources().getDrawable(R.mipmap.chat_icon_voice2),
-            getResources().getDrawable(R.mipmap.chat_icon_voice3),
-            getResources().getDrawable(R.mipmap.chat_icon_voice4),
-            getResources().getDrawable(R.mipmap.chat_icon_voice5),
-            getResources().getDrawable(R.mipmap.chat_icon_voice6) };// 话筒动画
+    private Drawable[] drawable_Anims;// 话筒动画
 
     /**
      * 初始化标题栏
@@ -181,6 +176,14 @@ public class ChatActivity extends BaseActivity implements MessageListHandler {
      * @return void
      */
     private void initVoiceView() {
+
+        drawable_Anims = new Drawable[] {
+                getResources().getDrawable(R.mipmap.chat_icon_voice2),
+                getResources().getDrawable(R.mipmap.chat_icon_voice3),
+                getResources().getDrawable(R.mipmap.chat_icon_voice4),
+                getResources().getDrawable(R.mipmap.chat_icon_voice5),
+                getResources().getDrawable(R.mipmap.chat_icon_voice6) };// 话筒动画
+
         btn_speak.setOnTouchListener(new VoiceTouchListener());
         // 语音相关管理器
         recordManager = BmobRecordManager.getInstance(this);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.activity.NewFriendActivity;
 import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
 
 
@@ -23,7 +24,7 @@ public class NewFriendConversation extends Conversation{
     @Override
     public String getLastMessageContent() {
         if(lastFriend!=null){
-            Integer status =lastFriend.getStatus();
+            Long status =lastFriend.getStatus();
             String name = lastFriend.getName();
             if(TextUtils.isEmpty(name)){
                 name = lastFriend.getUid();
@@ -66,9 +67,7 @@ public class NewFriendConversation extends Conversation{
 
     @Override
     public void onClick(Context context) {
-//        Intent intent = new Intent();
-//        intent.setClass(context, NewFriendActivity.class);
-//        context.startActivity(intent);
+        NewFriendActivity.startNewFriendActivity(context);
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.kw.app.chinesemedicine.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.CommonUtil;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
+import com.wty.app.library.utils.SystemBarTintManager;
 
 import java.util.List;
 
@@ -115,11 +119,6 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
                 mloginInputview.setIsRememberPsw(true);
             }
         }
-    }
-
-    @Override
-    protected boolean isEnableStatusBar() {
-        return true;
     }
 
     @Override

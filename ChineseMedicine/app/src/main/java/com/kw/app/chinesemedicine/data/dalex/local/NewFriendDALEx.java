@@ -30,7 +30,7 @@ public class NewFriendDALEx extends SqliteBaseDALEx{
     @DatabaseField(Type = FieldType.VARCHAR)
     private String avatar;//发送者的头像
     @DatabaseField(Type = FieldType.INT)
-    private int status;
+    private long status;
     @DatabaseField(Type = FieldType.INT)
     private long time;
 
@@ -154,7 +154,7 @@ public class NewFriendDALEx extends SqliteBaseDALEx{
         this.avatar = avatar;
     }
 
-    public int getStatus() {
+    public long getStatus() {
         return status;
     }
 

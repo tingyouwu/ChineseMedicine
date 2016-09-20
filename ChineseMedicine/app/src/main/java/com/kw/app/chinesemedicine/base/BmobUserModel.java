@@ -143,7 +143,7 @@ public class BmobUserModel{
     }
 
     /**
-     * 同意添加好友：1、发送同意添加的请求，2、添加对方到自己的好友列表中
+     * 同意添加好友：添加对方到自己的好友列表中
      */
     public void agreeAddFriend(UserBmob friend,SaveListener listener){
         Friend f = new Friend();
