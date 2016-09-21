@@ -1,39 +1,39 @@
 package com.kw.app.chinesemedicine.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.base.CMApplication;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
+import com.kw.app.chinesemedicine.fakeserver.FakeServer;
+import com.kw.app.chinesemedicine.fakeserver.HttpUtil;
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.kw.app.chinesemedicine.mvp.presenter.UserLoginPresenter;
 import com.kw.app.chinesemedicine.widget.login.LoginInputView;
-import com.orhanobut.logger.Logger;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.base.AppConstant;
 import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.CommonUtil;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
-import com.wty.app.library.utils.SystemBarTintManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.newim.listener.ConnectListener;
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import io.rong.imlib.RongIMClient;
 
 /**
  * @author wty
@@ -151,17 +151,63 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     @Override
     public void finishActivity(UserBmob user) {
 
-        BmobIM.connect(user.getObjectId(), new ConnectListener() {
+        FakeServer.getToken(user, new HttpUtil.OnResponse() {
             @Override
-            public void done(String uid, BmobException e) {
-                if (e == null) {
-                    AppLogUtil.i("connect success");
-                    MainActivity.startMainActivity(LoginActivity.this);
-                    finish();
-                } else {
-                    AppLogUtil.e(e.getErrorCode() + "/" + e.getMessage());
+            public void onResponse(int code, String body) {
+                if (code != 200) {
+                    Toast.makeText(LoginActivity.this, body, Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                String token;
+                try {
+                    JSONObject jsonObj = new JSONObject(body);
+                    token = jsonObj.getString("token");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(LoginActivity.this, "Token 解析失败!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+
             }
         });
+
+//        BmobIM.connect(user.getObjectId(), new ConnectListener() {
+//            @Override
+//            public void done(String uid, BmobException e) {
+//                if (e == null) {
+//                    AppLogUtil.i("connect success");
+//                    MainActivity.startMainActivity(LoginActivity.this);
+//                    finish();
+//                } else {
+//                    AppLogUtil.e(e.getErrorCode() + "/" + e.getMessage());
+//                }
+//            }
+//        });
+    }
+
+
+    private void connect(String token) {
+        if (getApplicationInfo().packageName.equals(CMApplication.getMyProcessName())) {
+            RongIMClient.connect(token, new RongIMClient.ConnectCallback() {
+
+                @Override
+                public void onTokenIncorrect() {
+                    AppLogUtil.d("LoginActivity--onTokenIncorrect");
+                }
+
+                @Override
+                public void onSuccess(String userid) {
+                    AppLogUtil.d("LoginActivity--onSuccess---" + userid);
+                }
+
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+                    AppLogUtil.d("LoginActivity--onError" + errorCode);
+                }
+            });
+        }
     }
 }
