@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import cn.bmob.newim.bean.BmobIMExtraMessage;
 import cn.bmob.newim.bean.BmobIMMessage;
+import io.rong.message.ContactNotificationMessage;
 
 /**添加好友请求
  * @author :smile
@@ -59,6 +60,34 @@ public class AddFriendMessage extends BmobIMExtraMessage {
         return add;
     }
 
+    /**将ContactNotifiMessage转成NewFriend
+     * @param msg 消息
+     * @return
+     */
+    public static NewFriendDALEx convert(ContactNotificationMessage msg){
+        NewFriendDALEx add =new NewFriendDALEx();
+        String content = msg.getMessage();
+        add.setMsg(content);
+//        add.setTime(msg.getCreateTime());
+        add.setStatus(AddFriendMessage.STATUS_VERIFY_NONE);
+        try {
+            String extra = msg.getExtra();
+            if(!TextUtils.isEmpty(extra)){
+                JSONObject json =new JSONObject(extra);
+                String name = json.getString("name");
+                add.setName(name);
+                String avatar = json.getString("avatar");
+                add.setAvatar(avatar);
+                add.setUid(json.getString("uid"));
+                add.setMsgid(json.getString("msgid"));
+            }else{
+                Logger.i("AddFriendMessage的extra为空");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return add;
+    }
 
     @Override
     public String getMsgType() {

@@ -30,7 +30,6 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
             @Override
             public void onSuccess() {
                 callBack.onSuccess(bu2);
-                //BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(bu2.getObjectId(), bu2.getUsername(), bu2.getLogourl()));
                 saveUserPreference(isAutoLogin,psw, BmobUser.getCurrentUser(context, UserBmob.class));
             }
 
@@ -42,7 +41,6 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
                     public void done(UserBmob bmobUser, BmobException e) {
                         if(bmobUser!=null){
                             callBack.onSuccess(bmobUser);
-                            //BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(bu2.getObjectId(), bu2.getUsername(), bu2.getLogourl()));
                             saveUserPreference(isAutoLogin,psw,BmobUser.getCurrentUser(context,UserBmob.class));
                         }else{
                             callBack.onFaild(BmobExceptionCode.match(e.getErrorCode()));

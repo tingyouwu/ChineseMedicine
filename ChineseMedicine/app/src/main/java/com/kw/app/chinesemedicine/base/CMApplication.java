@@ -30,6 +30,7 @@ public class CMApplication extends MainApplication {
 		 */
 		if(getApplicationInfo().packageName.equals(getMyProcessName()) || "io.rong.push".equals(getMyProcessName())){
 			RongIMClient.init(this);
+			RongManager.init(this);
 		}
 
 	}

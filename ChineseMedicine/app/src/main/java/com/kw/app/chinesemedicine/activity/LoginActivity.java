@@ -30,9 +30,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.listener.ConnectListener;
-import cn.bmob.v3.exception.BmobException;
 import io.rong.imlib.RongIMClient;
 
 /**
@@ -58,6 +55,7 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     }
 
     private String userid;
+    private UserBmob user;
 
     @Override
     public UserLoginPresenter getPresenter() {
@@ -72,25 +70,18 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
         CommonUtil.keyboardControl(LoginActivity.this, false, mloginInputview.getAccountInput());
 
         final boolean isAutoLogin = PreferenceUtil.getInstance().isAutoLogin();
+        String name = PreferenceUtil.getInstance().getLastName();
+        String psw = PreferenceUtil.getInstance().getLastPassword();
+        String logourl = PreferenceUtil.getInstance().getLogoUrl();
+        String userid = PreferenceUtil.getInstance().getLastAccount();
 
         if(isAutoLogin){//自动登录就调整到主页面
-            BmobIM.connect(PreferenceUtil.getInstance().getLastAccount(), new ConnectListener() {
-                @Override
-                public void done(String uid, BmobException e) {
-                    if (e == null) {
-                        AppLogUtil.i("connect success");
-                        MainActivity.startMainActivity(LoginActivity.this);
-                        finish();
-                    } else {
-                        AppLogUtil.e(e.getErrorCode() + "/" + e.getMessage());
-                    }
-                }
-            });
-
+            UserBmob user = new UserBmob();
+            user.setObjectId(userid);
+            user.setUsername(name);
+            user.setLogourl(logourl);
+            getToken(user);
         }else{
-            String lastOriginalAccount = PreferenceUtil.getInstance().getLastName();
-            String lastPsw = PreferenceUtil.getInstance().getLastPassword();
-            String logourl = PreferenceUtil.getInstance().getLogoUrl();
             //点击登陆后做的事情
             mloginInputview.setOnLoginAction(new LoginInputView.OnLoginActionListener() {
                 @Override
@@ -107,10 +98,10 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
             }
             tv_version.setText("V"+ CommonUtil.getVersion(this)+"."+CommonUtil.getVersionCode(this));
 
-            if (lastOriginalAccount != null) {
-                mloginInputview.setAccount(lastOriginalAccount);
-                mloginInputview.setPassword(lastPsw);
-                if (!TextUtils.isEmpty(lastPsw)) {
+            if (name != null) {
+                mloginInputview.setAccount(name);
+                mloginInputview.setPassword(psw);
+                if (!TextUtils.isEmpty(psw)) {
                     mloginInputview.setIsRememberPsw(true);
                 } else {
                     mloginInputview.setIsRememberPsw(false);
@@ -149,8 +140,14 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     }
 
     @Override
-    public void finishActivity(UserBmob user) {
+    public void finishActivity(final UserBmob user) {
+        getToken(user);
+    }
 
+    /**
+     * @Decription 客户端从融云服务器获取token令牌
+     **/
+    private void getToken(final UserBmob user){
         FakeServer.getToken(user, new HttpUtil.OnResponse() {
             @Override
             public void onResponse(int code, String body) {
@@ -158,49 +155,39 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
                     Toast.makeText(LoginActivity.this, body, Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 String token;
                 try {
                     JSONObject jsonObj = new JSONObject(body);
                     token = jsonObj.getString("token");
+                    AppLogUtil.d("LoginActivity--getToken:"+token);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(LoginActivity.this, "Token 解析失败!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-
-
+                connect(user,token);
             }
         });
-
-//        BmobIM.connect(user.getObjectId(), new ConnectListener() {
-//            @Override
-//            public void done(String uid, BmobException e) {
-//                if (e == null) {
-//                    AppLogUtil.i("connect success");
-//                    MainActivity.startMainActivity(LoginActivity.this);
-//                    finish();
-//                } else {
-//                    AppLogUtil.e(e.getErrorCode() + "/" + e.getMessage());
-//                }
-//            }
-//        });
     }
 
-
-    private void connect(String token) {
+    /**
+     * @Decription 连接到融云服务器
+     **/
+    private void connect(final UserBmob user, String token) {
         if (getApplicationInfo().packageName.equals(CMApplication.getMyProcessName())) {
             RongIMClient.connect(token, new RongIMClient.ConnectCallback() {
-
                 @Override
                 public void onTokenIncorrect() {
+                    // Token 错误，在线上环境下主要是因为 Token 已经过期，您需要向 App Server 重新请求一个新的 Token
                     AppLogUtil.d("LoginActivity--onTokenIncorrect");
+                    getToken(user);
                 }
 
                 @Override
                 public void onSuccess(String userid) {
-                    AppLogUtil.d("LoginActivity--onSuccess---" + userid);
+                    AppLogUtil.d("LoginActivity--onSuccess---gotoMainActivity" + userid);
+                    MainActivity.startMainActivity(LoginActivity.this);
+                    finish();
                 }
 
                 @Override
