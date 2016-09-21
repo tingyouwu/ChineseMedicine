@@ -21,9 +21,7 @@ public class AppLogUtil {
      * @param msg
      */
     public static void i(String msg) {
-        if (BuildConfig.DEBUG) {
             Logger.i(msg);
-        }
     }
 
     /**
@@ -31,9 +29,7 @@ public class AppLogUtil {
      * @param msg
      */
     public static void d(String msg) {
-        if (BuildConfig.DEBUG) {
             Logger.d(msg);
-        }
     }
 
     /**
@@ -41,9 +37,7 @@ public class AppLogUtil {
      * @param msg
      */
     public static void w(String msg) {
-        if (BuildConfig.DEBUG) {
             Logger.w(msg);
-        }
     }
 
     /**
