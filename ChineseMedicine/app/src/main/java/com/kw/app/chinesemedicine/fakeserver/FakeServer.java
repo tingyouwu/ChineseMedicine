@@ -4,23 +4,14 @@ import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 
 public class FakeServer {
 
-    /**
-     * 集成融云应用的唯一标识, 前端后台都需要用到.
-     */
-    public static final String APP_KEY = "e5t4ouvptkm2a";
-
-    /**
-     * 务必妥善保存, 不能放在应用端, 否则可以被反编译获得.
-     */
-    public static final String APP_SECRET = "vB4FakXm8f68";
-
+    public static final String APP_KEY = "tdrvipksrtz75";
+    public static final String APP_SECRET = "gChhkm11ygJ";
     public static String getAppKey() {
         return APP_KEY;
     }
 
     /**
      * 获取融云Token, 通过调用融云ServerApi获得.
-     *
      * @param user
      * @param callback
      */
