@@ -2,12 +2,12 @@ package com.kw.app.chinesemedicine.mvp.presenter;
 
 import android.content.Context;
 
-import com.kw.app.chinesemedicine.bean.Conversation;
+import com.kw.app.chinesemedicine.bean.RongConversation;
 import com.kw.app.chinesemedicine.mvp.contract.IMessageContract;
 import com.kw.app.chinesemedicine.mvp.model.MessageModel;
+import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.mvp.presenter.BasePresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,31 +25,46 @@ public class MessagePresenter extends BasePresenter<IMessageContract.IMessageVie
      * @Description 加载所有对话
      **/
     public void getAllConversations(Context context){
-        List<Conversation> conversation = new ArrayList<Conversation>();
-        conversation.clear();
         if(!mView.checkNet()){
             mView.showNoNet();
             return ;
         }
 
-        conversation =  mMessageModel.refreshMessage(context);
-        mView.refreshMessage(conversation);
+         mMessageModel.refreshMessage(context, new ICallBack<List<RongConversation>>() {
+             @Override
+             public void onSuccess(List<RongConversation> data) {
+                 mView.refreshMessage(data);
+             }
+
+             @Override
+             public void onFaild(String msg) {
+                 int i = 0;
+             }
+         });
     }
 
     /**
      * @Description 刷新所有对话
      **/
     public void refreshConversations(Context context){
-        List<Conversation> conversation = new ArrayList<Conversation>();
-        conversation.clear();
         if(!mView.checkNet()){
             mView.showNoNet();
             mView.onRefreshComplete();
             return ;
         }
 
-        conversation =  mMessageModel.refreshMessage(context);
-        mView.onRefreshComplete();
-        mView.refreshMessage(conversation);
+        mMessageModel.refreshMessage(context, new ICallBack<List<RongConversation>>() {
+            @Override
+            public void onSuccess(List<RongConversation> data) {
+                mView.refreshMessage(data);
+                mView.onRefreshComplete();
+            }
+
+            @Override
+            public void onFaild(String msg) {
+                mView.onRefreshComplete();
+
+            }
+        });
     }
 }

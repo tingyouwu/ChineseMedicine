@@ -7,55 +7,43 @@ import android.text.TextUtils;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.activity.ChatActivity;
 
-import java.util.List;
-
-import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.bean.BmobIMConversation;
-import cn.bmob.newim.bean.BmobIMConversationType;
-import cn.bmob.newim.bean.BmobIMMessage;
-import cn.bmob.newim.bean.BmobIMMessageType;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.MessageContent;
+import io.rong.imlib.model.UserInfo;
+import io.rong.message.ContactNotificationMessage;
+import io.rong.message.ImageMessage;
+import io.rong.message.LocationMessage;
+import io.rong.message.TextMessage;
+import io.rong.message.VoiceMessage;
 
 /**
  * 私聊会话
  * Created by Administrator on 2016/5/25.
  */
-public class PrivateConversation extends Conversation{
+public class PrivateConversation extends RongConversation{
 
-    public static final int PRIVATE = 1;
+    private Conversation conversation;
+    private MessageContent lastMsg;
 
-    private BmobIMConversation conversation;
-    private BmobIMMessage lastMsg;
-
-    public PrivateConversation(BmobIMConversation conversation){
+    public PrivateConversation(Conversation conversation){
         this.conversation = conversation;
-        cType = BmobIMConversationType.setValue(conversation.getConversationType());
-        cId = conversation.getConversationId();
-        if (cType == BmobIMConversationType.PRIVATE){
+        cType = conversation.getConversationType();
+        cId = conversation.getTargetId();
+        if (cType == Conversation.ConversationType.PRIVATE){
             cName=conversation.getConversationTitle();
             if (TextUtils.isEmpty(cName)) cName = cId;
         }else{
             cName="未知会话";
         }
-        List<BmobIMMessage> msgs =conversation.getMessages();
-        if(msgs!=null && msgs.size()>0){
-            lastMsg =msgs.get(0);
-        }
-    }
-
-    @Override
-    public void readAllMessages() {
-        conversation.updateLocalCache();
+        //获取最后一条消息
+        lastMsg =conversation.getLatestMessage();
     }
 
     @Override
     public Object getAvatar() {
-        if (cType == BmobIMConversationType.PRIVATE){
-            String avatar =  conversation.getConversationIcon();
-            if (TextUtils.isEmpty(avatar)){//头像为空，使用默认头像
-                return R.mipmap.img_contact_default;
-            }else{
-                return avatar;
-            }
+        UserInfo user = lastMsg.getUserInfo();
+        if(user != null && user.getPortraitUri()!=null && !TextUtils.isEmpty(user.getPortraitUri().toString())){
+            return user.getPortraitUri().toString();
         }else{
             return R.mipmap.img_contact_default;
         }
@@ -64,20 +52,20 @@ public class PrivateConversation extends Conversation{
     @Override
     public String getLastMessageContent() {
         if(lastMsg!=null){
-            String content =lastMsg.getContent();
-            if(lastMsg.getMsgType().equals(BmobIMMessageType.TEXT.getType()) || lastMsg.getMsgType().equals("agree")){
-                return content;
-            }else if(lastMsg.getMsgType().equals(BmobIMMessageType.IMAGE.getType())){
+            if(lastMsg instanceof TextMessage){
+                return ((TextMessage)lastMsg).getContent();
+            }else if(lastMsg instanceof ImageMessage){
                 return "[图片]";
-            }else if(lastMsg.getMsgType().equals(BmobIMMessageType.VOICE.getType())){
+            }else if(lastMsg instanceof VoiceMessage){
                 return "[语音]";
-            }else if(lastMsg.getMsgType().equals(BmobIMMessageType.LOCATION.getType())){
+            }else if(lastMsg instanceof LocationMessage){
                 return"[位置]";
-            }else if(lastMsg.getMsgType().equals(BmobIMMessageType.VIDEO.getType())){
-                return "[视频]";
-            }else{//开发者自定义的消息类型，需要自行处理
+            }else if(lastMsg instanceof ContactNotificationMessage){
+                return ((ContactNotificationMessage)lastMsg).getMessage();
+            }else {
                 return "[未知]";
             }
+
         }else{//防止消息错乱
             return "";
         }
@@ -85,16 +73,36 @@ public class PrivateConversation extends Conversation{
 
     @Override
     public long getLastMessageTime() {
-        if(lastMsg!=null) {
-            return lastMsg.getCreateTime();
-        }else{
-            return 0;
-        }
+        return conversation.getSentTime();
     }
 
     @Override
     public int getUnReadCount() {
-        return (int) BmobIM.getInstance().getUnReadCount(conversation.getConversationId());
+
+        return 0;
+//        /**
+//         * 获取某个会话内未读消息条数
+//         * conversationType 会话类型
+//         * targetId         会话目标ID
+//         */
+//        RongIMClient.getInstance().getUnreadCount(cType, cId,
+//                new RongIMClient.ResultCallback<Integer>() {
+//                    @Override
+//                    public void onSuccess(Integer integer) {
+//                        int unreadCount = integer;
+//                        //开发者根据自己需求自行处理接下来的逻辑
+//                    }
+//
+//                    @Override
+//                    public void onError(RongIMClient.ErrorCode errorCode) {
+//
+//                    }
+//                });
+    }
+
+    @Override
+    public void readAllMessages() {
+
     }
 
     @Override
@@ -107,8 +115,5 @@ public class PrivateConversation extends Conversation{
 
     @Override
     public void onLongClick(Context context) {
-        //以下两种方式均可以删除会话
-//        BmobIM.getInstance().deleteConversation(conversation.getConversationId());
-//        BmobIM.getInstance().deleteConversation(conversation);
     }
 }

@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
-import com.kw.app.chinesemedicine.bean.Conversation;
+import com.kw.app.chinesemedicine.bean.RongConversation;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.TimeUtil;
@@ -18,22 +18,27 @@ import java.util.List;
 /**
  * @Decription 联系人 适配器
  */
-public class ConversationAdapter extends BaseRecyclerViewAdapter<Conversation> {
+public class ConversationAdapter extends BaseRecyclerViewAdapter<RongConversation> {
     public ConversationAdapter(Context context, List data) {
         super(context, R.layout.item_conversation, data);
     }
 
     @Override
-    protected void convert(BaseRecyclerViewHolder helper, final Conversation item, int position) {
+    protected void convert(BaseRecyclerViewHolder helper, final RongConversation item, int position) {
         ImageView icon = helper.getView(R.id.iv_recent_avatar);
         TextView time = helper.getView(R.id.tv_recent_time);
         TextView name = helper.getView(R.id.tv_recent_name);
         TextView msg = helper.getView(R.id.tv_recent_msg);
         UnreadTextView unreadtv = helper.getView(R.id.tv_recent_unread);
+        View line = helper.getView(R.id.line);
 
         msg.setText(item.getLastMessageContent());
         name.setText(item.getcName());
         time.setText(TimeUtil.getChatTime(false,item.getLastMessageTime()));
+        if(position == mData.size()-1){
+            //最后一个不用显示线条
+            line.setVisibility(View.GONE);
+        }
 
         //会话图标
         Object obj = item.getAvatar();

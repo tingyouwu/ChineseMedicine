@@ -6,18 +6,14 @@ import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
 import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
-import cn.bmob.newim.bean.BmobIMExtraMessage;
-import cn.bmob.newim.bean.BmobIMMessage;
+import io.rong.imlib.model.UserInfo;
 import io.rong.message.ContactNotificationMessage;
 
-/**添加好友请求
- * @author :smile
- * @project:AddFriendMessage
- * @date :2016-01-30-17:28
+/**
+ * 添加好友请求
  */
-public class AddFriendMessage extends BmobIMExtraMessage {
+public class AddFriendMessage{
 
-    public static final String MSGTYPE = "add";
     //好友请求：未读-未添加->接收到别人发给我的好友添加请求，初始状态
     public static final int STATUS_VERIFY_NONE=0;
     //好友请求：已读-未添加->点击查看了新朋友，则都变成已读状态
@@ -31,35 +27,6 @@ public class AddFriendMessage extends BmobIMExtraMessage {
 
     public AddFriendMessage(){}
 
-    /**将BmobIMMessage转成NewFriend
-     * @param msg 消息
-     * @return
-     */
-    public static NewFriendDALEx convert(BmobIMMessage msg){
-        NewFriendDALEx add =new NewFriendDALEx();
-        String content = msg.getContent();
-        add.setMsg(content);
-        add.setTime(msg.getCreateTime());
-        add.setStatus(AddFriendMessage.STATUS_VERIFY_NONE);
-        try {
-            String extra = msg.getExtra();
-            if(!TextUtils.isEmpty(extra)){
-                JSONObject json =new JSONObject(extra);
-                String name = json.getString("name");
-                add.setName(name);
-                String avatar = json.getString("avatar");
-                add.setAvatar(avatar);
-                add.setUid(json.getString("uid"));
-                add.setMsgid(json.getString("msgid"));
-            }else{
-                Logger.i("AddFriendMessage的extra为空");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return add;
-    }
-
     /**将ContactNotifiMessage转成NewFriend
      * @param msg 消息
      * @return
@@ -68,18 +35,19 @@ public class AddFriendMessage extends BmobIMExtraMessage {
         NewFriendDALEx add =new NewFriendDALEx();
         String content = msg.getMessage();
         add.setMsg(content);
-//        add.setTime(msg.getCreateTime());
         add.setStatus(AddFriendMessage.STATUS_VERIFY_NONE);
+
+        UserInfo user = msg.getUserInfo();
+        add.setUid(user.getUserId());
+        add.setName(user.getName());
+        add.setAvatar(user.getPortraitUri().toString());
+
         try {
             String extra = msg.getExtra();
             if(!TextUtils.isEmpty(extra)){
                 JSONObject json =new JSONObject(extra);
-                String name = json.getString("name");
-                add.setName(name);
-                String avatar = json.getString("avatar");
-                add.setAvatar(avatar);
-                add.setUid(json.getString("uid"));
                 add.setMsgid(json.getString("msgid"));
+                add.setTime(json.getLong("time"));
             }else{
                 Logger.i("AddFriendMessage的extra为空");
             }
@@ -88,17 +56,4 @@ public class AddFriendMessage extends BmobIMExtraMessage {
         }
         return add;
     }
-
-    @Override
-    public String getMsgType() {
-        return MSGTYPE;
-    }
-
-    @Override
-    public boolean isTransient() {
-        //设置为true,表明为暂态消息，那么这条消息并不会保存到本地db中，SDK只负责发送出去
-        //设置为false,则会保存到指定会话的数据库中
-        return true;
-    }
-
 }

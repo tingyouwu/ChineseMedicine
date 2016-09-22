@@ -4,36 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import com.kw.app.chinesemedicine.R;
-import com.kw.app.chinesemedicine.base.CMApplication;
-import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
-import com.kw.app.chinesemedicine.event.RefreshEvent;
+import com.kw.app.chinesemedicine.base.CMNotificationManager;
 import com.kw.app.chinesemedicine.mvp.view.fragment.ContactFragment;
 import com.kw.app.chinesemedicine.mvp.view.fragment.DynamicFragment;
 import com.kw.app.chinesemedicine.mvp.view.fragment.MessageFragment;
 import com.kw.app.chinesemedicine.mvp.view.fragment.MySelfFragment;
-import com.orhanobut.logger.Logger;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.mvp.presenter.BasePresenter;
-import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.widget.TabStripView;
 
-import org.greenrobot.eventbus.EventBus;
-
 import butterknife.Bind;
-import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.core.ConnectionStatus;
-import cn.bmob.newim.listener.ConnectListener;
-import cn.bmob.newim.listener.ConnectStatusChangeListener;
-import cn.bmob.newim.listener.ObseverListener;
-import cn.bmob.newim.notification.BmobNotificationManager;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
 
 /**
  * @Description 主界面activity
  * @author wty
  **/
-public class MainActivity extends BaseActivity implements ObseverListener {
+public class MainActivity extends BaseActivity{
 
     @Bind(R.id.navigateTabBar)
     TabStripView navigateTabBar;
@@ -51,27 +37,6 @@ public class MainActivity extends BaseActivity implements ObseverListener {
     @Override
     public void onInitView(Bundle savedInstanceState) {
         //对应xml中的containerId
-
-        //监听连接状态，也可通过BmobIM.getInstance().getCurrentStatus()来获取当前的长连接状态
-        BmobIM.getInstance().setOnConnectStatusChangeListener(new ConnectStatusChangeListener() {
-            @Override
-            public void onChange(ConnectionStatus status) {
-
-                if(status.getCode()==ConnectionStatus.CONNECTED.getCode()){
-                    //连接成功
-//                    EventBus.getDefault().post(new RefreshEvent());
-                }else if(status.getCode()==ConnectionStatus.CONNECTING.getCode()){
-                    //正在连接
-                }else if(status.getCode()==ConnectionStatus.DISCONNECT.getCode()){
-                    //断开连接
-                }else if(status.getCode()==ConnectionStatus.KICK_ASS.getCode()){
-                    //被人踢下线
-                }
-
-                showAppToast("connectionStatus:" + status.getMsg());
-            }
-        });
-
         navigateTabBar.setFrameLayoutId(R.id.main_container);
         //对应xml中的navigateTabTextColor
         navigateTabBar.setTabTextColor(getResources().getColor(R.color.gray_font_3));
@@ -109,14 +74,11 @@ public class MainActivity extends BaseActivity implements ObseverListener {
     protected void onResume() {
         super.onResume();
         //进入应用后，通知栏应取消
-        BmobNotificationManager.getInstance(this).cancelNotification();
+        CMNotificationManager.clearNotification(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //清理导致内存泄露的资源
-        BmobIM.getInstance().disConnect();
-        BmobIM.getInstance().clear();
     }
 }

@@ -1,38 +1,62 @@
 package com.kw.app.chinesemedicine.bean;
 
 import android.text.TextUtils;
-
-import com.orhanobut.logger.Logger;
+import com.wty.app.library.utils.AppLogUtil;
 
 import org.json.JSONObject;
-
-import cn.bmob.newim.bean.BmobIMExtraMessage;
-import cn.bmob.newim.bean.BmobIMMessage;
+import io.rong.imlib.model.UserInfo;
+import io.rong.message.ContactNotificationMessage;
 
 /**同意添加好友请求-仅仅只用于发送同意添加好友的消息
- * @author smile
- * @project AgreeAddFriendMessage
- * @date 2016-03-04-10:41
- * 接收到对方发送的同意添加自己为好友的请求时，需要做两个事情：1、在本地数据库中新建一个会话，
- * 因此需要设置isTransient为false,2、添加对方到自己的好友表中
+ * 接收到对方发送的同意添加自己为好友的请求时，
+ * 需要做两个事情：1、在本地数据库中新建一个会话，
+ *                 2、添加对方到自己的好友表中
  */
-public class AgreeAddFriendMessage extends BmobIMExtraMessage {
+public class AgreeAddFriendMessage{
 
-    //以下均是从extra里面抽离出来的字段，方便获取
-    private String uid;//最初的发送方
+    private String msgid;
+    private String uid;//发送者的uid
+    private String msg;
+    private String name;
+    private String avatar;//发送者的头像
     private long time;
-    private String msg;//用于通知栏显示的内容
 
-    @Override
-    public String getMsgType() {
-        return "agree";
+    public AgreeAddFriendMessage(){}
+
+    /**将ContactNotifiMessage转成 AgreeAddFriendMessage
+     * @param msg 消息
+     * @return
+     */
+    public static AgreeAddFriendMessage convert(ContactNotificationMessage msg){
+        AgreeAddFriendMessage agree =new AgreeAddFriendMessage();
+        agree.setMsg(msg.getMessage());
+
+        UserInfo user = msg.getUserInfo();
+        agree.setUid(user.getUserId());
+        agree.setName(user.getName());
+        agree.setAvatar(user.getPortraitUri().toString());
+
+        try {
+            String extra = msg.getExtra();
+            if(!TextUtils.isEmpty(extra)){
+                JSONObject json =new JSONObject(extra);
+                agree.setMsgid(json.getString("msgid"));
+                agree.setTime(json.getLong("time"));
+            }else{
+                AppLogUtil.i("AgreeAddFriendMessage 的extra为空");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return agree;
     }
 
-    @Override
-    public boolean isTransient() {
-        //如果需要在对方的会话表中新增一条该类型的消息，则设置为false，表明是非暂态会话
-        //此处将同意添加好友的请求设置为false，为了演示怎样向会话表和消息表中新增一个类型
-        return false;
+    public String getMsgid() {
+        return msgid;
+    }
+
+    public void setMsgid(String msgid) {
+        this.msgid = msgid;
     }
 
     public String getUid() {
@@ -43,14 +67,6 @@ public class AgreeAddFriendMessage extends BmobIMExtraMessage {
         this.uid = uid;
     }
 
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
     public String getMsg() {
         return msg;
     }
@@ -59,38 +75,27 @@ public class AgreeAddFriendMessage extends BmobIMExtraMessage {
         this.msg = msg;
     }
 
-    public AgreeAddFriendMessage(){}
-
-    /**
-     * 继承BmobIMMessage的属性
-     * @param msg
-     */
-    private AgreeAddFriendMessage(BmobIMMessage msg){
-        super.parse(msg);
+    public String getName() {
+        return name;
     }
 
-    /**将BmobIMMessage转成AgreeAddFriendMessage
-     * @param msg 消息
-     * @return
-     */
-    public static AgreeAddFriendMessage convert(BmobIMMessage msg){
-        AgreeAddFriendMessage agree =new AgreeAddFriendMessage(msg);
-        try {
-            String extra = msg.getExtra();
-            if(!TextUtils.isEmpty(extra)){
-                JSONObject json =new JSONObject(extra);
-                Long time = json.getLong("time");
-                String uid =json.getString("uid");
-                String m =json.getString("msg");
-                agree.setMsg(m);
-                agree.setUid(uid);
-                agree.setTime(time);
-            }else{
-                Logger.i("AgreeAddFriendMessage的extra为空");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return agree;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

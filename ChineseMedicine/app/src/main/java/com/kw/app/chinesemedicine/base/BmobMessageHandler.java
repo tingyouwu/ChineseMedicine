@@ -112,17 +112,17 @@ public class BmobMessageHandler extends BmobIMMessageHandler {
         EventBus.getDefault().post(new RefreshEvent());
         //处理消息
         if(type.equals("add")){//接收到的添加好友的请求
-            NewFriendDALEx friend = AddFriendMessage.convert(msg);
-            //本地好友请求表做下校验，本地没有的才允许显示通知栏--有可能离线消息会有些重复
-            if(!friend.isExist(friend.getMsgid())){
-                friend.saveOrUpdate();
-                showAddNotify(friend);
-            }
+//            NewFriendDALEx friend = AddFriendMessage.convert(msg);
+//            //本地好友请求表做下校验，本地没有的才允许显示通知栏--有可能离线消息会有些重复
+//            if(!friend.isExist(friend.getMsgid())){
+//                friend.saveOrUpdate();
+//                showAddNotify(friend);
+//            }
         }else if(type.equals("agree")){//接收到的对方同意添加自己为好友,此时需要做的事情：1、添加对方为好友，2、显示通知
-            AgreeAddFriendMessage agree = AgreeAddFriendMessage.convert(msg);
-            addFriend(agree.getFromId());//添加消息的发送方为好友
-            //这里应该也需要做下校验--来检测下是否已经同意过该好友请求，我这里省略了
-            showAgreeNotify(info,agree);
+//            AgreeAddFriendMessage agree = AgreeAddFriendMessage.convert(msg);
+//            addFriend(agree.getFromId());//添加消息的发送方为好友
+//            //这里应该也需要做下校验--来检测下是否已经同意过该好友请求，我这里省略了
+//            showAgreeNotify(info,agree);
         }else{
             Toast.makeText(context, "接收到的自定义消息：" + msg.getMsgType() + "," + msg.getContent() + "," + msg.getExtra(), Toast.LENGTH_SHORT).show();
         }

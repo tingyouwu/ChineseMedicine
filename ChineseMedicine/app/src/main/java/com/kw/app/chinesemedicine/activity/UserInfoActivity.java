@@ -73,31 +73,6 @@ public class UserInfoActivity extends BaseActivity {
      * 发送添加好友的请求
      */
     private void sendAddFriendMessage(){
-//        //启动一个会话，如果isTransient设置为true,则不会创建在本地会话表中创建记录，
-//        //设置isTransient设置为false,则会在本地数据库的会话列表中先创建（如果没有）与该用户的会话信息，
-//        // 且将用户信息存储到本地的用户表中
-//        BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info, true, null);
-//        //这个obtain方法才是真正创建一个管理消息发送的会话
-//        BmobIMConversation conversation = BmobIMConversation.obtain(BmobIMClient.getInstance(), c);
-//        AddFriendMessage msg =new AddFriendMessage();
-//        UserBmob currentUser = BmobUser.getCurrentUser(this, UserBmob.class);
-//        msg.setContent("很高兴认识你，可以加个好友吗?");//给对方的一个留言信息
-//        Map<String,Object> map =new HashMap<>();
-//        map.put("name", currentUser.getUsername());//发送者姓名，这里只是举个例子，其实可以不需要传发送者的信息过去
-//        map.put("avatar",currentUser.getLogourl());//发送者的头像
-//        map.put("uid",currentUser.getObjectId());//发送者的uid
-//        map.put("msgid", UUID.randomUUID().toString());//消息id
-//        msg.setExtraMap(map);
-//        conversation.sendMessage(msg, new MessageSendListener() {
-//            @Override
-//            public void done(BmobIMMessage msg, BmobException e) {
-//                if (e == null) {//发送成功
-//                    showAppToast("好友请求发送成功，等待验证");
-//                } else {//发送失败
-//                    showAppToast("发送失败:" + e.getMessage());
-//                }
-//            }
-//        });
 
         /**
          * 发送添加好友消息
@@ -111,31 +86,30 @@ public class UserInfoActivity extends BaseActivity {
          *
          */
         UserBmob currentUser = BmobUser.getCurrentUser(this, UserBmob.class);
-        ContactNotificationMessage message = ContactNotificationMessage.obtain(ContactNotificationMessage.CONTACT_OPERATION_REQUEST, PreferenceUtil.getInstance().getLastAccount(),
+        ContactNotificationMessage message = ContactNotificationMessage.obtain(ContactNotificationMessage.CONTACT_OPERATION_REQUEST,
+                PreferenceUtil.getInstance().getLastAccount(),
                 user.getObjectId(), "很高兴认识你，可以加个好友吗?");
-        message.setUserInfo(new UserInfo(currentUser.getObjectId(),currentUser.getUsername(), Uri.parse(currentUser.getLogourl())));
+        message.setUserInfo(new UserInfo(currentUser.getObjectId(), currentUser.getUsername(), Uri.parse(currentUser.getLogourl())));
 
         Map<String,Object> map =new HashMap<>();
-        map.put("name", currentUser.getUsername());//发送者姓名，这里只是举个例子，其实可以不需要传发送者的信息过去
-        map.put("avatar",currentUser.getLogourl());//发送者的头像
-        map.put("uid",currentUser.getObjectId());//发送者的uid
         map.put("msgid", UUID.randomUUID().toString());//消息id
+        map.put("time",System.currentTimeMillis());//当前时间
         message.setExtra(new Gson().toJson(map));
 
         RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE,
                 user.getObjectId(),
                 message,
                 "很高兴认识你，可以加个好友吗?",
-                "", new RongIMClient.SendMessageCallback() {
+                "",new RongIMClient.SendMessageCallback() {
 
                     @Override
                     public void onSuccess(Integer integer) {
-
+                        showAppToast("好友请求发送成功，等待验证");
                     }
 
                     @Override
                     public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
-
+                        showAppToast("发送失败:" + errorCode);
                     }
                 }, new RongIMClient.ResultCallback<Message>() {
                     @Override

@@ -1,20 +1,22 @@
 package com.kw.app.chinesemedicine.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.base.BmobUserModel;
 import com.kw.app.chinesemedicine.bean.AddFriendMessage;
-import com.kw.app.chinesemedicine.bean.AgreeAddFriendMessage;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.utils.ImageLoaderUtil;
+import com.wty.app.library.utils.PreferenceUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 
 import java.util.HashMap;
@@ -22,15 +24,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.bean.BmobIMConversation;
-import cn.bmob.newim.bean.BmobIMMessage;
-import cn.bmob.newim.bean.BmobIMUserInfo;
-import cn.bmob.newim.core.BmobIMClient;
-import cn.bmob.newim.listener.MessageSendListener;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Message;
+import io.rong.imlib.model.UserInfo;
+import io.rong.message.ContactNotificationMessage;
 
 /**
  * @Decription 搜索好友 适配器
@@ -69,7 +69,7 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
                         @Override
                         public void onFailure(int i, String s) {
                             agree.setEnabled(false);
-                            ((BaseActivity)mContext).showAppToast("添加好友失败:"+s);
+                            ((BaseActivity) mContext).showAppToast("添加好友失败:" + s);
                         }
                     });
                 }
@@ -88,12 +88,12 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
      * @Decription 同意添加到好友列表
      **/
     private void agreeAdd(final NewFriendDALEx add, final SaveListener listener){
-        UserBmob user = new UserBmob();
+        final UserBmob user = new UserBmob();
         user.setObjectId(add.getUid());
         BmobUserModel.getInstance().agreeAddFriend(user, new SaveListener() {
             @Override
             public void onSuccess() {
-                sendAgreeAddFriendMessage(add, listener);
+                sendAgreeAddFriendMessage(add,listener);
             }
 
             @Override
@@ -106,33 +106,45 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
     /**
      * 发送同意添加好友的请求
      */
-    private void sendAgreeAddFriendMessage(final NewFriendDALEx add,final SaveListener listener){
-        BmobIMUserInfo info = new BmobIMUserInfo(add.getUid(), add.getName(), add.getAvatar());
-        //如果为true,则表明为暂态会话，也就是说该会话仅执行发送消息的操作，不会保存会话和消息到本地数据库中
-        BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info,true,null);
-        //这个obtain方法才是真正创建一个管理消息发送的会话
-        BmobIMConversation conversation = BmobIMConversation.obtain(BmobIMClient.getInstance(),c);
-        //而AgreeAddFriendMessage的isTransient设置为false，表明我希望在对方的会话数据库中保存该类型的消息
-        AgreeAddFriendMessage msg =new AgreeAddFriendMessage();
+    private void sendAgreeAddFriendMessage(final NewFriendDALEx user, final SaveListener listener){
         UserBmob currentUser = BmobUser.getCurrentUser(mContext, UserBmob.class);
-        msg.setContent("我通过了你的好友验证请求，我们可以开始聊天了!");//---这句话是直接存储到对方的消息表中的
+        ContactNotificationMessage message = ContactNotificationMessage.obtain(ContactNotificationMessage.CONTACT_OPERATION_ACCEPT_RESPONSE,
+                PreferenceUtil.getInstance().getLastAccount(),
+                user.getUid(), "我通过了你的好友验证请求，我们可以开始聊天了!");
+        message.setUserInfo(new UserInfo(currentUser.getObjectId(), currentUser.getUsername(), Uri.parse(currentUser.getLogourl())));
+
         Map<String,Object> map =new HashMap<>();
-        map.put("msg",currentUser.getUsername()+"同意添加你为好友");//显示在通知栏上面的内容
-        map.put("uid",add.getUid());//发送者的uid-方便请求添加的发送方找到该条添加好友的请求
-        map.put("time", add.getTime());//添加好友的请求时间
         map.put("msgid", UUID.randomUUID().toString());//消息id
-        msg.setExtraMap(map);
-        conversation.sendMessage(msg, new MessageSendListener() {
-            @Override
-            public void done(BmobIMMessage msg, BmobException e){
-                if (e == null) {//发送成功
-                    //修改本地的好友请求记录
-                    NewFriendDALEx.get().updateNewFriend(add,AddFriendMessage.STATUS_VERIFIED);
-                    listener.onSuccess();
-                } else {//发送失败
-                    listener.onFailure(e.getErrorCode(),e.getMessage());
-                }
-            }
-        });
+        map.put("time", System.currentTimeMillis());//当前时间
+        message.setExtra(new Gson().toJson(map));
+
+        RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE,
+                user.getUid(),
+                message,
+                "我通过了你的好友验证请求，我们可以开始聊天了!",
+                "", new RongIMClient.SendMessageCallback() {
+                    @Override
+                    public void onSuccess(Integer integer) {
+                        //修改本地的好友请求记录
+                        NewFriendDALEx.get().updateNewFriend(user, AddFriendMessage.STATUS_VERIFIED);
+                        listener.onSuccess();
+                    }
+
+                    @Override
+                    public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
+                        listener.onFailure(integer,"同意失败");
+                    }
+                }, new RongIMClient.ResultCallback<Message>() {
+                    @Override
+                    public void onSuccess(Message message) {
+
+                    }
+
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+
+                    }
+                });
+
     }
 }

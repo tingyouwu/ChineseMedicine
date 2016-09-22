@@ -7,7 +7,7 @@ import android.view.View;
 import com.devspark.appmsg.AppMsg;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.adapter.ConversationAdapter;
-import com.kw.app.chinesemedicine.bean.Conversation;
+import com.kw.app.chinesemedicine.bean.RongConversation;
 import com.kw.app.chinesemedicine.event.RefreshEvent;
 import com.kw.app.chinesemedicine.mvp.contract.IMessageContract;
 import com.kw.app.chinesemedicine.mvp.presenter.MessagePresenter;
@@ -37,7 +37,7 @@ import cn.bmob.newim.event.OfflineMessageEvent;
 public class MessageFragment extends BaseFragment<MessagePresenter> implements IMessageContract.IMessageView {
 
     ConversationAdapter adapter;
-    private List<Conversation> mDataList = new ArrayList<Conversation>();
+    private List<RongConversation> mDataList = new ArrayList<RongConversation>();
 
     @Bind(R.id.rc_view)
     XRecyclerView listview;
@@ -104,7 +104,7 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     }
 
     @Override
-    public void refreshMessage(List<Conversation> list) {
+    public void refreshMessage(List<RongConversation> list) {
         if(list.size()!=0){
             adapter.retsetData(list);
             mLoadingView.setVisibility(View.GONE);
