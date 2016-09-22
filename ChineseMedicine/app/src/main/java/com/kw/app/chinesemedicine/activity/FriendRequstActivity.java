@@ -1,31 +1,30 @@
-package com.kw.app.chinesemedicine.adapter;
+package com.kw.app.chinesemedicine.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.R;
-import com.kw.app.chinesemedicine.activity.FriendRequstActivity;
 import com.kw.app.chinesemedicine.base.BmobUserModel;
 import com.kw.app.chinesemedicine.bean.AddFriendMessage;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.activity.BaseActivity;
-import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
-import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import butterknife.Bind;
+import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.SaveListener;
 import io.rong.imlib.IRongCallback;
@@ -36,62 +35,76 @@ import io.rong.imlib.model.UserInfo;
 import io.rong.message.TextMessage;
 
 /**
- * @Decription 搜索好友 适配器
+ * 好友申请
+ * @author :wty
  */
-public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
-    public NewFriendAdapter(Context context, List data) {
-        super(context, R.layout.item_new_friend, data);
+public class FriendRequstActivity extends BaseActivity {
+
+    public static String FRIENDID = "friendid";
+
+    @Bind(R.id.iv_avatar)
+    ImageView ivAvatar;
+    @Bind(R.id.tv_name)
+    TextView tvName;
+    @Bind(R.id.tv_content)
+    TextView tv_content;
+
+    String friendid;
+    NewFriendDALEx newfriend;
+
+    public static void startNewFriendActivity(Context context,String friendid) {
+        Intent intent = new Intent(context, FriendRequstActivity.class);
+        intent.putExtra(FRIENDID,friendid);
+        context.startActivity(intent);
     }
 
     @Override
-    protected void convert(BaseRecyclerViewHolder helper, final NewFriendDALEx item, int position) {
-        ImageView icon = helper.getView(R.id.iv_recent_avatar);
-        TextView name = helper.getView(R.id.tv_recent_name);
-        final TextView msg = helper.getView(R.id.tv_recent_msg);
-        final Button agree = helper.getView(R.id.btn_aggree);
+    public Object getPresenter() {
+        return null;
+    }
 
-        name.setText(item.getName());
-        msg.setText(item.getMsg());
-        ImageLoaderUtil.loadCircle(mContext,item.getAvatar(),R.mipmap.img_contact_default,icon);
+    @Override
+    public void onInitView(Bundle savedInstanceState) {
+        getDefaultNavigation().setTitle("好友申请");
+        friendid = getIntent().getStringExtra(FRIENDID);
 
-        long status = item.getStatus();
-        if(status == AddFriendMessage.STATUS_VERIFY_NONE || status == AddFriendMessage.STATUS_VERIFY_READED){
-            //未添加 /已读未添加
-            agree.setText("同意");
-            agree.setEnabled(true);
-            agree.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    agreeAdd(item, new SaveListener() {
-                        @Override
-                        public void onSuccess() {
-                            agree.setText("已同意");
-                            agree.setEnabled(false);
-                        }
+        newfriend = NewFriendDALEx.get().findById(friendid);
+        tvName.setText(newfriend.getName());
+        tv_content.setText(newfriend.getMsg());
+        ImageLoaderUtil.loadCircle(this,newfriend.getAvatar(),R.mipmap.img_contact_default,ivAvatar);
+    }
 
-                        @Override
-                        public void onFailure(int i, String s) {
-                            agree.setEnabled(false);
-                            ((BaseActivity) mContext).showAppToast("添加好友失败:" + s);
-                        }
-                    });
-                }
-            });
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_friend_request;
+    }
 
-            helper.getConvertView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //点击跳转到 同意或者拒绝页面
-                    FriendRequstActivity.startNewFriendActivity(mContext,item.getMsgid());
-                }
-            });
+    @Override
+    protected boolean isEnableStatusBar() {
+        return true;
+    }
 
-        }else if(status == AddFriendMessage.STATUS_VERIFY_REFUSE){
-            agree.setText("已拒绝");
-            agree.setEnabled(false);
-        }else{
-            agree.setText("已同意");
-            agree.setEnabled(false);
+    @OnClick({R.id.ll_head, R.id.btn_refuse, R.id.btn_agree})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ll_head:
+                break;
+            case R.id.btn_refuse:
+                break;
+            case R.id.btn_agree:
+                agreeAdd(newfriend, new SaveListener() {
+                    @Override
+                    public void onSuccess() {
+                        //回到上一个页面
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        showFailed(s);
+                    }
+                });
+                break;
         }
     }
 
@@ -116,9 +129,11 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
 
     /**
      * 发送同意添加好友的请求
+     * 1.发一条系统消息
+     * 2.发一条聊天消息
      */
     private void sendAgreeAddFriendMessage(final NewFriendDALEx user, final SaveListener listener){
-        UserBmob currentUser = BmobUser.getCurrentUser(mContext, UserBmob.class);
+        UserBmob currentUser = BmobUser.getCurrentUser(this, UserBmob.class);
         CustomzeContactNotificationMessage message = CustomzeContactNotificationMessage.obtain(CustomzeContactNotificationMessage.CONTACT_OPERATION_ACCEPT_RESPONSE,
                 PreferenceUtil.getInstance().getLastAccount(),
                 user.getUid(), "已同意您的好友请求");
@@ -151,6 +166,8 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
                         listener.onFailure(1,"同意失败");
                     }
                 });
+
+
     }
 
     /**
@@ -183,4 +200,5 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
                     }
                 });
     }
+
 }

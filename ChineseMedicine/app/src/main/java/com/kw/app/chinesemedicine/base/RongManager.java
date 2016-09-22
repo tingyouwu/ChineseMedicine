@@ -97,10 +97,9 @@ public class RongManager {
 					//对方拒绝我的好友请求
 					AppLogUtil.d("对方拒绝我的好友请求");
 				}
-
-				//发送页面刷新的广播
-				EventBus.getDefault().post(new RefreshEvent());
 			}
+			//发送页面刷新的广播
+			EventBus.getDefault().post(new RefreshEvent());
 			return false;
 		}
 	}

@@ -149,15 +149,6 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
         mPresenter.refreshConversations(getContext());
     }
 
-    /**注册离线消息接收事件
-     * @param event
-     */
-    @Subscribe
-    public void onEventMainThread(OfflineMessageEvent event){
-        //重新刷新列表
-        mPresenter.refreshConversations(getContext());
-    }
-
     /**注册消息接收事件
      * @param event
      * 1、与用户相关的由开发者自己维护，SDK内部只存储用户信息

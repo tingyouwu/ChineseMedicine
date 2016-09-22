@@ -3,6 +3,7 @@ package com.kw.app.chinesemedicine.bean;
 import android.content.Context;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.activity.SystemMessageActivity;
 import com.kw.app.chinesemedicine.data.dalex.local.SystemMessageDALEx;
 
 /**
@@ -24,7 +25,7 @@ public class SystemMessageConversation extends RongConversation{
 
     @Override
     public String getLastMessageContent() {
-        return system.getMsg();
+        return system.getName() + "：" + system.getMsg();
     }
 
     @Override
@@ -44,6 +45,7 @@ public class SystemMessageConversation extends RongConversation{
 
     @Override
     public void onClick(Context context) {
+        SystemMessageActivity.startSystemMessageActivity(context);
     }
 
     @Override

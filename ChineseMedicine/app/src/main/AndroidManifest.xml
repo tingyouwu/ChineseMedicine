@@ -58,7 +58,6 @@
             android:process=":ipc" />
         <!-- imlib config end -->
 
-
         <!--必选： SDK 核心功能-->
         <!--第三方相关,向第三方推送服务请求 token 的服务 -->
         <service
@@ -103,9 +102,7 @@
         </receiver>
 
         <!--必选： SDK 核心功能-->
-
         <!-- end -->
-
         <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
@@ -150,8 +147,16 @@
             android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <activity
+            android:name=".activity.FriendRequstActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+        <activity
             android:name=".activity.ChatActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
+
+        <activity
+            android:name=".activity.SystemMessageActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <!-- bmobim start -->
         <receiver android:name="cn.bmob.newim.core.ConnectChangeReceiver">

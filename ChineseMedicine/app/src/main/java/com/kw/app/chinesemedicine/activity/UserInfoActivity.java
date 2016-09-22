@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.R;
-import com.kw.app.chinesemedicine.bean.AddFriendMessage;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.activity.BaseActivity;
@@ -25,19 +24,11 @@ import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.bean.BmobIMConversation;
-import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.newim.bean.BmobIMUserInfo;
-import cn.bmob.newim.core.BmobIMClient;
-import cn.bmob.newim.listener.MessageSendListener;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
-import io.rong.imlib.model.Message;
 import io.rong.imlib.model.UserInfo;
-import io.rong.message.ContactNotificationMessage;
 
 /**
  * 用户资料
@@ -109,16 +100,6 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onError(Integer integer, RongIMClient.ErrorCode errorCode) {
                         showAppToast("发送失败:" + errorCode);
-                    }
-                }, new RongIMClient.ResultCallback<Message>() {
-                    @Override
-                    public void onSuccess(Message message) {
-
-                    }
-
-                    @Override
-                    public void onError(RongIMClient.ErrorCode errorCode) {
-
                     }
                 });
 

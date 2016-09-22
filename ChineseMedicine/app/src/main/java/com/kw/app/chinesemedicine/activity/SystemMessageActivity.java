@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.kw.app.chinesemedicine.R;
-import com.kw.app.chinesemedicine.adapter.NewFriendAdapter;
-import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
+import com.kw.app.chinesemedicine.adapter.SystemMessageAdapter;
+import com.kw.app.chinesemedicine.data.dalex.local.SystemMessageDALEx;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.widget.loadingview.LoadingView;
 import com.wty.app.library.widget.xrecyclerview.ProgressStyle;
@@ -19,26 +19,26 @@ import java.util.List;
 import butterknife.Bind;
 
 /**
- * 新朋友
+ * 系统消息列表
  * @author :wty
  */
-public class NewFriendActivity extends BaseActivity {
+public class SystemMessageActivity extends BaseActivity {
 
     @Bind(R.id.rc_view)
     XRecyclerView rcSearch;
     @Bind(R.id.lv_loading)
     LoadingView lvLoading;
 
-    public static void startNewFriendActivity(Context context) {
-        Intent intent = new Intent(context, NewFriendActivity.class);
+    public static void startSystemMessageActivity(Context context) {
+        Intent intent = new Intent(context, SystemMessageActivity.class);
         context.startActivity(intent);
     }
 
-    NewFriendAdapter adapter;
-    private List<NewFriendDALEx> mDataList = new ArrayList<NewFriendDALEx>();
+    SystemMessageAdapter adapter;
+    private List<SystemMessageDALEx> mDataList = new ArrayList<SystemMessageDALEx>();
 
     public void query() {
-        adapter.retsetData(NewFriendDALEx.get().getAllNewFriend());
+        adapter.retsetData(SystemMessageDALEx.get().getAllMessage());
     }
 
     @Override
@@ -47,16 +47,11 @@ public class NewFriendActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        query();
-    }
-
-    @Override
     public void onInitView(Bundle savedInstanceState) {
-        getDefaultNavigation().setTitle("新朋友");
+        getDefaultNavigation().setTitle("系统消息");
+        getDefaultNavigation().getLeftButton().setText("消息");
 
-        adapter = new NewFriendAdapter(this,mDataList);
+        adapter = new SystemMessageAdapter(this,mDataList);
         rcSearch.setLayoutManager(new LinearLayoutManager(this));
 
         rcSearch.setLoadingMoreProgressStyle(ProgressStyle.LineSpinFadeLoader);
@@ -64,7 +59,6 @@ public class NewFriendActivity extends BaseActivity {
         rcSearch.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                // 下拉刷新根据最近修改时间这个限定去服务端拿
                 query();
             }
 
@@ -72,16 +66,16 @@ public class NewFriendActivity extends BaseActivity {
             public void onLoadMore() {
                 // 本地加载更多
             }
-
         });
         rcSearch.setAdapter(adapter);
-        NewFriendDALEx.get().updateBatchStatus();
+        //进到页面更新已读状态
+        SystemMessageDALEx.get().updateBatchStatus();
         query();
     }
 
     @Override
     public int getLayoutResource() {
-        return R.layout.activity_friend_new;
+        return R.layout.activity_systemmessage;
     }
 
     @Override
