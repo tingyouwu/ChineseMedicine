@@ -5,6 +5,9 @@ import android.content.Context;
 import com.kw.app.chinesemedicine.bean.NewFriendConversation;
 import com.kw.app.chinesemedicine.bean.PrivateConversation;
 import com.kw.app.chinesemedicine.bean.RongConversation;
+import com.kw.app.chinesemedicine.bean.SystemMessageConversation;
+import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.SystemMessageDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IMessageContract;
 import com.wty.app.library.callback.ICallBack;
 
@@ -39,40 +42,16 @@ public class MessageModel implements IMessageContract.IMessageModel {
                         if(item.getConversationType() == Conversation.ConversationType.PRIVATE){
                             //单聊
                             conversationList.add(new PrivateConversation(item));
-                            RongIMClient.getInstance().getLatestMessages(Conversation.ConversationType.PRIVATE, item.getTargetId(), 10, new RongIMClient.ResultCallback<List<Message>>() {
-                                @Override
-                                public void onSuccess(List<Message> messages) {
-                                    int i = 0;
-                                    RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE, item.getTargetId(), TextMessage.obtain("测试一下"),
-                                            " ", " ", new IRongCallback.ISendMessageCallback() {
-                                                @Override
-                                                public void onAttached(Message message) {
-
-                                                }
-
-                                                @Override
-                                                public void onSuccess(Message message) {
-
-                                                }
-
-                                                @Override
-                                                public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-
-                                                }
-                                            });
-                                }
-
-                                @Override
-                                public void onError(RongIMClient.ErrorCode errorCode) {
-
-                                }
-                            });
-                        }else if(item.getConversationType()== Conversation.ConversationType.SYSTEM){
-                            //系统通知(好友申请之类的)
-                            conversationList.add(new NewFriendConversation(item));
                         }
                     }
                 }
+
+                //添加系统消息
+                List<SystemMessageDALEx> systems = SystemMessageDALEx.get().getAllMessage();
+                if(systems != null && systems.size()>0){
+                    conversationList.add(new SystemMessageConversation(systems.get(0)));
+                }
+
                 callBack.onSuccess(conversationList);
             }
 

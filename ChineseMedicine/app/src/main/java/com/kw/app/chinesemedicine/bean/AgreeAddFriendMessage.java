@@ -1,11 +1,12 @@
 package com.kw.app.chinesemedicine.bean;
 
 import android.text.TextUtils;
+
+import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.utils.AppLogUtil;
 
 import org.json.JSONObject;
 import io.rong.imlib.model.UserInfo;
-import io.rong.message.ContactNotificationMessage;
 
 /**同意添加好友请求-仅仅只用于发送同意添加好友的消息
  * 接收到对方发送的同意添加自己为好友的请求时，
@@ -27,7 +28,7 @@ public class AgreeAddFriendMessage{
      * @param msg 消息
      * @return
      */
-    public static AgreeAddFriendMessage convert(ContactNotificationMessage msg){
+    public static AgreeAddFriendMessage convert(CustomzeContactNotificationMessage msg){
         AgreeAddFriendMessage agree =new AgreeAddFriendMessage();
         agree.setMsg(msg.getMessage());
 

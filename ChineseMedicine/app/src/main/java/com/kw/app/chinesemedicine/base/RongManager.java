@@ -6,9 +6,15 @@ import com.kw.app.chinesemedicine.bean.AddFriendMessage;
 import com.kw.app.chinesemedicine.bean.AgreeAddFriendMessage;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.SystemMessageDALEx;
+import com.kw.app.chinesemedicine.event.RefreshEvent;
+import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.utils.AppLogUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import cn.bmob.v3.listener.SaveListener;
+import io.rong.imlib.AnnotationNotFoundException;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
@@ -37,6 +43,12 @@ public class RongManager {
 	private RongManager(Context mContext) {
 		this.mContext = mContext;
 		RongIMClient.getInstance().setOnReceiveMessageListener(new RongReceiveMessageListener());
+		try {
+			//在这里注册自定义消息
+			RongIMClient.getInstance().registerMessageType(CustomzeContactNotificationMessage.class);
+		} catch (AnnotationNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	class RongReceiveMessageListener implements RongIMClient.OnReceiveMessageListener {
@@ -49,10 +61,11 @@ public class RongManager {
 		@Override
 		public boolean onReceived(Message message, int left) {
 			MessageContent content = message.getContent();
-			if(content instanceof ContactNotificationMessage){
-				ContactNotificationMessage contactNotificationMessage = (ContactNotificationMessage) content;
+			if(content instanceof CustomzeContactNotificationMessage){
+				//自定义系统信息
+				CustomzeContactNotificationMessage contactNotificationMessage = (CustomzeContactNotificationMessage) content;
 
-				if (contactNotificationMessage.getOperation().equals(ContactNotificationMessage.CONTACT_OPERATION_REQUEST)) {
+				if (contactNotificationMessage.getOperation().equals(CustomzeContactNotificationMessage.CONTACT_OPERATION_REQUEST)) {
 					//对方发来好友邀请
 					AppLogUtil.d("对方发来好友邀请");
 					NewFriendDALEx friend = AddFriendMessage.convert(contactNotificationMessage);
@@ -61,17 +74,32 @@ public class RongManager {
 						friend.saveOrUpdate();
 						CMNotificationManager.showNotification(mContext,friend.getName(),friend.getMsg(),null);
 					}
-				} else if (contactNotificationMessage.getOperation().equals(ContactNotificationMessage.CONTACT_OPERATION_ACCEPT_RESPONSE)) {
+
+					SystemMessageDALEx system = SystemMessageDALEx.convert(contactNotificationMessage);
+					system.setType(SystemMessageDALEx.SystemMessageType.AddFriend.code);
+					if(!system.isExist(system.getMsgid())){
+						system.saveOrUpdate();
+					}
+
+				} else if (contactNotificationMessage.getOperation().equals(CustomzeContactNotificationMessage.CONTACT_OPERATION_ACCEPT_RESPONSE)) {
 					//对方同意我的好友请求 此时需要做的事情：1、添加对方为好友，2、显示通知
 					AppLogUtil.d("对方同意我的好友邀请");
 					AgreeAddFriendMessage agree = AgreeAddFriendMessage.convert(contactNotificationMessage);
 					addFriend(contactNotificationMessage.getSourceUserId());
-					CMNotificationManager.showNotification(mContext,agree.getName(),agree.getMsg(),null);
+					CMNotificationManager.showNotification(mContext, agree.getName(), agree.getMsg(), null);
+					SystemMessageDALEx system = SystemMessageDALEx.convert(contactNotificationMessage);
+					system.setType(SystemMessageDALEx.SystemMessageType.AgreeAdd.code);
+					if(!system.isExist(system.getMsgid())){
+						system.saveOrUpdate();
+					}
 
 				}else if(contactNotificationMessage.getOperation().equals(ContactNotificationMessage.CONTACT_OPERATION_REJECT_RESPONSE)){
 					//对方拒绝我的好友请求
 					AppLogUtil.d("对方拒绝我的好友请求");
 				}
+
+				//发送页面刷新的广播
+				EventBus.getDefault().post(new RefreshEvent());
 			}
 			return false;
 		}

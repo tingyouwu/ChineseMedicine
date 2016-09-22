@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.bean.AddFriendMessage;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
+import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
@@ -73,7 +74,6 @@ public class UserInfoActivity extends BaseActivity {
      * 发送添加好友的请求
      */
     private void sendAddFriendMessage(){
-
         /**
          * 发送添加好友消息
          * @param conversationType      会话类型
@@ -83,12 +83,11 @@ public class UserInfoActivity extends BaseActivity {
          * @param pushData              接收方离线时需要在push消息中携带的非显示内容
          * @param SendMessageCallback   发送消息的回调
          * @param ResultCallback        消息存库的回调，可用于获取消息实体
-         *
          */
         UserBmob currentUser = BmobUser.getCurrentUser(this, UserBmob.class);
-        ContactNotificationMessage message = ContactNotificationMessage.obtain(ContactNotificationMessage.CONTACT_OPERATION_REQUEST,
+        CustomzeContactNotificationMessage message = CustomzeContactNotificationMessage.obtain(CustomzeContactNotificationMessage.CONTACT_OPERATION_REQUEST,
                 PreferenceUtil.getInstance().getLastAccount(),
-                user.getObjectId(), "很高兴认识你，可以加个好友吗?");
+                user.getObjectId(), "很高兴认识你，可以加好友吗?");
         message.setUserInfo(new UserInfo(currentUser.getObjectId(), currentUser.getUsername(), Uri.parse(currentUser.getLogourl())));
 
         Map<String,Object> map =new HashMap<>();

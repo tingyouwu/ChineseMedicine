@@ -3,11 +3,11 @@ package com.kw.app.chinesemedicine.bean;
 import android.text.TextUtils;
 
 import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
+import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
 import io.rong.imlib.model.UserInfo;
-import io.rong.message.ContactNotificationMessage;
 
 /**
  * 添加好友请求
@@ -31,7 +31,7 @@ public class AddFriendMessage{
      * @param msg 消息
      * @return
      */
-    public static NewFriendDALEx convert(ContactNotificationMessage msg){
+    public static NewFriendDALEx convert(CustomzeContactNotificationMessage msg){
         NewFriendDALEx add =new NewFriendDALEx();
         String content = msg.getMessage();
         add.setMsg(content);
