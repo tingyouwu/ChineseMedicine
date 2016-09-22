@@ -13,6 +13,8 @@
 
     <dimen name="height_2">2dip</dimen>
     <dimen name="height_line">1dip</dimen>
+    <dimen name="height_15">15dip</dimen>
+    <dimen name="height_20">20dip</dimen>
     <dimen name="height_35">35dip</dimen>
     <dimen name="height_40">40dip</dimen>
     <dimen name="height_45">45dip</dimen>
