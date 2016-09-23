@@ -13,7 +13,9 @@ public class SqliteAnnotationField {
 	
 	/** 字段注解中声明的类型 */
 	private DatabaseField.FieldType type;
-	
+
+	/** 用来区分int 和 long*/
+	private boolean isLongType;
 	/** 字段是否为表的主键 */
 	private boolean primaryKey;
 	
@@ -30,6 +32,7 @@ public class SqliteAnnotationField {
 			this.columnName = field.getName();
 		}
 		this.primaryKey = annotation.primaryKey();
+		this.isLongType = annotation.isLongType();
 	}
 	
 	public DatabaseField.FieldType getType() {
@@ -44,8 +47,8 @@ public class SqliteAnnotationField {
 		return primaryKey;
 	}
 
-	public void setPrimaryKey(boolean primaryKey) {
-		this.primaryKey = primaryKey;
+	public boolean isLongType(){
+		return isLongType;
 	}
 
 	public DatabaseField getAnnotation() {

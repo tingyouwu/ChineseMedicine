@@ -12,6 +12,8 @@ public @interface DatabaseField {
 	FieldType Type() default FieldType.VARCHAR;
 	
 	boolean primaryKey() default false;
+
+	boolean isLongType() default false;//用来区分int 型和 long型
 	
 	String fieldName() default "";
 	

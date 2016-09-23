@@ -46,7 +46,7 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 		Class<? extends SqliteBaseDALEx> cls = this.getClass();
 		String packageName = cls.getName();
 		String[] pa = packageName.split("\\.");
-		return "wty"+pa[pa.length-1];
+		return pa[pa.length-1];
 	}
 
 	/**
@@ -210,7 +210,11 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 					if (value.equals("")) {
 						f.set(this, 0);
 					} else {
-						f.set(this, Long.valueOf(value));
+						if(af.isLongType()){
+							f.set(this, Long.valueOf(value));
+						}else{
+							f.set(this, Integer.valueOf(value));
+						}
 					}
 				} else if (type == DatabaseField.FieldType.VARCHAR) {
 					f.set(this, value);
@@ -270,7 +274,11 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 					if (t == DatabaseField.FieldType.VARCHAR) {
 						f.set(this, cursor.getString(entry.getValue()));
 					} else if (t == DatabaseField.FieldType.INT) {
-						f.set(this, cursor.getLong(entry.getValue()));
+						if(saf.isLongType()){
+							f.set(this, cursor.getLong(entry.getValue()));
+						}else{
+							f.set(this, cursor.getInt(entry.getValue()));
+						}
 					} else if (t == DatabaseField.FieldType.REAL) {
 						f.set(this, cursor.getFloat(entry.getValue()));
 					}
