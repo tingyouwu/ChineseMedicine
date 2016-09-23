@@ -21,7 +21,7 @@ public class CMApplication extends MainApplication {
 			//im初始化
 			BmobIM.init(this);
 			//注册消息接收器
-			BmobIM.registerDefaultMessageHandler(new BmobMessageHandler(this));
+//			BmobIM.registerDefaultMessageHandler(new BmobMessageHandler(this));
 		}
 
 		/**

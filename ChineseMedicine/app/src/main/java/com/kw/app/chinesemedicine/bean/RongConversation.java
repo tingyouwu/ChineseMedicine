@@ -3,7 +3,6 @@ package com.kw.app.chinesemedicine.bean;
 import android.content.Context;
 
 import java.io.Serializable;
-
 import io.rong.imlib.model.Conversation.ConversationType;
 
 /**

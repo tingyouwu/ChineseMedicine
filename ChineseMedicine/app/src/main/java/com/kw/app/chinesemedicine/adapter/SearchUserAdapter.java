@@ -2,7 +2,6 @@ package com.kw.app.chinesemedicine.adapter;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,11 +26,10 @@ public class SearchUserAdapter extends BaseRecyclerViewAdapter<UserBmob> {
     protected void convert(BaseRecyclerViewHolder helper, final UserBmob item, int position) {
         TextView name = helper.getView(R.id.name);
         ImageView img = helper.getView(R.id.avatar);
-        Button btn_detail = helper.getView(R.id.btn_add);
         ImageLoaderUtil.loadCircle(mContext, item.getLogourl(), img);
 
         name.setText(item.getUsername());
-        btn_detail.setOnClickListener(new View.OnClickListener() {
+        helper.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserInfoActivity.startUserInfoActivity(mContext,item);

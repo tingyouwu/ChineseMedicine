@@ -106,8 +106,8 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
                 } else {
                     mloginInputview.setIsRememberPsw(false);
                 }
-            } else {// 第一次使用，默认记住密码
-                mloginInputview.setIsRememberPsw(true);
+            } else {// 第一次使用，默认不记住密码
+                mloginInputview.setIsRememberPsw(false);
             }
         }
     }

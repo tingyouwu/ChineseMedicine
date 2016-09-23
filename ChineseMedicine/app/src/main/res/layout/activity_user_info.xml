@@ -77,15 +77,4 @@
         android:text="添加好友"
         />
 
-    <Button
-        android:id="@+id/btn_chat"
-        style="@style/style_text_white"
-        android:background="@drawable/login_press"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="直接聊天" />
-
 </LinearLayout>

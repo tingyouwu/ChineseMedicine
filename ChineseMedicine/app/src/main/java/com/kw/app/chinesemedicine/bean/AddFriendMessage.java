@@ -7,8 +7,6 @@ import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMess
 import com.orhanobut.logger.Logger;
 import org.json.JSONObject;
 
-import io.rong.imlib.model.UserInfo;
-
 /**
  * 添加好友请求
  */
@@ -27,7 +25,7 @@ public class AddFriendMessage{
 
     public AddFriendMessage(){}
 
-    /**将ContactNotifiMessage转成NewFriend
+    /**从CustomzeContactNotificationMessage获取一个NewFriednd的信息
      * @param msg 消息
      * @return
      */
@@ -35,12 +33,8 @@ public class AddFriendMessage{
         NewFriendDALEx add =new NewFriendDALEx();
         String content = msg.getMessage();
         add.setMsg(content);
+        add.setUid(msg.getSourceUserId());
         add.setStatus(AddFriendMessage.STATUS_VERIFY_NONE);
-
-        UserInfo user = msg.getUserInfo();
-        add.setUid(user.getUserId());
-        add.setName(user.getName());
-        add.setAvatar(user.getPortraitUri().toString());
 
         try {
             String extra = msg.getExtra();

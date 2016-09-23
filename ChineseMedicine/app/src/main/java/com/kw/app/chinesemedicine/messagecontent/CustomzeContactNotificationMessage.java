@@ -16,7 +16,7 @@ import io.rong.imlib.model.UserInfo;
 
 /**
  * @author wty
- * 自定义 好友 通知消息
+ * 自定义  通知消息
  **/
 
 @MessageTag(

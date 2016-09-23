@@ -32,8 +32,9 @@
             android:layout_width="60dp"
             android:layout_height="30dp"
             android:layout_marginRight="5dp"
-            android:background="@drawable/login_press"
+            android:background="@drawable/login_bg"
             android:text="搜索"
+            android:textColor="@color/gray_font_3"
             android:textSize="14sp" />
     </LinearLayout>
 

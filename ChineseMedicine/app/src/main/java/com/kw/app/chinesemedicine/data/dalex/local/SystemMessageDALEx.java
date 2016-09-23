@@ -1,8 +1,8 @@
 package com.kw.app.chinesemedicine.data.dalex.local;
 
+import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.kw.app.chinesemedicine.bean.User;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.orhanobut.logger.Logger;
 import com.wty.app.library.data.QueryBuilder;
@@ -15,8 +15,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.rong.imlib.model.UserInfo;
 
 /**
  * @Decription
@@ -36,16 +34,15 @@ public class SystemMessageDALEx extends SqliteBaseDALEx{
     private String uid;//发送者的uid
     @DatabaseField(Type = FieldType.VARCHAR)
     private String msg;//备注信息
-    @DatabaseField(Type = FieldType.VARCHAR)
-    private String name;//发送者的名字
-    @DatabaseField(Type = FieldType.VARCHAR)
-    private String avatar;//发送者的头像
     @DatabaseField(Type = FieldType.INT)
-    private long status;//是否已读  0未读 1已读
+    private int status;//是否已读  0未读 1已读
     @DatabaseField(Type = FieldType.INT)
-    private long type;//消息类型 0 好友邀请 1同意加好友 2拒绝加好友
-    @DatabaseField(Type = FieldType.INT)
+    private int type;//消息类型 0 好友邀请 1同意加好友 2拒绝加好友
+    @DatabaseField(Type = FieldType.INT,isLongType = true)
     private long time;
+
+    private String name;
+    private String avator;
 
     public static SystemMessageDALEx get() {
         return SqliteDao.getDao(SystemMessageDALEx.class);
@@ -59,11 +56,7 @@ public class SystemMessageDALEx extends SqliteBaseDALEx{
         String content = msg.getMessage();
         add.setMsg(content);
         add.setStatus(UNREAD);
-
-        UserInfo user = msg.getUserInfo();
-        add.setUid(user.getUserId());
-        add.setName(user.getName());
-        add.setAvatar(user.getPortraitUri().toString());
+        add.setUid(msg.getSourceUserId());
 
         try {
             String extra = msg.getExtra();
@@ -163,6 +156,15 @@ public class SystemMessageDALEx extends SqliteBaseDALEx{
         friend.deleteById(friend.getMsgid());
     }
 
+    @Override
+    protected void onSetCursorValueComplete(Cursor cursor) {
+        UserDALEx user = UserDALEx.get().findById(getUid());
+        if(user != null){
+            setName(user.getNickname());
+            setAvator(user.getLogourl());
+        }
+    }
+
     public enum SystemMessageType{
         AddFriend(1,"添加好友邀请"),AgreeAdd(2,"同意添加请求"),RefuseAdd(3,"拒绝添加");
         public int code;
@@ -189,23 +191,7 @@ public class SystemMessageDALEx extends SqliteBaseDALEx{
         this.msg = msg;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public long getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -229,15 +215,27 @@ public class SystemMessageDALEx extends SqliteBaseDALEx{
         this.msgid = msgid;
     }
 
-    public void setStatus(long status) {
-        this.status = status;
-    }
-
-    public long getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(long type) {
+    public void setType(int type) {
         this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAvator() {
+        return avator;
+    }
+
+    public void setAvator(String avator) {
+        this.avator = avator;
     }
 }

@@ -2,28 +2,32 @@ package com.kw.app.chinesemedicine.adapter;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.wty.app.bmobim.R;
 import com.wty.app.library.adapter.BaseRecyclerViewMultiItemAdapter;
 import com.wty.app.library.utils.ImageLoaderUtil;
+import com.wty.app.library.utils.PreferenceUtil;
 import com.wty.app.library.utils.TimeUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 
 import java.util.List;
 
-import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMMessage;
-import cn.bmob.newim.bean.BmobIMMessageType;
-import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.v3.BmobUser;
+import io.rong.imlib.model.Message;
+import io.rong.imlib.model.MessageContent;
+import io.rong.message.ImageMessage;
+import io.rong.message.LocationMessage;
+import io.rong.message.TextMessage;
+import io.rong.message.VoiceMessage;
 
 /**
  * @author :wty
  */
-public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage> {
+public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
     //文本
     private final int TYPE_RECEIVER_TXT = 0;
     private final int TYPE_SEND_TXT = 1;
@@ -39,24 +43,17 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
     //视频
     private final int TYPE_SEND_VIDEO =8;
     private final int TYPE_RECEIVER_VIDEO = 9;
-    //同意添加好友成功后的样式
-    private final int TYPE_AGREE = 10;
 
     private final long TIME_INTERVAL = 10 * 60 * 1000;//显示时间间隔:10分钟
 
     private String currentUid="";
-    BmobIMConversation c;
+    private UserDALEx target;
 
-    public ChatAdapter(Context context, List<BmobIMMessage> data, BmobIMConversation c) {
+    public ChatAdapter(Context context, List<Message> data,UserDALEx target) {
         super(context, data);
+        this.target = target;
 
-        try {
-            currentUid = BmobUser.getCurrentUser(context).getObjectId();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        this.c =c;
-
+        currentUid = BmobUser.getCurrentUser(context).getObjectId();
         addItemType(TYPE_RECEIVER_TXT, R.layout.item_chat_received_message);
         addItemType(TYPE_SEND_TXT, R.layout.item_chat_sent_message);
         addItemType(TYPE_SEND_IMAGE,R.layout.item_chat_sent_image);
@@ -67,7 +64,6 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
         addItemType(TYPE_RECEIVER_VOICE,R.layout.item_chat_received_voice);
         addItemType(TYPE_SEND_VIDEO, R.layout.item_chat_sent_message);
         addItemType(TYPE_RECEIVER_VIDEO, R.layout.item_chat_received_message);
-        addItemType(TYPE_AGREE,R.layout.item_chat_received_message);
     }
 
     public int findPosition(BmobIMMessage message) {
@@ -94,7 +90,7 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
         return position;
     }
 
-    public BmobIMMessage getFirstMessage() {
+    public Message getFirstMessage() {
         if (null != mData && mData.size() > 0) {
             return mData.get(0);
         } else {
@@ -103,22 +99,23 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
     }
 
     @Override
-    protected void bindView(BaseRecyclerViewHolder helper, BmobIMMessage item, int position) {
-
+    protected void bindView(BaseRecyclerViewHolder helper, Message item, int position) {
         //首先处理一下头像
         ImageView icon = helper.getView(R.id.iv_avatar);
-        final BmobIMUserInfo info = item.getBmobIMUserInfo();
-        ImageLoaderUtil.loadCircle(mContext,info.getAvatar(),R.mipmap.img_contact_default,icon);
+        if(item.getSenderUserId().equals(currentUid)){
+            //显示我自己的头像
+            ImageLoaderUtil.loadCircle(mContext, PreferenceUtil.getInstance().getLogoUrl(),R.mipmap.img_contact_default,icon);
+        }else{
+            ImageLoaderUtil.loadCircle(mContext,target.getLogourl(),R.mipmap.img_contact_default,icon);
+        }
 
         TextView tv_time = helper.getView(R.id.tv_time);
-        tv_time.setText(TimeUtil.getChatTime(false, item.getCreateTime()));
+        tv_time.setText(TimeUtil.getChatTime(false, item.getSentTime()));
         tv_time.setVisibility(shouldShowTime(position)? View.VISIBLE:View.GONE);
 
         switch (helper.getItemViewType()){
-            case TYPE_AGREE:
             case TYPE_RECEIVER_TXT:
-                TextView txt = helper.getView(R.id.tv_message);
-                txt.setText(item.getContent());
+                handleReceiveTextMessage(helper,item);
                 break;
             case TYPE_RECEIVER_IMAGE:
                 break;
@@ -133,6 +130,7 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
             case TYPE_SEND_LOCATION:
                 break;
             case TYPE_SEND_TXT:
+                handleSendTextMessage(helper,item);
                 break;
             case TYPE_SEND_VIDEO:
                 break;
@@ -145,22 +143,43 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
 
     @Override
     protected int getItemMultiViewType(int position) {
-        BmobIMMessage message = mData.get(position);
-        if(message.getMsgType().equals(BmobIMMessageType.IMAGE.getType())){
-            return message.getFromId().equals(currentUid) ? TYPE_SEND_IMAGE: TYPE_RECEIVER_IMAGE;
-        }else if(message.getMsgType().equals(BmobIMMessageType.LOCATION.getType())){
-            return message.getFromId().equals(currentUid) ? TYPE_SEND_LOCATION: TYPE_RECEIVER_LOCATION;
-        }else if(message.getMsgType().equals(BmobIMMessageType.VOICE.getType())){
-            return message.getFromId().equals(currentUid) ? TYPE_SEND_VOICE: TYPE_RECEIVER_VOICE;
-        }else if(message.getMsgType().equals(BmobIMMessageType.TEXT.getType())){
-            return message.getFromId().equals(currentUid) ? TYPE_SEND_TXT: TYPE_RECEIVER_TXT;
-        }else if(message.getMsgType().equals(BmobIMMessageType.VIDEO.getType())){
-            return message.getFromId().equals(currentUid) ? TYPE_SEND_VIDEO: TYPE_RECEIVER_VIDEO;
-        }else if(message.getMsgType().equals("agree")) {//显示欢迎
-            return TYPE_AGREE;
-        }else{
+        Message message = mData.get(position);
+        MessageContent content = message.getContent();
+
+        if(content instanceof TextMessage){
+            //文本消息
+            return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_TXT: TYPE_RECEIVER_TXT;
+        }else if(content instanceof ImageMessage){
+            //图片消息
+            return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_IMAGE: TYPE_RECEIVER_IMAGE;
+        }else if(content instanceof LocationMessage){
+            //定位信息
+            return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_LOCATION: TYPE_RECEIVER_LOCATION;
+        }else if(content instanceof VoiceMessage){
+            //语音信息
+            return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_VOICE: TYPE_RECEIVER_VOICE;
+        }else {
             return -1;
         }
+
+    }
+
+    /**
+     * @Decription 处理我发出去的文本信息
+     **/
+    private void handleSendTextMessage(BaseRecyclerViewHolder helper,Message msg){
+        TextMessage textMessage = (TextMessage)(msg.getContent());
+        TextView content = helper.getView(R.id.tv_message);
+        content.setText(textMessage.getContent());
+    }
+
+    /**
+     * @Decription 处理别人发给我的文本信息
+     **/
+    private void handleReceiveTextMessage(BaseRecyclerViewHolder helper,Message msg){
+        TextMessage textMessage = (TextMessage)(msg.getContent());
+        TextView content = helper.getView(R.id.tv_message);
+        content.setText(textMessage.getContent());
     }
 
     /**
@@ -170,8 +189,8 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<BmobIMMessage>
         if (position == 0) {
             return true;
         }
-        long lastTime = mData.get(position - 1).getCreateTime();
-        long curTime = mData.get(position).getCreateTime();
+        long lastTime = mData.get(position - 1).getSentTime();
+        long curTime = mData.get(position).getSentTime();
         return curTime - lastTime > TIME_INTERVAL;
     }
 }

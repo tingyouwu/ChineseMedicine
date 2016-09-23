@@ -40,7 +40,7 @@ public class SystemMessageAdapter extends BaseRecyclerViewAdapter<SystemMessageD
             //最后一个不用显示线条
             line.setVisibility(View.GONE);
         }
-        ImageLoaderUtil.loadCircle(mContext,item.getAvatar(),R.mipmap.img_contact_default,icon);
+        ImageLoaderUtil.loadCircle(mContext,item.getAvator(),R.mipmap.img_contact_default,icon);
 
         if(item.getType()==SystemMessageDALEx.SystemMessageType.AddFriend.code){
             //如果是好友邀请就跳到 新朋友页面

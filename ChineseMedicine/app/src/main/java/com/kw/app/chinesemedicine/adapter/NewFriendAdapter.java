@@ -47,6 +47,7 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
     protected void convert(BaseRecyclerViewHolder helper, final NewFriendDALEx item, int position) {
         ImageView icon = helper.getView(R.id.iv_recent_avatar);
         TextView name = helper.getView(R.id.tv_recent_name);
+        final TextView tv_status = helper.getView(R.id.tv_status);
         final TextView msg = helper.getView(R.id.tv_recent_msg);
         final Button agree = helper.getView(R.id.btn_aggree);
 
@@ -58,20 +59,21 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
         if(status == AddFriendMessage.STATUS_VERIFY_NONE || status == AddFriendMessage.STATUS_VERIFY_READED){
             //未添加 /已读未添加
             agree.setText("同意");
-            agree.setEnabled(true);
+            agree.setVisibility(View.VISIBLE);
+            tv_status.setVisibility(View.GONE);
             agree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     agreeAdd(item, new SaveListener() {
                         @Override
                         public void onSuccess() {
-                            agree.setText("已同意");
-                            agree.setEnabled(false);
+                            tv_status.setText("已添加");
+                            tv_status.setVisibility(View.VISIBLE);
+                            agree.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onFailure(int i, String s) {
-                            agree.setEnabled(false);
                             ((BaseActivity) mContext).showAppToast("添加好友失败:" + s);
                         }
                     });
@@ -87,11 +89,13 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
             });
 
         }else if(status == AddFriendMessage.STATUS_VERIFY_REFUSE){
-            agree.setText("已拒绝");
-            agree.setEnabled(false);
+            tv_status.setText("已拒绝");
+            tv_status.setVisibility(View.VISIBLE);
+            agree.setVisibility(View.GONE);
         }else{
-            agree.setText("已同意");
-            agree.setEnabled(false);
+            tv_status.setText("已添加");
+            tv_status.setVisibility(View.VISIBLE);
+            agree.setVisibility(View.GONE);
         }
     }
 

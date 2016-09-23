@@ -32,11 +32,6 @@ public class AgreeAddFriendMessage{
         AgreeAddFriendMessage agree =new AgreeAddFriendMessage();
         agree.setMsg(msg.getMessage());
 
-        UserInfo user = msg.getUserInfo();
-        agree.setUid(user.getUserId());
-        agree.setName(user.getName());
-        agree.setAvatar(user.getPortraitUri().toString());
-
         try {
             String extra = msg.getExtra();
             if(!TextUtils.isEmpty(extra)){

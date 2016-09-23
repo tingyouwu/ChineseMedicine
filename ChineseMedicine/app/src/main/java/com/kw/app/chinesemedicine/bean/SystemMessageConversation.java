@@ -25,7 +25,7 @@ public class SystemMessageConversation extends RongConversation{
 
     @Override
     public String getLastMessageContent() {
-        return system.getName() + "：" + system.getMsg();
+        return system.getMsg();
     }
 
     @Override

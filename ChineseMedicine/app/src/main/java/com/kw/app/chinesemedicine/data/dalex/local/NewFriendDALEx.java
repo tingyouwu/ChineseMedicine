@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.data.dalex.local;
 
+import android.database.Cursor;
+
 import com.kw.app.chinesemedicine.bean.AddFriendMessage;
 import com.wty.app.library.data.QueryBuilder;
 import com.wty.app.library.data.annotation.DatabaseField;
@@ -25,14 +27,13 @@ public class NewFriendDALEx extends SqliteBaseDALEx{
     private String uid;//发送者的uid
     @DatabaseField(Type = FieldType.VARCHAR)
     private String msg;
-    @DatabaseField(Type = FieldType.VARCHAR)
-    private String name;
-    @DatabaseField(Type = FieldType.VARCHAR)
-    private String avatar;//发送者的头像
     @DatabaseField(Type = FieldType.INT)
     private long status;
     @DatabaseField(Type = FieldType.INT)
     private long time;
+
+    private String name;
+    private String avatar;//发送者的头像
 
     public static NewFriendDALEx get() {
         return SqliteDao.getDao(NewFriendDALEx.class);
@@ -112,6 +113,15 @@ public class NewFriendDALEx extends SqliteBaseDALEx{
     public void updateNewFriend(NewFriendDALEx friend,int status){
         friend.setStatus(status);
         friend.saveOrUpdate();
+    }
+
+    @Override
+    protected void onSetCursorValueComplete(Cursor cursor) {
+        UserDALEx user = UserDALEx.get().findById(getUid());
+        if(user != null){
+            setName(user.getNickname());
+            setAvatar(user.getLogourl());
+        }
     }
 
     /**

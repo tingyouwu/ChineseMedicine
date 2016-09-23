@@ -4,26 +4,13 @@ import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 
 import cn.bmob.v3.BmobObject;
 
-/**好友表
- * @author smile
- * @project Friend
- * @date 2016-04-26
+/**
+ * 好友关系表
  */
 public class Friend extends BmobObject {
 
     private UserBmob user;
-    private UserBmob friendUser;
-
-    //拼音
-    private transient String pinyin;
-
-    public String getPinyin() {
-        return pinyin;
-    }
-
-    public void setPinyin(String pinyin) {
-        this.pinyin = pinyin;
-    }
+    private UserBmob friendUser;//关联的对象
 
     public UserBmob getUser() {
         return user;
