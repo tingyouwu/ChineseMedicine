@@ -14,6 +14,7 @@ import com.wty.app.library.mvp.presenter.BasePresenter;
 import com.wty.app.library.widget.TabStripView;
 
 import butterknife.Bind;
+import io.rong.imlib.RongIMClient;
 
 /**
  * @Description 主界面activity
@@ -80,5 +81,6 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RongIMClient.getInstance().disconnect();
     }
 }
