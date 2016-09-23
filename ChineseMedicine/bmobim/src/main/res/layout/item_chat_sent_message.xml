@@ -9,15 +9,17 @@
 
     <TextView
         android:id="@+id/tv_time"
-        android:background="@color/color_msg_system_time_bg"
         style="@style/style_text_white_small"
+        android:text="1111111"
         android:padding="@dimen/margin_5"
+        android:textColor="@color/gray_font_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_50"
         android:layout_marginRight="@dimen/margin_5"
         android:layout_marginTop="@dimen/margin_11" >
 
@@ -42,10 +44,11 @@
             android:lineSpacingExtra="@dimen/margin_3"
             android:minHeight="@dimen/height_50"
             android:minWidth="80dp"
+            android:text="11"
             android:paddingTop="@dimen/margin_8"
             android:paddingBottom="@dimen/margin_8"
-            android:paddingLeft="@dimen/margin_15"
-            android:paddingRight="@dimen/margin_30" />
+            android:paddingLeft="@dimen/margin_8"
+            android:paddingRight="@dimen/margin_15" />
 
         <ImageView
             android:id="@+id/iv_fail_resend"
@@ -76,8 +79,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_message"
-            android:visibility="visible" />
+            android:layout_toLeftOf="@id/tv_message"/>
 
     </RelativeLayout>
 
