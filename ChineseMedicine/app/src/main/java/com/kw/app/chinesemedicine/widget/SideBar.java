@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
 
+import java.util.List;
+
 /**
  * @Description:右侧的sideBar
  * 点击字母，自动导航到相应拼音的汉字上
@@ -124,6 +126,10 @@ public class SideBar extends View {
 		this.start  = (Max - letters.length)/2;
 		invalidate();
 
+	}
+
+	public void setLettersList(List<String> letters){
+		setLettersList(letters.toArray(new String[letters.size()]));
 	}
 
 	/**

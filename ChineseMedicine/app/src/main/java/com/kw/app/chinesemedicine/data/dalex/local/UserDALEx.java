@@ -1,9 +1,12 @@
 package com.kw.app.chinesemedicine.data.dalex.local;
 
+import com.wty.app.library.data.QueryBuilder;
 import com.wty.app.library.data.annotation.DatabaseField;
 import com.wty.app.library.data.annotation.DatabaseField.FieldType;
 import com.wty.app.library.data.annotation.SqliteDao;
 import com.wty.app.library.data.dalex.SqliteBaseDALEx;
+
+import java.util.List;
 
 /**
  * 用户信息
@@ -13,6 +16,8 @@ public class UserDALEx extends SqliteBaseDALEx {
 
 	public static final int User_Doctor = 1;//医生
 	public static final int User_Not_Doctor = 0;//非医生
+	public static final String USERID = "userid";
+	public static final String PINYIN = "pinyin";
 
 	@DatabaseField(primaryKey = true,Type = FieldType.VARCHAR)
 	private String userid;
@@ -52,6 +57,16 @@ public class UserDALEx extends SqliteBaseDALEx {
 
 	public static UserDALEx get() {
 		return SqliteDao.getDao(UserDALEx.class);
+	}
+
+	/**
+	 * 获取我的好友列表
+	 **/
+	public List<UserDALEx> findAllFriend(){
+		String sql = String.format("select * from %s where exists (select null from %s where %s.userid = friendid and status = 1) order by %s asc",
+				TABLE_NAME,FriendRelationDALEx.get().getTableName(),TABLE_NAME,PINYIN);
+		   return findList(sql
+		   );
 	}
 
 	public String getCreateAt() {

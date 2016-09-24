@@ -1,8 +1,8 @@
 package com.kw.app.chinesemedicine.mvp.presenter;
 
 import android.content.Context;
-
-import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.FriendRelationDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
 import com.kw.app.chinesemedicine.mvp.model.ContactModel;
 import com.wty.app.library.callback.ICallBack;
@@ -21,18 +21,19 @@ public class ContactPresenter extends BasePresenter<IContactContract.IContactVie
         mContactModel = new ContactModel();
     }
 
-    public void refreshMoreContact(Context context){
+    /**
+     * @Decription 根据本地最新的一条数据 去服务端拿新数据(比较更新时间)
+     **/
+    public void refreshFriend(Context context){
         if(!mView.checkNet()){
             mView.showNoNet();
-            mView.onRefreshComplete();
             return;
         }
 
-        mContactModel.refreshMoreContact(context,new ContactDALEx(), new ICallBack<List<ContactDALEx>>() {
+        mContactModel.refreshFriend(context,new ICallBack<List<UserDALEx>>(){
             @Override
-            public void onSuccess(List<ContactDALEx> data) {
-                mView.onRefreshComplete(data.size());
-                mView.refreshMore(data);
+            public void onSuccess(List<UserDALEx> data) {
+                mView.refreshFriend(data);
             }
 
             @Override
@@ -43,48 +44,9 @@ public class ContactPresenter extends BasePresenter<IContactContract.IContactVie
     }
 
     /**
-     * @Description 加载更多朋友圈动态
+     * @Decription 从本地获得所有的朋友
      **/
-    public void loadMoreDynamic(Context context){
-        if(!mView.checkNet()){
-            mView.showNoNet();
-            mView.onLoadMoreComplete();
-            return;
-        }
-
-        mContactModel.loadMoreContact(context,new ContactDALEx(), new ICallBack<List<ContactDALEx>>() {
-            @Override
-            public void onSuccess(List<ContactDALEx> data) {
-                mView.onLoadMoreComplete(data.size());
-                mView.loadMore(data);
-            }
-
-            @Override
-            public void onFaild(String msg) {
-
-            }
-        });
+    public void loadAllFriend(){
+        mView.refreshFriend(UserDALEx.get().findAllFriend());
     }
-
-    public void loadContactFirst(){
-        if(!mView.checkNet()){
-            mView.showNoNet();
-            mView.onLoadMoreComplete();
-            return;
-        }
-//        mContactModel.loadContactFirst(new ICallBack<List<ContactDALEx>>() {
-//            @Override
-//            public void onSuccess(List<ContactDALEx> data) {
-//                mView.onLoadMoreComplete(data.size());
-//                mView.loadMore(data);
-//            }
-//
-//            @Override
-//            public void onFaild(String msg) {
-//
-//            }
-//        });
-        mView.onRefreshComplete(0);
-    }
-
 }

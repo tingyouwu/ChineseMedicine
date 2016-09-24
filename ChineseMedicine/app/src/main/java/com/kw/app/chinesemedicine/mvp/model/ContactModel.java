@@ -2,16 +2,15 @@ package com.kw.app.chinesemedicine.mvp.model;
 
 import android.content.Context;
 
-import com.kw.app.chinesemedicine.data.dalex.bmob.ContactBmob;
-import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.base.BmobUserModel;
+import com.kw.app.chinesemedicine.bean.Friend;
+import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
+import com.kw.app.chinesemedicine.data.dalex.local.FriendRelationDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
 import com.wty.app.library.callback.ICallBack;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 /**
@@ -20,34 +19,26 @@ import cn.bmob.v3.listener.FindListener;
 public class ContactModel implements IContactContract.IContactModel {
 
     @Override
-    public void loadMoreContact(Context context,ContactDALEx data, ICallBack<List<ContactDALEx>> callBack) {
-        List<ContactDALEx> list = new ArrayList<ContactDALEx>();
-        callBack.onSuccess(list);
-    }
+    public void refreshFriend(Context context, final ICallBack<List<UserDALEx>> callBack) {
 
-    @Override
-    public void refreshMoreContact(Context context,ContactDALEx data, final ICallBack<List<ContactDALEx>> callBack) {
-        BmobQuery<ContactBmob> query = new BmobQuery<ContactBmob>();
+        FriendRelationDALEx relation = FriendRelationDALEx.get().getNewestRelation();
 
-        query.findObjects(context, new FindListener<ContactBmob>() {
+        String updatetime = null;
+        if(relation !=null){
+            updatetime = relation.getUpdateAt();
+        }
+
+        BmobUserModel.getInstance().queryFriends(updatetime,new FindListener<Friend>() {
             @Override
-            public void onSuccess(List<ContactBmob> list) {
-                List<ContactDALEx> newlist = ContactBmob.get().saveReturn(list);
-                callBack.onSuccess(newlist);
+            public void onSuccess(List<Friend> list) {
+                Friend.get().save(list);
+                callBack.onSuccess(UserDALEx.get().findAllFriend());
             }
 
             @Override
             public void onError(int i, String s) {
-                callBack.onFaild(s);
 
             }
         });
-
     }
-
-    @Override
-    public void loadContactFirst(Context context,ICallBack<List<ContactDALEx>> callBack) {
-        List<ContactDALEx> list = ContactDALEx.get().findAll();
-        callBack.onSuccess(list);
-     }
 }

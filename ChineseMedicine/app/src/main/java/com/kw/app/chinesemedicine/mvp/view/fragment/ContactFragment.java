@@ -9,10 +9,9 @@ import com.devspark.appmsg.AppMsg;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.activity.SearchUserActivity;
 import com.kw.app.chinesemedicine.adapter.ContactAdapter;
-import com.kw.app.chinesemedicine.data.dalex.local.ContactDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
 import com.kw.app.chinesemedicine.mvp.presenter.ContactPresenter;
-import com.kw.app.chinesemedicine.mvp.view.activity.ContactAddActivity;
 import com.kw.app.chinesemedicine.widget.ClearEditText;
 import com.kw.app.chinesemedicine.widget.SideBar;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
@@ -22,11 +21,12 @@ import com.wty.app.library.widget.loadingview.LoadingState;
 import com.wty.app.library.widget.loadingview.LoadingView;
 import com.wty.app.library.widget.loadingview.OnEmptyListener;
 import com.wty.app.library.widget.loadingview.OnRetryListener;
-import com.wty.app.library.widget.xrecyclerview.ProgressStyle;
 import com.wty.app.library.widget.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 
@@ -47,13 +47,9 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
     @Bind(R.id.tv_letter)
     TextView tv_letter;
 
-    BaseRecyclerViewAdapter adapter;
-    private List<ContactDALEx> mDataList = new ArrayList<>();
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    ContactAdapter adapter;
+    LinearLayoutManager linearLayoutManager;
+    private List<UserDALEx> mDataList = new ArrayList<>();
 
     @Override
     public ContactPresenter getPresenter() {
@@ -62,25 +58,25 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
 
     @Override
     public void onInitView(Bundle savedInstanceState) {
+        filter_letters.setTextView(tv_letter);
         adapter = new ContactAdapter(getContext(),mDataList);
-        listview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        listview.setLayoutManager(linearLayoutManager);
         listview.addItemDecoration(new DivItemDecoration(2, true));
-        listview.setLoadingMoreProgressStyle(ProgressStyle.LineSpinFadeLoader);
-        listview.setRefreshProgressStyle(ProgressStyle.BallClipRotatePulse);
-        listview.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                // 下拉刷新根据最近修改时间这个限定去服务端拿
-                mPresenter.refreshMoreContact(getContext());
-            }
-
-            @Override
-            public void onLoadMore() {
-                // 本地加载更多
-            }
-
-        });
+        listview.setLoadingMoreEnabled(false);
+        listview.setPullRefreshEnabled(false);
         listview.setAdapter(adapter);
+
+        filter_letters.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
+            @Override
+            public void onTouchingLetterChanged(String s) {
+                // 该字母首次出现的位置
+                int position = adapter.getPositionForSection(s.charAt(0));
+                if (position != -1) {
+                    linearLayoutManager.scrollToPositionWithOffset(position-1,0);
+                }
+            }
+        });
 
         mLoadingView.withLoadedEmptyText("暂时没有联系人")
                     .withOnEmptyListener(new OnEmptyListener() {
@@ -93,8 +89,14 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
                         }
                     }).build();
 
-        mPresenter.loadContactFirst();
-        filter_letters.setTextView(tv_letter);
+        mPresenter.loadAllFriend();
+        mPresenter.refreshFriend(getContext());
+
+    }
+
+    @Override
+    public void doWorkOnResume() {
+
     }
 
     @Override
@@ -124,10 +126,12 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
     }
 
     @Override
-    public void refreshMore(List<ContactDALEx> list) {
+    public void refreshFriend(List<UserDALEx> list) {
         if(list.size()!=0){
-            adapter.addData(list);
+            filter_letters.setLettersList(getSortLetter(list));
+            adapter.retsetData(list);
             mLoadingView.setVisibility(View.GONE);
+            listview.setNoMore(list.size() + "位联系人");
         }else{
             if(adapter.getItemCount()==0){
                 mLoadingView.setState(LoadingState.STATE_EMPTY);
@@ -137,37 +141,25 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
         }
     }
 
-    @Override
-    public void loadMore(List<ContactDALEx> list) {
-        if(list.size()==0)return;
-    }
+    /**
+     * 获取排序的首字母
+     **/
+    public List<String> getSortLetter(List<UserDALEx> list){
+        Map<String,String> letterMap = new LinkedHashMap<>();
+        List<String> letters = new ArrayList<String>();
 
-    @Override
-    public void onRefreshComplete() {
-        listview.refreshComplete();
-    }
-
-    @Override
-    public void onRefreshComplete(int result) {
-        if(result==0 && adapter.getItemCount()==0){
-            mLoadingView.setState(LoadingState.STATE_EMPTY);
-        }else{
-            if(mLoadingView.getVisibility()==View.VISIBLE)
-                mLoadingView.setVisibility(View.GONE);
+        for(UserDALEx user:list){
+            String sortString = user.getPinyin().substring(0, 1).toUpperCase();
+            // 正则表达式，判断首字母是否是英文字母
+            if(sortString.matches("[A-Z]")){
+                letterMap.put(sortString,sortString);
+            }else{
+                letterMap.put("#","#");
+            }
         }
-        listview.refreshComplete(result + "条新内容");
+
+        letters.addAll(letterMap.values());
+        return letters;
     }
 
-    @Override
-    public void onLoadMoreComplete() {
-        listview.loadMoreComplete();
-    }
-
-    @Override
-    public void onLoadMoreComplete(int result) {
-        listview.loadMoreComplete();
-        if(result == 0){
-            listview.setNoMore("亲,已经是最后一页了！");
-        }
-    }
 }

@@ -1,16 +1,21 @@
 package com.kw.app.chinesemedicine.base;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.kw.app.chinesemedicine.bean.Friend;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.listener.QueryUserListener;
 import com.wty.app.library.base.MainApplication;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.FindListener;
@@ -113,6 +118,7 @@ public class BmobUserModel{
         UserBmob user = BmobUser.getCurrentUser(getContext(), UserBmob.class);
         f.setUser(user);
         f.setFriendUser(friend);
+        f.setStatus(1);//1表示我添加为好友  0表示我删除这条好友关系
         f.save(getContext(),listener);
     }
 
@@ -120,12 +126,23 @@ public class BmobUserModel{
      * 查询好友
      * @param listener
      */
-    public void queryFriends(final FindListener<Friend> listener){
+    public void queryFriends(String updatetime,final FindListener<Friend> listener){
         BmobQuery<Friend> query = new BmobQuery<>();
         UserBmob user = BmobUser.getCurrentUser(getContext(), UserBmob.class);
         query.addWhereEqualTo("user", user);
+
+        if(!TextUtils.isEmpty(updatetime)){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date;
+            try {
+                date = sdf.parse(updatetime);
+                query.addWhereGreaterThanOrEqualTo("updatedAt",new BmobDate(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
         query.include("friendUser");
-        query.order("-updatedAt");
         query.findObjects(getContext(), new FindListener<Friend>() {
             @Override
             public void onSuccess(List<Friend> list) {
