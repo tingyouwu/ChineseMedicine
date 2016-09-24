@@ -38,6 +38,7 @@ public class TabStripView extends LinearLayout implements View.OnClickListener {
     private List<ViewHolder> mViewHolderList;
     private BaseActivity activity;
     private Map<String,Fragment> mFragmentMap = new LinkedHashMap<>();
+    private Map<String,ViewHolder> mViewHolderMap = new LinkedHashMap<>();
     private OnTabSelectedListener mTabSelectListener;
     private FragmentActivity mFragmentActivity;
     private String mCurrentTag;
@@ -115,6 +116,7 @@ public class TabStripView extends LinearLayout implements View.OnClickListener {
 
         holder.tabIcon = (ImageView) view.findViewById(R.id.tab_icon);
         holder.tabTitle = ((TextView) view.findViewById(R.id.tab_title));
+        holder.tabUnread = (ImageView)view.findViewById(R.id.img_unread);
 
         if (TextUtils.isEmpty(tabParam.title)) {
             holder.tabTitle.setVisibility(View.INVISIBLE);
@@ -145,6 +147,7 @@ public class TabStripView extends LinearLayout implements View.OnClickListener {
             mViewHolderList.add(holder);
         }
 
+        mViewHolderMap.put(tabParam.title,holder);
         addView(view, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0F));
 
     }
@@ -333,6 +336,7 @@ public class TabStripView extends LinearLayout implements View.OnClickListener {
         public String tag;
         public TabParam pageParam;
         public ImageView tabIcon;
+        public ImageView tabUnread;
         public TextView tabTitle;
         public Class fragmentClass;
         public int tabIndex;
@@ -402,6 +406,13 @@ public class TabStripView extends LinearLayout implements View.OnClickListener {
 
     public Fragment getCurrentSelectedFragment(String tag){
         return mFragmentMap.get(tag);
+    }
+
+    public void updateUnread(String tag,boolean hasunread){
+        ViewHolder holder = mViewHolderMap.get(tag);
+        if(holder != null){
+            holder.tabUnread.setVisibility(hasunread?View.VISIBLE:View.GONE);
+        }
     }
 
 }
