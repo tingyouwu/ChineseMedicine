@@ -3,6 +3,7 @@ package com.kw.app.chinesemedicine.adapter;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
@@ -15,7 +16,6 @@ import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 
 import java.util.List;
 
-import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.v3.BmobUser;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
@@ -64,30 +64,6 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
         addItemType(TYPE_RECEIVER_VOICE,R.layout.item_chat_received_voice);
         addItemType(TYPE_SEND_VIDEO, R.layout.item_chat_sent_message);
         addItemType(TYPE_RECEIVER_VIDEO, R.layout.item_chat_received_message);
-    }
-
-    public int findPosition(BmobIMMessage message) {
-        int index = this.getItemCount();
-        int position = -1;
-        while(index-- > 0) {
-            if(message.equals(this.getItem(index))) {
-                position = index;
-                break;
-            }
-        }
-        return position;
-    }
-
-    public int findPosition(long id) {
-        int index = this.getItemCount();
-        int position = -1;
-        while(index-- > 0) {
-            if(this.getItemId(index) == id) {
-                position = index;
-                break;
-            }
-        }
-        return position;
     }
 
     public Message getFirstMessage() {
@@ -168,9 +144,35 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
      * @Decription 处理我发出去的文本信息
      **/
     private void handleSendTextMessage(BaseRecyclerViewHolder helper,Message msg){
-        TextMessage textMessage = (TextMessage)(msg.getContent());
         TextView content = helper.getView(R.id.tv_message);
+        ImageView iv_failed_resend = helper.getView(R.id.iv_fail_resend);
+        ProgressBar pb_load = helper.getView(R.id.progress_load);
+
+        TextMessage textMessage = (TextMessage)(msg.getContent());
         content.setText(textMessage.getContent());
+
+        if(msg.getSentStatus()== Message.SentStatus.FAILED){
+            //发送失败
+            iv_failed_resend.setVisibility(View.VISIBLE);
+            pb_load.setVisibility(View.GONE);
+        }else if(msg.getSentStatus()== Message.SentStatus.SENDING){
+            //发送中
+            iv_failed_resend.setVisibility(View.GONE);
+            pb_load.setVisibility(View.VISIBLE);
+        }else if(msg.getSentStatus()== Message.SentStatus.RECEIVED || msg.getSentStatus()== Message.SentStatus.SENT
+                || msg.getSentStatus()== Message.SentStatus.READ || msg.getSentStatus()== Message.SentStatus.DESTROYED){
+            //对方已接收  已发送  对方已读  对方已销毁
+            iv_failed_resend.setVisibility(View.GONE);
+            pb_load.setVisibility(View.GONE);
+        }
+
+        iv_failed_resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
     /**

@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.bean.PrivateConversation;
 import com.kw.app.chinesemedicine.bean.RongConversation;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.utils.ImageLoaderUtil;
@@ -14,6 +15,8 @@ import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 import com.wty.app.library.widget.UnreadTextView;
 
 import java.util.List;
+import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.Conversation;
 
 /**
  * @Decription 联系人 适配器
@@ -29,7 +32,7 @@ public class ConversationAdapter extends BaseRecyclerViewAdapter<RongConversatio
         TextView time = helper.getView(R.id.tv_recent_time);
         TextView name = helper.getView(R.id.tv_recent_name);
         TextView msg = helper.getView(R.id.tv_recent_msg);
-        UnreadTextView unreadtv = helper.getView(R.id.tv_recent_unread);
+        final UnreadTextView unreadtv = helper.getView(R.id.tv_recent_unread);
         View line = helper.getView(R.id.line);
 
         msg.setText(item.getLastMessageContent());
@@ -50,13 +53,25 @@ public class ConversationAdapter extends BaseRecyclerViewAdapter<RongConversatio
             ImageLoaderUtil.loadCircle(mContext, defaultRes, icon);
         }
 
-        //查询指定未读消息数
-        long unread = item.getUnReadCount();
-        if(unread>0){
-            unreadtv.setVisibility(View.VISIBLE);
-            unreadtv.setText(String.valueOf(unread));
+        if(item instanceof PrivateConversation){
+            RongIMClient.getInstance().getUnreadCount(Conversation.ConversationType.PRIVATE, item.getcId(),
+                    new RongIMClient.ResultCallback<Integer>() {
+                        @Override
+                        public void onSuccess(Integer integer) {
+                            int unreadCount = integer;
+                            //开发者根据自己需求自行处理接下来的逻辑
+                            unreadtv.setUnread(unreadCount);
+                        }
+
+                        @Override
+                        public void onError(RongIMClient.ErrorCode errorCode) {
+
+                        }
+                    });
         }else{
-            unreadtv.setVisibility(View.GONE);
+            //查询指定未读消息数
+            int unread = item.getUnReadCount();
+            unreadtv.setUnread(unread);
         }
 
         helper.convertView.setOnClickListener(new View.OnClickListener() {

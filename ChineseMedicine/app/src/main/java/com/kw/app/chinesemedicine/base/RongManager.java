@@ -8,6 +8,7 @@ import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.SystemMessageDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
+import com.kw.app.chinesemedicine.event.RefreshChatEvent;
 import com.kw.app.chinesemedicine.event.RefreshEvent;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.utils.AppLogUtil;
@@ -20,6 +21,10 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
 import io.rong.message.ContactNotificationMessage;
+import io.rong.message.ImageMessage;
+import io.rong.message.LocationMessage;
+import io.rong.message.TextMessage;
+import io.rong.message.VoiceMessage;
 
 /**
  * @author wty
@@ -64,6 +69,8 @@ public class RongManager {
 			MessageContent content = message.getContent();
 			if(content instanceof CustomzeContactNotificationMessage){
 				handleCustomzeContactNotificationMessage((CustomzeContactNotificationMessage) content);
+			}else if (content instanceof TextMessage || content instanceof ImageMessage || content instanceof LocationMessage || content instanceof VoiceMessage){
+				EventBus.getDefault().post(new RefreshChatEvent(message));
 			}
 			//发送页面刷新的广播
 			EventBus.getDefault().post(new RefreshEvent());

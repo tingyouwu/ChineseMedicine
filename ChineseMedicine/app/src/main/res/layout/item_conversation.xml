@@ -76,7 +76,7 @@
             android:layout_below="@id/tv_recent_time"
             style="@style/style_text_white"
             android:layout_marginRight="10.0dip"
-            app:unread="10"
+            app:unread="0"
             android:textSize="13.0dip" />
 
     </RelativeLayout>

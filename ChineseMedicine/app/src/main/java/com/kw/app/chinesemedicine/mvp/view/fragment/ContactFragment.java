@@ -14,13 +14,11 @@ import com.kw.app.chinesemedicine.mvp.contract.IContactContract;
 import com.kw.app.chinesemedicine.mvp.presenter.ContactPresenter;
 import com.kw.app.chinesemedicine.widget.ClearEditText;
 import com.kw.app.chinesemedicine.widget.SideBar;
-import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.fragment.BaseFragment;
 import com.wty.app.library.widget.DivItemDecoration;
+import com.wty.app.library.widget.MyTextWatcher;
 import com.wty.app.library.widget.loadingview.LoadingState;
 import com.wty.app.library.widget.loadingview.LoadingView;
-import com.wty.app.library.widget.loadingview.OnEmptyListener;
-import com.wty.app.library.widget.loadingview.OnRetryListener;
 import com.wty.app.library.widget.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -73,22 +71,24 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
                 // 该字母首次出现的位置
                 int position = adapter.getPositionForSection(s.charAt(0));
                 if (position != -1) {
-                    linearLayoutManager.scrollToPositionWithOffset(position-1,0);
+                    linearLayoutManager.scrollToPositionWithOffset(position-1+2,0);
                 }
             }
         });
 
-        mLoadingView.withLoadedEmptyText("暂时没有联系人")
-                    .withOnEmptyListener(new OnEmptyListener() {
-                        @Override
-                        public void onClick() {
-                        }
-                    }).withOnRetryListener(new OnRetryListener() {
-                        @Override
-                        public void onRetry() {
-                        }
-                    }).build();
+        // 根据输入框输入值的改变来过滤搜索
+        et_filter.addTextChangedListener(new MyTextWatcher(){
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
+                sortFriend(s.toString());
+            }
+        });
 
+        mLoadingView.withLoadedEmptyText("暂时没有联系人")
+                .withBtnEmptyEnnable(false)
+                .withBtnNoNetEnnable(false)
+                .build();
         mPresenter.loadAllFriend();
         mPresenter.refreshFriend(getContext());
 
@@ -127,6 +127,7 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
 
     @Override
     public void refreshFriend(List<UserDALEx> list) {
+        adapter.clearData();
         if(list.size()!=0){
             filter_letters.setLettersList(getSortLetter(list));
             adapter.retsetData(list);
@@ -135,10 +136,19 @@ public class ContactFragment extends BaseFragment<ContactPresenter> implements I
         }else{
             if(adapter.getItemCount()==0){
                 mLoadingView.setState(LoadingState.STATE_EMPTY);
+                listview.setNoMore("");
             }else{
                 mLoadingView.setVisibility(View.GONE);
             }
         }
+    }
+
+    /**
+     * @根据关键字搜索列表
+     **/
+    public void sortFriend(String sortstring){
+        List<UserDALEx> list = UserDALEx.get().findAllFriendByFilter(sortstring);
+        refreshFriend(list);
     }
 
     /**

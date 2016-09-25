@@ -25,16 +25,22 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.adapter.ChatAdapter;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
+import com.kw.app.chinesemedicine.event.RefreshChatEvent;
 import com.orhanobut.logger.Logger;
 import com.wty.app.bmobim.R;
 import com.wty.app.library.activity.BaseActivity;
+import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.CommonUtil;
 import com.wty.app.library.utils.FileUtils;
 import com.wty.app.library.utils.PreferenceUtil;
 import com.wty.app.library.widget.xrecyclerview.ProgressStyle;
 import com.wty.app.library.widget.xrecyclerview.XRecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +58,7 @@ import io.rong.message.TextMessage;
 public class ChatActivity extends BaseActivity{
 
     public static final String TARGET = "target";
+    public static final int Max_Limit = 100;
 
     Toast toast;
     XRecyclerView rc_view;
@@ -70,6 +77,34 @@ public class ChatActivity extends BaseActivity{
     private List<Message> msgs = new ArrayList<Message>();
     private Drawable[] drawable_Anims;// 话筒动画
     private UserDALEx target;
+    private boolean isHasMoreMessage = true;//是否还有更多数据
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected boolean isEnableStatusBar() {
+        return true;
+    }
+
+    /**注册自定义消息接收事件
+     * @param event
+     */
+    @Subscribe
+    public void onEventMainThread(RefreshChatEvent event){
+        AppLogUtil.i("---会话页接收到消息---");
+        scrollToBottom();
+        adapter.addOne(event.getMsg());
+    }
 
     @Override
     public void onInitView(Bundle savedInstanceState) {
@@ -99,6 +134,23 @@ public class ChatActivity extends BaseActivity{
         initSwipeLayout();
         initVoiceView();
         initBottomView();
+
+        /**
+         * 清除某个会话中的未读消息数
+         * conversationType 会话类型
+         * targetId         会话目标ID
+         */
+        RongIMClient.getInstance().clearMessagesUnreadStatus(Conversation.ConversationType.PRIVATE, target.getUserid(), new RongIMClient.ResultCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+
+            }
+
+            @Override
+            public void onError(RongIMClient.ErrorCode errorCode) {
+
+            }
+        });
     }
 
     /**
@@ -115,8 +167,8 @@ public class ChatActivity extends BaseActivity{
         adapter = new ChatAdapter(this,msgs,target);
         layoutManager = new LinearLayoutManager(this);
         rc_view.setLayoutManager(layoutManager);
-        rc_view.setLoadingMoreProgressStyle(ProgressStyle.LineSpinFadeLoader);
         rc_view.setRefreshProgressStyle(ProgressStyle.BallClipRotatePulse);
+        rc_view.setLoadingMoreEnabled(false);
         rc_view.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -144,6 +196,16 @@ public class ChatActivity extends BaseActivity{
             }
         });
 
+        edit_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (layout_more.getVisibility() == View.VISIBLE) {
+                    layout_add.setVisibility(View.GONE);
+                    layout_more.setVisibility(View.GONE);
+                }
+            }
+        });
+
         edit_msg.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -156,11 +218,13 @@ public class ChatActivity extends BaseActivity{
                     btn_chat_send.setVisibility(View.VISIBLE);
                     btn_chat_keyboard.setVisibility(View.GONE);
                     btn_chat_voice.setVisibility(View.GONE);
+                    btn_chat_add.setVisibility(View.GONE);
                 } else {
                     if (btn_chat_voice.getVisibility() != View.VISIBLE) {
                         btn_chat_voice.setVisibility(View.VISIBLE);
                         btn_chat_send.setVisibility(View.GONE);
                         btn_chat_keyboard.setVisibility(View.GONE);
+                        btn_chat_add.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -373,7 +437,9 @@ public class ChatActivity extends BaseActivity{
 
                     @Override
                     public void onSuccess(Message message) {
-
+                        adapter.addOne(message);
+                        edit_msg.setText("");
+                        scrollToBottom();
                     }
 
                     @Override
@@ -420,24 +486,80 @@ public class ChatActivity extends BaseActivity{
      * @param msg
      */
     public void queryMessages(Message msg){
-        RongIMClient.getInstance().getLatestMessages(Conversation.ConversationType.PRIVATE, target.getUserid(), 20, new RongIMClient.ResultCallback<List<Message>>() {
-            @Override
-            public void onSuccess(List<Message> messages) {
-                if (messages != null && messages.size() > 0) {
-                    adapter.addData(0, messages);
-                    layoutManager.scrollToPositionWithOffset(messages.size() - 1, 0);
+
+        if(msg == null){
+            /**
+             * 根据会话类型的目标 Id，回调方式获取最新的 N 条消息实体。
+             * @param conversationType 会话类型。
+             * @param targetId         目标 Id。根据不同的 conversationType，可能是用户 Id、讨论组 Id、群组 Id 或聊天室 Id。
+             * @param count            要获取的消息数量。
+             * @param callback         获取最新消息记录的回调，按照时间顺序从新到旧排列。
+             */
+            RongIMClient.getInstance().getLatestMessages(Conversation.ConversationType.PRIVATE, target.getUserid(), Max_Limit, new RongIMClient.ResultCallback<List<Message>>() {
+                @Override
+                public void onSuccess(List<Message> messages) {
+                    if (messages != null && messages.size() > 0) {
+                        Collections.reverse(messages);
+                        adapter.addData(0, messages);
+                        layoutManager.scrollToPositionWithOffset(messages.size() - 1+2, 0);
+
+                        if(messages.size()==Max_Limit){
+                            //证明可能还有聊天记录
+                            isHasMoreMessage = true;
+                        }else{
+                            isHasMoreMessage = false;
+                        }
+                    }
+                    rc_view.refreshComplete();
                 }
-            }
 
-            @Override
-            public void onError(RongIMClient.ErrorCode errorCode) {
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+                    rc_view.refreshComplete();
+                }
+            });
+        }else{
+            if(isHasMoreMessage){
+                /**
+                 * 获取会话中，从指定消息之前、指定数量的最新消息实体
+                 * @param conversationType 会话类型。不支持传入 ConversationType.CHATROOM。
+                 * @param targetId         目标 Id。根据不同的 conversationType，可能是用户 Id、讨论组 Id、群组 Id。
+                 * @param oldestMessageId  最后一条消息的 Id，获取此消息之前的 count 条消息，没有消息第一次调用应设置为:-1。
+                 * @param count            要获取的消息数量。
+                 * @param callback         获取历史消息记录的回调，按照时间顺序从新到旧排列。
+                 */
+                RongIMClient.getInstance().getHistoryMessages(Conversation.ConversationType.PRIVATE, target.getUserid(), msg.getMessageId(), Max_Limit, new RongIMClient.ResultCallback<List<Message>>() {
+                    @Override
+                    public void onSuccess(List<Message> messages) {
+                        if (messages != null && messages.size() > 0) {
+                            Collections.reverse(messages);
+                            adapter.addData(0, messages);
+                            layoutManager.scrollToPositionWithOffset(messages.size() - 1+2, 0);
+                            if(messages.size()==Max_Limit){
+                                //证明可能还有聊天记录
+                                isHasMoreMessage = true;
+                            }else{
+                                isHasMoreMessage = false;
+                            }
+                        }
+                        rc_view.refreshComplete();
+                    }
 
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+                        rc_view.refreshComplete();
+                    }
+                });
             }
-        });
+        }
+
     }
 
+    /**
+     * @decription 滚动到最底部
+     **/
     private void scrollToBottom() {
-        layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - 1, 0);
+        layoutManager.scrollToPositionWithOffset(adapter.getItemCount() + 1, 0);
     }
 
     @Override

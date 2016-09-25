@@ -102,24 +102,6 @@ public class PrivateConversation extends RongConversation{
     @Override
     public int getUnReadCount() {
         return 0;
-//        /**
-//         * 获取某个会话内未读消息条数
-//         * conversationType 会话类型
-//         * targetId         会话目标ID
-//         */
-//        RongIMClient.getInstance().getUnreadCount(cType, cId,
-//                new RongIMClient.ResultCallback<Integer>() {
-//                    @Override
-//                    public void onSuccess(Integer integer) {
-//                        int unreadCount = integer;
-//                        //开发者根据自己需求自行处理接下来的逻辑
-//                    }
-//
-//                    @Override
-//                    public void onError(RongIMClient.ErrorCode errorCode) {
-//
-//                    }
-//                });
     }
 
     @Override

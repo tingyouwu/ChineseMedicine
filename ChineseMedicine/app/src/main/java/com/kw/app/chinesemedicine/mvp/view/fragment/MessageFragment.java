@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import cn.bmob.newim.event.MessageEvent;
-import cn.bmob.newim.event.OfflineMessageEvent;
 
 /**
  * 消息(聊天/电话)
@@ -146,17 +144,6 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
     public void onEventMainThread(RefreshEvent event){
         AppLogUtil.i("---会话页接收到自定义消息---");
         //因为新增`新朋友`这种会话类型
-        mPresenter.refreshConversations(getContext());
-    }
-
-    /**注册消息接收事件
-     * @param event
-     * 1、与用户相关的由开发者自己维护，SDK内部只存储用户信息
-     * 2、开发者获取到信息后，可调用SDK内部提供的方法更新会话
-     */
-    @Subscribe
-    public void onEventMainThread(MessageEvent event){
-        //重新获取本地消息并刷新列表
         mPresenter.refreshConversations(getContext());
     }
 

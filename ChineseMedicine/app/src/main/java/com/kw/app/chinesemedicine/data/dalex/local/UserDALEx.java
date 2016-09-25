@@ -1,10 +1,10 @@
 package com.kw.app.chinesemedicine.data.dalex.local;
 
-import com.wty.app.library.data.QueryBuilder;
 import com.wty.app.library.data.annotation.DatabaseField;
 import com.wty.app.library.data.annotation.DatabaseField.FieldType;
 import com.wty.app.library.data.annotation.SqliteDao;
 import com.wty.app.library.data.dalex.SqliteBaseDALEx;
+import com.wty.app.library.utils.AppLogUtil;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ public class UserDALEx extends SqliteBaseDALEx {
 
 	public static final int User_Doctor = 1;//医生
 	public static final int User_Not_Doctor = 0;//非医生
-	public static final String USERID = "userid";
 	public static final String PINYIN = "pinyin";
+	public static final String USERNAME = "username";
 
 	@DatabaseField(primaryKey = true,Type = FieldType.VARCHAR)
 	private String userid;
@@ -67,6 +67,18 @@ public class UserDALEx extends SqliteBaseDALEx {
 				TABLE_NAME,FriendRelationDALEx.get().getTableName(),TABLE_NAME,PINYIN);
 		   return findList(sql
 		   );
+	}
+
+	/**
+	 * 根据关键字搜索朋友
+	 **/
+	public List<UserDALEx> findAllFriendByFilter(String filterString){
+		String sql = String.format("select * from %s where %s or %s and exists (select null from %s where %s.userid = friendid and status = 1) order by %s asc",
+				TABLE_NAME,PINYIN + " like " + "'%" + filterString + "%'",USERNAME + " like " + " '%" + filterString + "%' ",FriendRelationDALEx.get().getTableName(),TABLE_NAME,PINYIN);
+		AppLogUtil.d(sql);
+		return findList(sql
+		);
+
 	}
 
 	public String getCreateAt() {

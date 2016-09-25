@@ -38,7 +38,6 @@ public class MessagePresenter extends BasePresenter<IMessageContract.IMessageVie
 
              @Override
              public void onFaild(String msg) {
-                 int i = 0;
              }
          });
     }
