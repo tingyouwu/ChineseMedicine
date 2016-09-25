@@ -30,6 +30,10 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
         this(context,0, data);
     }
 
+    public BaseRecyclerViewAdapter(Context context,int layoutResId) {
+        this(context,layoutResId,null);
+    }
+
     public BaseRecyclerViewAdapter(Context context,View contentView, List<T> data) {
         this(context,0, data);
         mContentView = contentView;
