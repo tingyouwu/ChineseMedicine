@@ -15,6 +15,7 @@
     <dimen name="height_line">1dip</dimen>
     <dimen name="height_15">15dip</dimen>
     <dimen name="height_20">20dip</dimen>
+    <dimen name="height_30">30dip</dimen>
     <dimen name="height_35">35dip</dimen>
     <dimen name="height_40">40dip</dimen>
     <dimen name="height_45">45dip</dimen>
@@ -23,6 +24,7 @@
     <dimen name="height_message">75dp</dimen>
     <dimen name="height_70">70dp</dimen>
 
+    <dimen name="margin_2">2dp</dimen>
     <dimen name="margin_3">3dp</dimen>
     <dimen name="margin_5">5dp</dimen>
     <dimen name="margin_8">8dp</dimen>
@@ -37,4 +39,5 @@
     <dimen name="margin_30">30dp</dimen>
     <dimen name="margin_40">40dp</dimen>
     <dimen name="margin_50">50dp</dimen>
+    <dimen name="margin_60">60dp</dimen>
 </resources>

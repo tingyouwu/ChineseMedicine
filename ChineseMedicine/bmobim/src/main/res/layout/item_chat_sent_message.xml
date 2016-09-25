@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_10"
-    android:paddingTop="@dimen/margin_15" >
+    android:paddingBottom="@dimen/margin_5"
+    android:paddingTop="@dimen/margin_5" >
 
     <TextView
         android:id="@+id/tv_time"
@@ -19,14 +19,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_50"
+        android:paddingLeft="@dimen/margin_60"
         android:layout_marginRight="@dimen/margin_5"
-        android:layout_marginTop="@dimen/margin_11" >
+        android:layout_marginTop="@dimen/margin_5" >
 
         <ImageView
             android:id="@+id/iv_avatar"
-            android:layout_width="@dimen/height_50"
-            android:layout_height="@dimen/height_50"
+            android:layout_width="@dimen/height_40"
+            android:layout_height="@dimen/height_40"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:src="@mipmap/img_contact_default"
@@ -41,13 +41,13 @@
             android:gravity="left|center"
             android:layout_toLeftOf="@id/iv_avatar"
             android:background="@drawable/bg_chatroom_content_right"
-            android:lineSpacingExtra="@dimen/margin_3"
-            android:minHeight="@dimen/height_50"
+            android:lineSpacingExtra="@dimen/margin_2"
+            android:minHeight="@dimen/height_30"
             android:minWidth="80dp"
-            android:text="11"
-            android:paddingTop="@dimen/margin_8"
-            android:paddingBottom="@dimen/margin_8"
-            android:paddingLeft="@dimen/margin_8"
+            android:text="11111111111111111111111111111111111111111"
+            android:paddingTop="@dimen/margin_3"
+            android:paddingBottom="@dimen/margin_3"
+            android:paddingLeft="@dimen/margin_5"
             android:paddingRight="@dimen/margin_15" />
 
         <ImageView
