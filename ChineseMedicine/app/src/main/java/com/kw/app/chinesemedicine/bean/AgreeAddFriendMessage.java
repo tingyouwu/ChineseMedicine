@@ -6,7 +6,6 @@ import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMess
 import com.wty.app.library.utils.AppLogUtil;
 
 import org.json.JSONObject;
-import io.rong.imlib.model.UserInfo;
 
 /**同意添加好友请求-仅仅只用于发送同意添加好友的消息
  * 接收到对方发送的同意添加自己为好友的请求时，
@@ -38,6 +37,7 @@ public class AgreeAddFriendMessage{
                 JSONObject json =new JSONObject(extra);
                 agree.setMsgid(json.getString("msgid"));
                 agree.setTime(json.getLong("time"));
+                agree.setName(json.getString("name"));
             }else{
                 AppLogUtil.i("AgreeAddFriendMessage 的extra为空");
             }

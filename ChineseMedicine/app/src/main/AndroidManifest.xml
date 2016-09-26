@@ -44,6 +44,10 @@
             android:name="RONG_CLOUD_APP_KEY"
             android:value="tdrvipksrtz75" />
 
+        <meta-data
+            android:name="Bmob_APP_KEY"
+            android:value="23913c4360866d3d50aee19a56fa24ff" />
+
         <service
             android:name="io.rong.imlib.ipc.RongService"
             android:exported="true"
@@ -61,7 +65,7 @@
         <!-- end -->
         <activity
             android:name=".activity.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/ImageTranslucentTheme"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -114,9 +118,10 @@
             android:name=".activity.SystemMessageActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
 
-        <meta-data
-            android:name="Bmob_APP_KEY"
-            android:value="23913c4360866d3d50aee19a56fa24ff" />
+        <activity
+            android:name=".activity.FriendInfoActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:theme="@style/ImageTranslucentTheme"/>
 
     </application>
 

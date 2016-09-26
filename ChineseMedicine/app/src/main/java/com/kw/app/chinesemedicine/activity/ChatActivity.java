@@ -1,5 +1,7 @@
 package com.kw.app.chinesemedicine.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -78,6 +80,13 @@ public class ChatActivity extends BaseActivity{
     private Drawable[] drawable_Anims;// 话筒动画
     private UserDALEx target;
     private boolean isHasMoreMessage = true;//是否还有更多数据
+
+    public static void startChatActivity(Context context,UserDALEx user){
+        Intent intent = new Intent();
+        intent.setClass(context, ChatActivity.class);
+        intent.putExtra(ChatActivity.TARGET, user);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onStart() {
@@ -158,6 +167,13 @@ public class ChatActivity extends BaseActivity{
      **/
     private void initTitle(){
         getDefaultNavigation().setTitle(target.getNickname());
+        getDefaultNavigation().getLeftButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtil.keyboardControl(ChatActivity.this,false,edit_msg);
+                finish();
+            }
+        });
     }
 
     /**

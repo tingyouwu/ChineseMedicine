@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.activity.FriendInfoActivity;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
 import com.wty.app.library.utils.ImageLoaderUtil;
@@ -22,9 +23,9 @@ public class ContactAdapter extends BaseRecyclerViewAdapter<UserDALEx> {
     }
 
     @Override
-    protected void convert(BaseRecyclerViewHolder helper, UserDALEx item, int position) {
+    protected void convert(BaseRecyclerViewHolder helper, final UserDALEx item, int position) {
         TextView name = helper.getView(R.id.tv_name);
-        ImageView icon = helper.getView(R.id.iv_contact_header);
+        final ImageView icon = helper.getView(R.id.iv_contact_header);
         TextView letter = helper.getView(R.id.tv_letter);
         ImageLoaderUtil.loadCircle(mContext,item.getLogourl(),R.mipmap.img_contact_default,icon);
         name.setText(item.getNickname());
@@ -39,6 +40,14 @@ public class ContactAdapter extends BaseRecyclerViewAdapter<UserDALEx> {
         }else{
             letter.setVisibility(View.GONE);
         }
+
+        helper.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FriendInfoActivity.startFriendInfoActivity(mContext,item);
+            }
+        });
+
     }
 
     /**

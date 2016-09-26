@@ -42,6 +42,7 @@ public class AddFriendMessage{
                 JSONObject json =new JSONObject(extra);
                 add.setMsgid(json.getString("msgid"));
                 add.setTime(json.getLong("time"));
+                add.setName(json.getString("name"));
             }else{
                 Logger.i("AddFriendMessage的extra为空");
             }

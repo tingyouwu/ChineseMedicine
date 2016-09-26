@@ -408,10 +408,10 @@ public class TabStripView extends LinearLayout implements View.OnClickListener {
         return mFragmentMap.get(tag);
     }
 
-    public void updateUnread(String tag,boolean hasunread){
+    public void updateUnread(String tag,int unread){
         ViewHolder holder = mViewHolderMap.get(tag);
         if(holder != null){
-            holder.tabUnread.setVisibility(hasunread?View.VISIBLE:View.GONE);
+            holder.tabUnread.setVisibility( unread > 0 ? View.VISIBLE : View.GONE);
         }
     }
 

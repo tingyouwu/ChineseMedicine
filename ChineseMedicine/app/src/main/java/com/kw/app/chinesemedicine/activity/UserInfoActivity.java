@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
+import com.kw.app.chinesemedicine.data.dalex.local.FriendRelationDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.utils.ImageLoaderUtil;
@@ -22,7 +24,6 @@ import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.v3.BmobUser;
 import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
@@ -30,7 +31,7 @@ import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
 
 /**
- * 用户资料
+ * 个人详情
  */
 public class UserInfoActivity extends BaseActivity {
 
@@ -42,14 +43,21 @@ public class UserInfoActivity extends BaseActivity {
     TextView tv_name;
     @Bind(R.id.btn_add_friend)
     Button btn_add_friend;
+    @Bind(R.id.btn_send_message)
+    Button btn_send_message;
 
     UserBmob user;
-    BmobIMUserInfo info;
 
     public static void startUserInfoActivity(Context context,UserBmob user) {
         Intent intent = new Intent(context, UserInfoActivity.class);
         intent.putExtra(TAG, user);
         context.startActivity(intent);
+    }
+
+    @OnClick(R.id.btn_send_message)
+    public void onSendMessage(View view){
+        UserDALEx friend = UserDALEx.get().findById(user.getObjectId());
+        ChatActivity.startChatActivity(UserInfoActivity.this,friend);
     }
 
     @OnClick(R.id.btn_add_friend)
@@ -78,6 +86,7 @@ public class UserInfoActivity extends BaseActivity {
         Map<String,Object> map =new HashMap<>();
         map.put("msgid", UUID.randomUUID().toString());//消息id
         map.put("time",System.currentTimeMillis());//当前时间
+        map.put("name",PreferenceUtil.getInstance().getLastName());//用户名
         message.setExtra(new Gson().toJson(map));
 
         RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE,
@@ -112,14 +121,16 @@ public class UserInfoActivity extends BaseActivity {
         user = (UserBmob)getIntent().getSerializableExtra(TAG);
         getDefaultNavigation().setTitle("个人资料");
 
-        if(user.getObjectId().equals(getCurrentUid())){
+        if(FriendRelationDALEx.get().isFriend(user.getObjectId())){
+                //已经是我朋友  就直接可以聊天
             btn_add_friend.setVisibility(View.GONE);
+            btn_send_message.setVisibility(View.VISIBLE);
         }else{
             btn_add_friend.setVisibility(View.VISIBLE);
+            btn_send_message.setVisibility(View.GONE);
         }
 
         //构造聊天方的用户信息:传入用户id、用户名和用户头像三个参数
-        info = new BmobIMUserInfo(user.getObjectId(),user.getUsername(),user.getLogourl());
         ImageLoaderUtil.loadCircle(this, user.getLogourl(), iv_avator);
         tv_name.setText(user.getUsername());
     }

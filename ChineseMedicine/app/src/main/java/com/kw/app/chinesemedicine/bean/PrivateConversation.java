@@ -111,10 +111,7 @@ public class PrivateConversation extends RongConversation{
 
     @Override
     public void onClick(Context context) {
-        Intent intent = new Intent();
-        intent.setClass(context, ChatActivity.class);
-        intent.putExtra(ChatActivity.TARGET, user);
-        context.startActivity(intent);
+        ChatActivity.startChatActivity(context,user);
     }
 
     @Override

@@ -1,8 +1,12 @@
 package com.kw.app.chinesemedicine.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +48,8 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     LoginInputView mloginInputview;
     @Bind(R.id.login_version)
     TextView tv_version;
+    @Bind(R.id.de_img_backgroud)
+    ImageView mImg_Background;
 
     @OnClick(R.id.login_signup)
     void goToRegisterActivity(){
@@ -55,7 +61,6 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     }
 
     private String userid;
-    private UserBmob user;
 
     @Override
     public UserLoginPresenter getPresenter() {
@@ -65,7 +70,8 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
     @Override
     public void onInitView(Bundle savedInstanceState) {
 
-        getDefaultNavigation().setTitle("老中医");
+        getDefaultNavigation().setTitle("");
+        getDefaultNavigation().getRootView().setBackgroundColor(Color.TRANSPARENT);
         getDefaultNavigation().getLeftButton().hide();
         CommonUtil.keyboardControl(LoginActivity.this, false, mloginInputview.getAccountInput());
 
@@ -109,6 +115,15 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
             } else {// 第一次使用，默认不记住密码
                 mloginInputview.setIsRememberPsw(false);
             }
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Animation animation = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.translate_anim);
+                    mImg_Background.startAnimation(animation);
+                }
+            }, 200);
+
         }
     }
 

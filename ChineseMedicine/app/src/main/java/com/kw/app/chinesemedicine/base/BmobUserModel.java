@@ -7,6 +7,7 @@ import com.kw.app.chinesemedicine.bean.Friend;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.listener.QueryUserListener;
 import com.wty.app.library.base.MainApplication;
+import com.wty.app.library.utils.AppLogUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +29,7 @@ import cn.bmob.v3.listener.SaveListener;
 public class BmobUserModel{
 
     public int CODE_NULL=1000;
-    public static final int DEFAULT_LIMIT=20;
+    public static final int DEFAULT_LIMIT=50;
 
     public Context getContext(){
         return MainApplication.getInstance();
@@ -169,4 +170,25 @@ public class BmobUserModel{
         Friend friend =new Friend();
         friend.delete(getContext(),f.getObjectId(),listener);
     }
+
+    /**
+     * 添加对方为自己的好友
+     * @param uid
+     */
+    public void addFriend(String uid){
+        UserBmob user =new UserBmob();
+        user.setObjectId(uid);
+        BmobUserModel.getInstance().agreeAddFriend(user, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                AppLogUtil.i("onSuccess");
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                AppLogUtil.i("onFailure:" + s + "-" + i);
+            }
+        });
+    }
+
 }

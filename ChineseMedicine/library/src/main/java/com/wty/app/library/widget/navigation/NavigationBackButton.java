@@ -22,7 +22,6 @@ public class NavigationBackButton extends NavigationButton {
         init();
     }
 
-
     private void init(){
         setRootGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         setButton(R.drawable.actionbar_back, new OnClickListener() {
@@ -34,6 +33,8 @@ public class NavigationBackButton extends NavigationButton {
                 }
             }
         });
+
+        setText("返回");
     }
 
 }

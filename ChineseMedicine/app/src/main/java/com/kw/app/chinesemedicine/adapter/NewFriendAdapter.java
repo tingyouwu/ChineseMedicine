@@ -131,6 +131,7 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
         Map<String,Object> map =new HashMap<>();
         map.put("msgid", UUID.randomUUID().toString());//消息id
         map.put("time", System.currentTimeMillis());//当前时间
+        map.put("name",PreferenceUtil.getInstance().getLastName());//用户名
         message.setExtra(new Gson().toJson(map));
 
         RongIMClient.getInstance().sendMessage(Conversation.ConversationType.PRIVATE,

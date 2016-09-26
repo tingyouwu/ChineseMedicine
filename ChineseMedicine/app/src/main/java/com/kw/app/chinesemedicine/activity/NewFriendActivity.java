@@ -39,6 +39,7 @@ public class NewFriendActivity extends BaseActivity {
 
     public void query() {
         adapter.retsetData(NewFriendDALEx.get().getAllNewFriend());
+        rcSearch.refreshComplete();
     }
 
     @Override
@@ -55,6 +56,7 @@ public class NewFriendActivity extends BaseActivity {
     @Override
     public void onInitView(Bundle savedInstanceState) {
         getDefaultNavigation().setTitle("新朋友");
+        getDefaultNavigation().getLeftButton().setText("返回");
 
         adapter = new NewFriendAdapter(this,mDataList);
         rcSearch.setLayoutManager(new LinearLayoutManager(this));

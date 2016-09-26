@@ -10,12 +10,13 @@ import com.kw.app.chinesemedicine.data.dalex.local.SystemMessageDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.event.RefreshChatEvent;
 import com.kw.app.chinesemedicine.event.RefreshEvent;
+import com.kw.app.chinesemedicine.event.RefreshMessageTabEvent;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.utils.AppLogUtil;
+import com.wty.app.library.utils.CommonUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
-import cn.bmob.v3.listener.SaveListener;
 import io.rong.imlib.AnnotationNotFoundException;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
@@ -70,7 +71,11 @@ public class RongManager {
 			if(content instanceof CustomzeContactNotificationMessage){
 				handleCustomzeContactNotificationMessage((CustomzeContactNotificationMessage) content);
 			}else if (content instanceof TextMessage || content instanceof ImageMessage || content instanceof LocationMessage || content instanceof VoiceMessage){
+				handleChatMessage(message);
+				//如果在聊天页面  刷新一下
 				EventBus.getDefault().post(new RefreshChatEvent(message));
+				//刷新消息tab红点状态
+				EventBus.getDefault().post(new RefreshMessageTabEvent());
 			}
 			//发送页面刷新的广播
 			EventBus.getDefault().post(new RefreshEvent());
@@ -93,7 +98,8 @@ public class RongManager {
 			//本地好友请求表做下校验，本地没有的才允许显示通知栏--有可能离线消息会有些重复
 			if(!friend.isExist(friend.getMsgid())){
 				friend.saveOrUpdate();
-				CMNotificationManager.showNotification(mContext,friend.getName(),friend.getMsg(),null);
+				if(CommonUtil.isAppIsInBackground(mContext))
+				    CMNotificationManager.showNotification(mContext,friend.getName(),friend.getMsg(),null);
 			}
 
 			SystemMessageDALEx system = SystemMessageDALEx.convert(contactNotificationMessage);
@@ -106,13 +112,16 @@ public class RongManager {
 			//对方同意我的好友请求 此时需要做的事情：1、添加对方为好友，2、显示通知
 			AppLogUtil.d("对方同意我的好友邀请");
 			AgreeAddFriendMessage agree = AgreeAddFriendMessage.convert(contactNotificationMessage);
-			addFriend(contactNotificationMessage.getSourceUserId());
-			CMNotificationManager.showNotification(mContext, agree.getName(), agree.getMsg(), null);
+			BmobUserModel.getInstance().addFriend(contactNotificationMessage.getSourceUserId());
 			SystemMessageDALEx system = SystemMessageDALEx.convert(contactNotificationMessage);
 			system.setType(SystemMessageDALEx.SystemMessageType.AgreeAdd.code);
+
 			if(!system.isExist(system.getMsgid())){
 				system.saveOrUpdate();
 			}
+
+			if(CommonUtil.isAppIsInBackground(mContext))
+				CMNotificationManager.showNotification(mContext, agree.getName(), agree.getMsg(), null);
 
 		}else if(contactNotificationMessage.getOperation().equals(ContactNotificationMessage.CONTACT_OPERATION_REJECT_RESPONSE)){
 			//对方拒绝我的好友请求
@@ -121,23 +130,29 @@ public class RongManager {
 	}
 
 	/**
-	 * 添加对方为自己的好友
-	 * @param uid
-	 */
-	private void addFriend(String uid){
-		UserBmob user =new UserBmob();
-		user.setObjectId(uid);
-		BmobUserModel.getInstance().agreeAddFriend(user, new SaveListener() {
-			@Override
-			public void onSuccess() {
-				AppLogUtil.i("onSuccess");
+	 * @处理一下聊天信息
+	 **/
+	private void handleChatMessage(Message message){
+		if(CommonUtil.isAppIsInBackground(mContext)){
+			MessageContent content = message.getContent();
+			String notificationmsg = "[未知]";
+			String name = "陌生人";
+			if(content instanceof TextMessage){
+				notificationmsg = ((TextMessage)content).getContent();
+			}else if(content instanceof ImageMessage){
+				notificationmsg =  "[图片]";
+			}else if(content instanceof VoiceMessage){
+				notificationmsg = "[语音]";
+			}else if(content instanceof LocationMessage){
+				notificationmsg = "[位置]";
 			}
 
-			@Override
-			public void onFailure(int i, String s) {
-				AppLogUtil.i("onFailure:" + s + "-" + i);
+			UserDALEx user = UserDALEx.get().findById(message.getSenderUserId());
+			if(user != null){
+				name = user.getNickname();
 			}
-		});
+			CMNotificationManager.showNotification(mContext,name,notificationmsg,null);
+		}
 	}
 
 }

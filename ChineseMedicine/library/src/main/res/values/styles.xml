@@ -9,8 +9,8 @@
     <style name="AppTheme" parent="@style/Base.V7.Theme.AppCompat.Light">
         <!--Customize your theme here.-->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorBrownPrimary</item>
-        <item name="colorAccent">@color/colorBrownPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
         <item name="actionBarStyle">@style/ActionBarBaseStyle</item>
         <!--去掉actionbar阴影 -->
         <item name="android:windowContentOverlay">@null</item>
@@ -31,6 +31,10 @@
         <item name="contentInsetEnd">0dp</item>
         <item name="height">50dip</item>
         <item name="elevation">0dp</item>
+    </style>
+
+    <style name="ImageTranslucentTheme" parent="AppTheme.NoActionBar">
+        <!--在Android 4.4之前的版本上运行，直接跟随系统主题-->
     </style>
 
 </resources>

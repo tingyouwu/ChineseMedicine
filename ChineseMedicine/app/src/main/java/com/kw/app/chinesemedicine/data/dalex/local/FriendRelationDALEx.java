@@ -8,6 +8,8 @@ import com.wty.app.library.data.dalex.SqliteBaseDALEx;
 
 import java.util.List;
 
+import io.rong.message.TextMessage;
+
 /**
  * 好友关系表
  * @author wty
@@ -45,6 +47,16 @@ public class FriendRelationDALEx extends SqliteBaseDALEx {
 		}else{
 			return list.get(0);
 		}
+	}
+
+	/**
+	 * 判断 userid 是否为我的朋友
+	 **/
+	public boolean isFriend(String userid){
+		List<FriendRelationDALEx> list = findList(new QueryBuilder().selectNull().from(TABLE_NAME).where(equal("friendid",userid)).build());
+		if(list.size()>0)
+			return true;
+		return false;
 	}
 
 	public String getUpdateAt() {

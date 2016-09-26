@@ -137,7 +137,8 @@ public class MessageFragment extends BaseFragment<MessagePresenter> implements I
         super.onStop();
     }
 
-    /**注册自定义消息接收事件
+    /**
+     * 刷新列表
      * @param event
      */
     @Subscribe

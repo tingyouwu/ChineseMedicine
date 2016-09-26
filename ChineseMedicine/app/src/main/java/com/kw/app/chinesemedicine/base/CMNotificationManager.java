@@ -8,6 +8,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -60,6 +62,8 @@ public class CMNotificationManager {
 			defaults |=Notification.DEFAULT_VIBRATE;
 		}
 
+		Bitmap largetIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_launcher);
+
 		NotificationCompat.Builder mBulider = new NotificationCompat.Builder(context);
 		mBulider.setContentTitle(title)//设置通知栏标题
 				.setTicker(content)//通知首次出现在通知栏，带上升动画效果的
@@ -68,6 +72,7 @@ public class CMNotificationManager {
 				.setPriority(Notification.PRIORITY_DEFAULT)//设置该通知优先级
 				.setAutoCancel(true)//设置这个标志当用户单击面板就可以让通知将自动取消
 				.setDefaults(defaults)//向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合
+				.setLargeIcon(largetIcon)
 				.setSmallIcon(R.drawable.icon_launcher)
 				.setContentIntent(contentItent);
 
