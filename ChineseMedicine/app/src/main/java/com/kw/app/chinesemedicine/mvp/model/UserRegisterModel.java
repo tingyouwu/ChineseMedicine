@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.List;
 
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
 
@@ -53,7 +54,7 @@ public class UserRegisterModel implements IUserRegisterContract.IUserRegisterMod
      * @Decription 注册
      **/
     private void signUp(final Context context, final String compresspath, final UserDALEx data, final ICallBack<String> callBack){
-        BmobFile.uploadBatch(context,new String[]{compresspath}, new UploadBatchListener() {
+        BmobFile.uploadBatch(new String[]{compresspath}, new UploadBatchListener() {
             @Override
             public void onSuccess(List<BmobFile> list, List<String> urls) {
                 if (urls.size() == 1) {//如果数量相等，则代表文件上传完成
@@ -76,16 +77,15 @@ public class UserRegisterModel implements IUserRegisterContract.IUserRegisterMod
     private void signUpToBmob(Context context, UserDALEx data,final ICallBack<String> callBack){
         final UserBmob bmob = new UserBmob();
         bmob.setAnnotationField(data);
-        bmob.signUp(context, new SaveListener() {
+        bmob.signUp(new SaveListener<UserBmob>() {
             @Override
-            public void onSuccess() {
-                bmob.save(bmob);
-                callBack.onSuccess(bmob.getObjectId());
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                callBack.onFaild(s);
+            public void done(UserBmob userBmob, BmobException e) {
+                if(e==null){
+                    userBmob.save(userBmob);
+                    callBack.onSuccess(userBmob.getObjectId());
+                }else{
+                    callBack.onFaild(e.getMessage());
+                }
             }
         });
     }

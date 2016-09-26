@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.wty.app.bmobim.R;
 import com.wty.app.library.adapter.BaseRecyclerViewMultiItemAdapter;
@@ -53,7 +54,7 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
         super(context, data);
         this.target = target;
 
-        currentUid = BmobUser.getCurrentUser(context).getObjectId();
+        currentUid = BmobUser.getCurrentUser(UserBmob.class).getObjectId();
         addItemType(TYPE_RECEIVER_TXT, R.layout.item_chat_received_message);
         addItemType(TYPE_SEND_TXT, R.layout.item_chat_sent_message);
         addItemType(TYPE_SEND_IMAGE,R.layout.item_chat_sent_image);

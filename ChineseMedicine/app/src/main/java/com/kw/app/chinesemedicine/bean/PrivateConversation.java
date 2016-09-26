@@ -1,14 +1,13 @@
 package com.kw.app.chinesemedicine.bean;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.activity.ChatActivity;
 import com.kw.app.chinesemedicine.base.BmobUserModel;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
-import com.kw.app.chinesemedicine.listener.QueryUserListener;
+import com.wty.app.library.callback.ICallBack;
 
 import cn.bmob.v3.exception.BmobException;
 import io.rong.imlib.model.Conversation;
@@ -36,20 +35,25 @@ public class PrivateConversation extends RongConversation{
 
         //去用户表中去拿此id的信息
         if(!UserDALEx.get().isExist(cId)){
-            BmobUserModel.getInstance().queryUserInfo(cId, new QueryUserListener() {
+
+            BmobUserModel.getInstance().queryUserInfo(cId, new ICallBack<UserBmob>() {
                 @Override
-                public void done(UserBmob userBmob, BmobException e) {
-                    if(e==null){
-                        userBmob.save(userBmob);
-                        user = UserDALEx.get().findById(cId);
-                        if(user != null){
-                            cName = user.getNickname();
-                        }else{
-                            cName = "陌生人";
-                        }
+                public void onSuccess(UserBmob userBmob) {
+                    userBmob.save(userBmob);
+                    user = UserDALEx.get().findById(cId);
+                    if(user != null){
+                        cName = user.getNickname();
+                    }else{
+                        cName = "陌生人";
                     }
                 }
+
+                @Override
+                public void onFaild(String msg) {
+
+                }
             });
+
         }else{
             user = UserDALEx.get().findById(cId);
             if(user != null){

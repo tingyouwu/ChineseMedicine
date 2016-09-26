@@ -2,17 +2,13 @@ package com.kw.app.chinesemedicine.mvp.model;
 
 import android.content.Context;
 
-import com.kw.app.chinesemedicine.data.annotation.bmob.BmobExceptionCode;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.utils.PreferenceUtil;
 
-import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -26,27 +22,16 @@ public class UserLoginModel implements IUserLoginContract.IUserLoginModel {
         bu2.setUsername(name);
         bu2.setPassword(psw);
         //首先尝试用户名+密码登陆
-        bu2.login(context, new SaveListener() {
-            @Override
-            public void onSuccess() {
-                callBack.onSuccess(bu2);
-                saveUserPreference(isAutoLogin,psw, BmobUser.getCurrentUser(context, UserBmob.class));
-            }
+        bu2.login(new SaveListener<UserBmob>() {
 
             @Override
-            public void onFailure(int i, String s) {
-                //再次尝试以邮箱登陆
-                bu2.loginByAccount(context,name, psw, new LogInListener<UserBmob>() {
-                    @Override
-                    public void done(UserBmob bmobUser, BmobException e) {
-                        if(bmobUser!=null){
-                            callBack.onSuccess(bmobUser);
-                            saveUserPreference(isAutoLogin,psw,BmobUser.getCurrentUser(context,UserBmob.class));
-                        }else{
-                            callBack.onFaild(BmobExceptionCode.match(e.getErrorCode()));
-                        }
-                    }
-                });
+            public void done(UserBmob userBmob, BmobException e) {
+                if(e==null){
+                    callBack.onSuccess(userBmob);
+                    saveUserPreference(isAutoLogin,psw, BmobUser.getCurrentUser(UserBmob.class));
+                }else {
+                    callBack.onFaild(e.getMessage());
+                }
             }
         });
     }

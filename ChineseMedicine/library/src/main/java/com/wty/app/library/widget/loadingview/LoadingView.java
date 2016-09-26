@@ -128,6 +128,12 @@ public class LoadingView extends FrameLayout {
         return this;
     }
 
+    public void updateLoadMsg(String msg){
+        if(mState == LoadingState.STATE_LOADING){
+            tv_loading.setText(msg);
+        }
+    }
+
     private void changeState(LoadingState state) {
         switch (state) {
             case STATE_LOADING:

@@ -17,6 +17,7 @@ import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.adapter.BaseRecyclerViewAdapter;
+import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
@@ -27,7 +28,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.listener.SaveListener;
 import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
@@ -64,17 +64,18 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
             agree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    agreeAdd(item, new SaveListener() {
+
+                    agreeAdd(item, new ICallBack<String>() {
                         @Override
-                        public void onSuccess() {
+                        public void onSuccess(String data) {
                             tv_status.setText("已添加");
                             tv_status.setVisibility(View.VISIBLE);
                             agree.setVisibility(View.GONE);
                         }
 
                         @Override
-                        public void onFailure(int i, String s) {
-                            ((BaseActivity) mContext).showAppToast("添加好友失败:" + s);
+                        public void onFaild(String msg) {
+                            ((BaseActivity) mContext).showAppToast("添加好友失败:"+msg);
                         }
                     });
                 }
@@ -102,18 +103,18 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
     /**
      * @Decription 同意添加到好友列表
      **/
-    private void agreeAdd(final NewFriendDALEx add, final SaveListener listener){
+    private void agreeAdd(final NewFriendDALEx add, final ICallBack<String> callBack){
         final UserBmob user = new UserBmob();
         user.setObjectId(add.getUid());
-        BmobUserModel.getInstance().agreeAddFriend(user, new SaveListener() {
+        BmobUserModel.getInstance().agreeAddFriend(user, new ICallBack<String>() {
             @Override
-            public void onSuccess() {
-                sendAgreeAddFriendMessage(add,listener);
+            public void onSuccess(String data) {
+                sendAgreeAddFriendMessage(add,callBack);
             }
 
             @Override
-            public void onFailure(int i, String s) {
-                listener.onFailure(i, s);
+            public void onFaild(String msg) {
+                callBack.onFaild(msg);
             }
         });
     }
@@ -121,8 +122,8 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
     /**
      * 发送同意添加好友的请求
      */
-    private void sendAgreeAddFriendMessage(final NewFriendDALEx user, final SaveListener listener){
-        UserBmob currentUser = BmobUser.getCurrentUser(mContext, UserBmob.class);
+    private void sendAgreeAddFriendMessage(final NewFriendDALEx user, final ICallBack<String> callBack){
+        UserBmob currentUser = BmobUser.getCurrentUser(UserBmob.class);
         CustomzeContactNotificationMessage message = CustomzeContactNotificationMessage.obtain(CustomzeContactNotificationMessage.CONTACT_OPERATION_ACCEPT_RESPONSE,
                 PreferenceUtil.getInstance().getLastAccount(),
                 user.getUid(), "已同意您的好友请求");
@@ -147,13 +148,13 @@ public class NewFriendAdapter extends BaseRecyclerViewAdapter<NewFriendDALEx> {
                     @Override
                     public void onSuccess(Message message) {
                         NewFriendDALEx.get().updateNewFriend(user, AddFriendMessage.STATUS_VERIFIED);
-                        listener.onSuccess();
+                        callBack.onSuccess("");
                         sendTxtMessage(user);
                     }
 
                     @Override
                     public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-                        listener.onFailure(1,"同意失败");
+                        callBack.onFaild("同意失败");
                     }
                 });
     }

@@ -216,6 +216,8 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
             });
             loadingdialog.show();
 
+        }else{
+            loadingdialog.setTitleText(msg);
         }
     }
 

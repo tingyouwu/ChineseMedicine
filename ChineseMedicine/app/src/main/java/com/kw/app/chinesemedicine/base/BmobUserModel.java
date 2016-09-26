@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.kw.app.chinesemedicine.bean.Friend;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
-import com.kw.app.chinesemedicine.listener.QueryUserListener;
 import com.wty.app.library.base.MainApplication;
+import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.utils.AppLogUtil;
 
 import java.text.ParseException;
@@ -18,9 +18,9 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * @author :wty
@@ -28,7 +28,6 @@ import cn.bmob.v3.listener.SaveListener;
  */
 public class BmobUserModel{
 
-    public int CODE_NULL=1000;
     public static final int DEFAULT_LIMIT=50;
 
     public Context getContext(){
@@ -46,53 +45,53 @@ public class BmobUserModel{
     /**查询用户
      * @param username
      * @param limit
-     * @param listener
+     * @param callBack
      */
-    public void queryUsers(String username,int limit,final FindListener<UserBmob> listener){
+    public void queryUsers(String username,int limit,final ICallBack<List<UserBmob>> callBack){
         BmobQuery<UserBmob> query = new BmobQuery<>();
         //去掉当前用户
-        BmobUser user = BmobUser.getCurrentUser(getContext());
+        UserBmob user = UserBmob.getCurrentUser(UserBmob.class);
         query.addWhereNotEqualTo("username",user.getUsername());
         query.addWhereContains("username", username);
         query.setLimit(limit);
         query.order("-createdAt");
-        query.findObjects(getContext(), new FindListener<UserBmob>() {
+
+        query.findObjects(new FindListener<UserBmob>() {
             @Override
-            public void onSuccess(List<UserBmob> list) {
-                if (list != null && list.size() > 0) {
-                    listener.onSuccess(list);
-                } else {
-                    listener.onError(CODE_NULL, "查无此人");
+            public void done(List<UserBmob> list, BmobException e) {
+                if(e==null){
+                    if (list != null && list.size() > 0) {
+                        callBack.onSuccess(list);
+                    } else {
+                        callBack.onFaild("查无此人");
+                    }
+                }else{
+                    callBack.onFaild(e.getMessage());
                 }
             }
-
-            @Override
-            public void onError(int i, String s) {
-                listener.onError(i, s);
-            }
         });
+
     }
 
     /**查询用户信息
      * @param objectId
-     * @param listener
+     * @param callBack
      */
-    public void queryUserInfo(String objectId, final QueryUserListener listener){
+    public void queryUserInfo(String objectId, final ICallBack<UserBmob> callBack){
         BmobQuery<UserBmob> query = new BmobQuery<>();
         query.addWhereEqualTo("objectId", objectId);
-        query.findObjects(getContext(), new FindListener<UserBmob>() {
+        query.findObjects(new FindListener<UserBmob>() {
             @Override
-            public void onSuccess(List<UserBmob> list) {
-                if (list != null && list.size() > 0) {
-                    listener.internalDone(list.get(0), null);
-                } else {
-                    listener.internalDone(new BmobException(000, "查无此人"));
+            public void done(List<UserBmob> list, BmobException e) {
+                if(e==null){
+                    if (list != null && list.size() > 0) {
+                        callBack.onSuccess(list.get(0));
+                    } else {
+                        callBack.onFaild("查无此人");
+                    }
+                }else{
+                    callBack.onFaild(e.getMessage());
                 }
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                listener.internalDone(new BmobException(i, s));
             }
         });
     }
@@ -101,35 +100,48 @@ public class BmobUserModel{
      * @更新用户信息
      **/
     public void updateUserInfo(String userid){
-        BmobUserModel.getInstance().queryUserInfo(userid, new QueryUserListener() {
+
+        BmobUserModel.getInstance().queryUserInfo(userid, new ICallBack<UserBmob>() {
             @Override
-            public void done(UserBmob user, BmobException e) {
+            public void onSuccess(UserBmob user) {
+                user.save(user);
+            }
+
+            @Override
+            public void onFaild(String msg) {
+
+            }
+        });
+
+    }
+
+    /**
+     * 同意添加好友：添加对方到自己的好友列表中
+     */
+    public void agreeAddFriend(UserBmob friend, final ICallBack<String> callBack){
+        Friend f = new Friend();
+        UserBmob user = BmobUser.getCurrentUser(UserBmob.class);
+        f.setUser(user);
+        f.setFriendUser(friend);
+        f.setStatus(1);//1表示我添加为好友  0表示我删除这条好友关系
+        f.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
                 if(e==null){
-                    user.save(user);
+                    callBack.onSuccess("");
+                }else{
+                    callBack.onFaild(e.getMessage());
                 }
             }
         });
     }
 
     /**
-     * 同意添加好友：添加对方到自己的好友列表中
-     */
-    public void agreeAddFriend(UserBmob friend,SaveListener listener){
-        Friend f = new Friend();
-        UserBmob user = BmobUser.getCurrentUser(getContext(), UserBmob.class);
-        f.setUser(user);
-        f.setFriendUser(friend);
-        f.setStatus(1);//1表示我添加为好友  0表示我删除这条好友关系
-        f.save(getContext(),listener);
-    }
-
-    /**
      * 查询好友
-     * @param listener
      */
-    public void queryFriends(String updatetime,final FindListener<Friend> listener){
-        BmobQuery<Friend> query = new BmobQuery<>();
-        UserBmob user = BmobUser.getCurrentUser(getContext(), UserBmob.class);
+    public void queryFriends(String updatetime, final ICallBack<List<Friend>> callBack){
+        BmobQuery<Friend> query = new BmobQuery<Friend>();
+        UserBmob user = BmobUser.getCurrentUser(UserBmob.class);
         query.addWhereEqualTo("user", user);
 
         if(!TextUtils.isEmpty(updatetime)){
@@ -144,19 +156,18 @@ public class BmobUserModel{
         }
 
         query.include("friendUser");
-        query.findObjects(getContext(), new FindListener<Friend>() {
+        query.findObjects(new FindListener<Friend>() {
             @Override
-            public void onSuccess(List<Friend> list) {
-                if (list != null && list.size() > 0) {
-                    listener.onSuccess(list);
-                } else {
-                    listener.onError(0, "暂无联系人");
+            public void done(List<Friend> list, BmobException e) {
+                if(e==null){
+                    if (list != null && list.size() > 0) {
+                        callBack.onSuccess(list);
+                    } else {
+                        callBack.onFaild("暂无联系人");
+                    }
+                }else{
+                    callBack.onFaild(e.getMessage());
                 }
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                listener.onError(i, s);
             }
         });
     }
@@ -166,9 +177,19 @@ public class BmobUserModel{
      * @param f
      * @param listener
      */
-    public void deleteFriend(Friend f,DeleteListener listener){
+    public void deleteFriend(Friend f, final ICallBack<String> listener){
         Friend friend =new Friend();
-        friend.delete(getContext(),f.getObjectId(),listener);
+        friend.setObjectId(f.getObjectId());
+        friend.delete(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    listener.onSuccess("删除成功");
+                }else{
+                    listener.onFaild("删除失败:"+e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -178,15 +199,15 @@ public class BmobUserModel{
     public void addFriend(String uid){
         UserBmob user =new UserBmob();
         user.setObjectId(uid);
-        BmobUserModel.getInstance().agreeAddFriend(user, new SaveListener() {
+        BmobUserModel.getInstance().agreeAddFriend(user, new ICallBack<String>() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(String data) {
                 AppLogUtil.i("onSuccess");
             }
 
             @Override
-            public void onFailure(int i, String s) {
-                AppLogUtil.i("onFailure:" + s + "-" + i);
+            public void onFaild(String msg) {
+                AppLogUtil.i("onFailure:" + msg);
             }
         });
     }

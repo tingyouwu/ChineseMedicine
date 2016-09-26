@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
 
@@ -59,7 +60,7 @@ public class DynamicAddModel implements IDynamicAddContract.IDynamicAddModel {
 
     private void uploadBatch(final Context context, final List<String> compresspaths, final DynamicDALEx data, final ICallBack<String> callBack){
 
-        BmobFile.uploadBatch(context,compresspaths.toArray(new String[compresspaths.size()]), new UploadBatchListener() {
+        BmobFile.uploadBatch(compresspaths.toArray(new String[compresspaths.size()]), new UploadBatchListener() {
             @Override
             public void onSuccess(List<BmobFile> list, List<String> urls) {
                 //有多少个文件上传，onSuccess方法就会执行多少次;
@@ -70,17 +71,16 @@ public class DynamicAddModel implements IDynamicAddContract.IDynamicAddModel {
                     final DynamicBmob bmob = new DynamicBmob();
                     bmob.setAnnotationField(data);
 
-                    bmob.save(context, new SaveListener() {
+                    bmob.save(new SaveListener<String>() {
                         @Override
-                        public void onSuccess() {
-                            data.setDynamicid(bmob.getObjectId());
-                            data.saveOrUpdate();
-                            callBack.onSuccess(bmob.getObjectId());
-                        }
-
-                        @Override
-                        public void onFailure(int i, String s) {
-                            callBack.onFaild(s);
+                        public void done(String objectid, BmobException e) {
+                            if(e==null){
+                                data.setDynamicid(objectid);
+                                data.saveOrUpdate();
+                                callBack.onSuccess(objectid);
+                            }else{
+                                callBack.onFaild(e.getMessage());
+                            }
                         }
                     });
 

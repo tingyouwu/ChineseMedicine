@@ -22,7 +22,11 @@ public interface IUserLoginContract {
         void dismissLoading(OnDismissCallbackListener callback);
         boolean checkNet();
         void showNoNet();
-        void finishActivity(UserBmob user);
+        void finishActivity();
+        void showLoadingView(String loadmsg);
+        void dismissLoadingView();
+        void updateLoadingMsg(String msg);
+        void showFailed(String msg);
     }
 
 }

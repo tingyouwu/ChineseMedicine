@@ -140,10 +140,6 @@ public class UserInfoActivity extends BaseActivity {
         return R.layout.activity_user_info;
     }
 
-    private String getCurrentUid(){
-        return BmobUser.getCurrentUser(this,UserBmob.class).getObjectId();
-    }
-
     @Override
     protected boolean isEnableStatusBar() {
         return true;

@@ -13,6 +13,7 @@ import com.kw.app.chinesemedicine.base.BmobUserModel;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
 import com.kw.app.chinesemedicine.widget.ClearEditText;
 import com.wty.app.library.activity.BaseActivity;
+import com.wty.app.library.callback.ICallBack;
 import com.wty.app.library.widget.loadingview.LoadingView;
 import com.wty.app.library.widget.xrecyclerview.ProgressStyle;
 import com.wty.app.library.widget.xrecyclerview.XRecyclerView;
@@ -55,16 +56,16 @@ public class SearchUserActivity extends BaseActivity {
             showAppToast("请填写用户名");
             return;
         }
-        BmobUserModel.getInstance().queryUsers(name, BmobUserModel.DEFAULT_LIMIT, new FindListener<UserBmob>() {
+        BmobUserModel.getInstance().queryUsers(name, BmobUserModel.DEFAULT_LIMIT, new ICallBack<List<UserBmob>>() {
             @Override
             public void onSuccess(List<UserBmob> list) {
                 adapter.retsetData(list);
             }
 
             @Override
-            public void onError(int i, String s) {
+            public void onFaild(String msg) {
                 adapter.clearData();
-                showAppToast(s + "(" + i + ")");
+                showAppToast(msg);
             }
         });
     }

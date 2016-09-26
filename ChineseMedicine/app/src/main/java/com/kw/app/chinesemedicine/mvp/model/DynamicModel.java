@@ -29,18 +29,18 @@ public class DynamicModel implements IDynamicContract.IDynamicModel {
     public void refreshMoreDynamic(Context context,DynamicDALEx data, final ICallBack<List<DynamicDALEx>> callBack) {
         BmobQuery<DynamicBmob> query = new BmobQuery<DynamicBmob>();
 
-        query.findObjects(context, new FindListener<DynamicBmob>() {
+        query.findObjects(new FindListener<DynamicBmob>() {
             @Override
-            public void onSuccess(List<DynamicBmob> list) {
-                List<DynamicDALEx> newlist = DynamicBmob.get().saveReturn(list);
-                callBack.onSuccess(newlist);
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                callBack.onFaild(s);
+            public void done(List<DynamicBmob> list, BmobException e) {
+                if(e==null){
+                    List<DynamicDALEx> newlist = DynamicBmob.get().saveReturn(list);
+                    callBack.onSuccess(newlist);
+                }else{
+                    callBack.onFaild(e.getMessage());
+                }
             }
         });
+
     }
 
     @Override
