@@ -1,10 +1,13 @@
 package com.kw.app.chinesemedicine.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +19,7 @@ import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.mvp.contract.IUserLoginContract;
 import com.kw.app.chinesemedicine.mvp.presenter.UserLoginPresenter;
 import com.kw.app.chinesemedicine.widget.login.LoginInputView;
+import com.tbruyelle.rxpermissions.RxPermissions;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.base.AppConstant;
 import com.wty.app.library.utils.CommonUtil;
@@ -26,6 +30,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import rx.functions.Action1;
 
 /**
  * @author wty
@@ -64,7 +69,6 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
 
     @Override
     public void onInitView(Bundle savedInstanceState) {
-
         getDefaultNavigation().setTitle("");
         getDefaultNavigation().getRootView().setBackgroundColor(Color.TRANSPARENT);
         getDefaultNavigation().getLeftButton().hide();
@@ -75,6 +79,26 @@ public class LoginActivity extends BaseActivity<UserLoginPresenter> implements I
         String psw = PreferenceUtil.getInstance().getLastPassword();
         String logourl = PreferenceUtil.getInstance().getLogoUrl();
         String userid = PreferenceUtil.getInstance().getLastAccount();
+
+        if(PreferenceUtil.getInstance().isFirstLogin() && Build.VERSION.SDK_INT == Build.VERSION_CODES.M){
+            //如果是第一次安装应用程序 适配android6.0动态权限
+            RxPermissions.getInstance(this)
+                    .request(Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.WRITE_CONTACTS,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.RECORD_AUDIO)
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean aBoolean) {
+                            if(aBoolean){
+                                // All requested permissions are granted
+                            }else{
+                                // At least one permission is denied
+                            }
+                        }
+                    });
+            PreferenceUtil.getInstance().writePreferences(PreferenceUtil.IsFirstLogin,false);
+        }
 
         if(isAutoLogin){//自动登录就调整到主页面
             UserBmob user = new UserBmob();

@@ -163,7 +163,7 @@ public class HttpUtil {
                 e.printStackTrace();
                 return new Response(-1, "网络连接出错!");
             } catch (IOException e) {
-                throw new RuntimeException("Parser http response error!");
+                return new Response(-1,"Parser http response error!");
             }
         }
 
