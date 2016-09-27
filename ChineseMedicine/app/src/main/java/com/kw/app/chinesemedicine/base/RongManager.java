@@ -12,6 +12,7 @@ import com.kw.app.chinesemedicine.event.RefreshChatEvent;
 import com.kw.app.chinesemedicine.event.RefreshEvent;
 import com.kw.app.chinesemedicine.event.RefreshMessageTabEvent;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
+import com.kw.app.chinesemedicine.messagecontent.CustomzeFileMessage;
 import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.CommonUtil;
 
@@ -22,6 +23,7 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
 import io.rong.message.ContactNotificationMessage;
+import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
@@ -53,6 +55,8 @@ public class RongManager {
 		try {
 			//在这里注册自定义消息
 			RongIMClient.getInstance().registerMessageType(CustomzeContactNotificationMessage.class);
+			RongIMClient.getInstance().registerMessageType(FileMessage.class);
+			RongIMClient.getInstance().registerMessageType(CustomzeFileMessage.class);
 		} catch (AnnotationNotFoundException e) {
 			e.printStackTrace();
 		}
