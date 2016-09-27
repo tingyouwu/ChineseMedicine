@@ -27,7 +27,7 @@
         <Button
             android:id="@+id/btn_chat_keyboard"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="25dp"
             android:layout_marginLeft="6dp"
             android:visibility="gone"
             android:background="@mipmap/img_chatroom_keybroad"

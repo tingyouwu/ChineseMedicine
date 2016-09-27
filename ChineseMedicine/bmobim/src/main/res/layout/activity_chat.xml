@@ -25,8 +25,9 @@
 
             <ImageView
                 android:id="@+id/iv_record"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
                 android:src="@mipmap/chat_icon_voice1" />
 

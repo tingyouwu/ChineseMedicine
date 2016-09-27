@@ -28,6 +28,8 @@ import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.adapter.ChatAdapter;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.event.RefreshChatEvent;
+import com.kw.app.chinesemedicine.record.OnRecordChangeListener;
+import com.kw.app.chinesemedicine.record.RecordManager;
 import com.orhanobut.logger.Logger;
 import com.wty.app.bmobim.R;
 import com.wty.app.library.activity.BaseActivity;
@@ -80,6 +82,7 @@ public class ChatActivity extends BaseActivity{
     private Drawable[] drawable_Anims;// 话筒动画
     private UserDALEx target;
     private boolean isHasMoreMessage = true;//是否还有更多数据
+    private RecordManager recordManager;
 
     public static void startChatActivity(Context context,UserDALEx user){
         Intent intent = new Intent();
@@ -259,44 +262,37 @@ public class ChatActivity extends BaseActivity{
     private void initVoiceView() {
 
         drawable_Anims = new Drawable[] {
-                getResources().getDrawable(R.mipmap.chat_icon_voice2),
-                getResources().getDrawable(R.mipmap.chat_icon_voice3),
-                getResources().getDrawable(R.mipmap.chat_icon_voice4),
-                getResources().getDrawable(R.mipmap.chat_icon_voice5),
-                getResources().getDrawable(R.mipmap.chat_icon_voice6) };// 话筒动画
+                getResources().getDrawable(R.mipmap.voice_land_1),
+                getResources().getDrawable(R.mipmap.voice_land_2),
+                getResources().getDrawable(R.mipmap.voice_land_3),
+                getResources().getDrawable(R.mipmap.voice_land_4),
+                getResources().getDrawable(R.mipmap.voice_land_5),
+                getResources().getDrawable(R.mipmap.voice_land_6),
+                getResources().getDrawable(R.mipmap.voice_land_7),
+                getResources().getDrawable(R.mipmap.voice_land_8),
+                getResources().getDrawable(R.mipmap.voice_land_9)};// 话筒动画
 
         btn_speak.setOnTouchListener(new VoiceTouchListener());
-//        // 语音相关管理器
-//        recordManager = BmobRecordManager.getInstance(this);
-//        // 设置音量大小监听--在这里开发者可以自己实现：当剩余10秒情况下的给用户的提示，类似微信的语音那样
-//        recordManager.setOnRecordChangeListener(new OnRecordChangeListener() {
-//            @Override
-//            public void onVolumnChanged(int value) {
-//                iv_record.setImageDrawable(drawable_Anims[value]);
-//            }
-//
-//            @Override
-//            public void onTimeChanged(int recordTime, String localPath) {
-//                Logger.i("voice", "已录音长度:" + recordTime);
-//                if (recordTime >= BmobRecordManager.MAX_RECORD_TIME) {// 1分钟结束，发送消息
-//                    // 需要重置按钮
-//                    btn_speak.setPressed(false);
-//                    btn_speak.setClickable(false);
-//                    // 取消录音框
-//                    layout_record.setVisibility(View.INVISIBLE);
-//                    // 发送语音消息
-//                    sendVoiceMessage(localPath, recordTime);
-//                    //是为了防止过了录音时间后，会多发一条语音出去的情况。
-//                    new Handler().postDelayed(new Runnable() {
-//
-//                        @Override
-//                        public void run() {
-//                            btn_speak.setClickable(true);
-//                        }
-//                    }, 1000);
-//                }
-//            }
-//        });
+
+        recordManager = RecordManager.getInstance(this,PreferenceUtil.getInstance().getLastAccount(),target.getUserid(),drawable_Anims.length);
+
+        recordManager.setOnRecordChangeListener(new OnRecordChangeListener() {
+            @Override
+            public void onVolumnChanged(int value) {
+                iv_record.setImageDrawable(drawable_Anims[value-1]);
+            }
+
+            @Override
+            public void onTimeChanged(int recordTime, String localPath) {
+                AppLogUtil.d("剩余时间:"+recordTime+"s");
+                if(recordTime==0){
+                    //一分钟结束
+                    // 需要重置按钮
+                    btn_speak.setPressed(false);
+                    btn_speak.setClickable(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -629,7 +625,7 @@ public class ChatActivity extends BaseActivity{
                         layout_record.setVisibility(View.VISIBLE);
                         tv_voice_tips.setText(getString(R.string.voice_cancel_tips));
                         // 开始录音
-//                        recordManager.startRecording(conversation.getConversationId());
+                        recordManager.startRecording();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -649,17 +645,16 @@ public class ChatActivity extends BaseActivity{
                     layout_record.setVisibility(View.INVISIBLE);
                     try {
                         if (event.getY() < 0) {// 放弃录音
-//                            recordManager.cancelRecording();
-                            Logger.i("voice", "放弃发送语音");
+                            recordManager.cancelRecording();
+                            AppLogUtil.i("放弃发送语音");
                         } else {
-//                            int recordTime = recordManager.stopRecording();
-//                            if (recordTime > 1) {
-//                                // 发送语音文件
-//                                sendVoiceMessage(recordManager.getRecordFilePath(conversation.getConversationId()),recordTime);
-//                            } else {// 录音时间过短，则提示录音过短的提示
-//                                layout_record.setVisibility(View.GONE);
-//                                showShortToast().show();
-//                            }
+                            int recordTime = recordManager.stopRecording();
+                            if (recordTime > 1) {
+                                // 发送语音文件
+                            } else {// 录音时间过短，则提示录音过短的提示
+                                layout_record.setVisibility(View.GONE);
+                                showShortToast().show();
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
