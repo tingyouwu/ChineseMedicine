@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -28,9 +30,9 @@ import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.adapter.ChatAdapter;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.event.RefreshChatEvent;
+import com.kw.app.chinesemedicine.messagecontent.CustomzeFileMessage;
 import com.kw.app.chinesemedicine.record.OnRecordChangeListener;
 import com.kw.app.chinesemedicine.record.RecordManager;
-import com.orhanobut.logger.Logger;
 import com.wty.app.bmobim.R;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.utils.AppLogUtil;
@@ -43,6 +45,7 @@ import com.wty.app.library.widget.xrecyclerview.XRecyclerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,7 +57,9 @@ import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
+import io.rong.message.FileMessage;
 import io.rong.message.TextMessage;
+import io.rong.message.VoiceMessage;
 
 /**
  * 聊天界面
@@ -290,6 +295,18 @@ public class ChatActivity extends BaseActivity{
                     // 需要重置按钮
                     btn_speak.setPressed(false);
                     btn_speak.setClickable(false);
+                    //取消录音框
+                    layout_record.setVisibility(View.INVISIBLE);
+                    // 发送语音文件
+                    sendVoiceMessage(recordManager.getRecordFilePath(),60);
+                    //是为了防止过了录音时间后，会多发一条语音出去的情况。
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            btn_speak.setClickable(true);
+                        }
+                    }, 1000);
                 }
             }
         });
@@ -477,7 +494,31 @@ public class ChatActivity extends BaseActivity{
      * @return void
      */
     private void sendVoiceMessage(String local, int length) {
+        CustomzeFileMessage fileMessage = CustomzeFileMessage.obtain(Uri.fromFile(new File(local)));
+        Message myMessage = Message.obtain(target.getUserid(), Conversation.ConversationType.PRIVATE, fileMessage);
+        RongIMClient.getInstance().sendMediaMessage(myMessage, "收到一条语音", "", new IRongCallback.ISendMediaMessageCallback() {
+            @Override
+            public void onProgress(Message message, int i) {
+                AppLogUtil.d("上传..."+i);
+            }
 
+            @Override
+            public void onAttached(Message message) {
+
+            }
+
+            @Override
+            public void onSuccess(Message message) {
+                int i = 0;
+                int j = 0;
+            }
+
+            @Override
+            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+                int i = 0;
+                int j = 0;
+            }
+        });
     }
 
     /**
@@ -651,6 +692,7 @@ public class ChatActivity extends BaseActivity{
                             int recordTime = recordManager.stopRecording();
                             if (recordTime > 1) {
                                 // 发送语音文件
+                                sendVoiceMessage(recordManager.getRecordFilePath(),recordTime);
                             } else {// 录音时间过短，则提示录音过短的提示
                                 layout_record.setVisibility(View.GONE);
                                 showShortToast().show();
