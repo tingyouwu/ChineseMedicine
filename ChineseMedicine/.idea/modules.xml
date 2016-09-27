@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/ChineseMedicine.iml" filepath="$PROJECT_DIR$/ChineseMedicine.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/bmobim/bmobim.iml" filepath="$PROJECT_DIR$/bmobim/bmobim.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imlib/imlib.iml" filepath="$PROJECT_DIR$/imlib/imlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>

@@ -1,1 +1,1 @@
-include ':app',':library', ':bmobim', ':imlib'
+include ':app',':library', ':bmobim'
