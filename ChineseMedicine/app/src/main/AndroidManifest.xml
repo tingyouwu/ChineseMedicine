@@ -123,6 +123,19 @@
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:theme="@style/ImageTranslucentTheme"/>
 
+        <activity
+            android:name=".activity.MyAccountActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".activity.UpdateNameActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".activity.AccountSettingActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".activity.UpdatePasswordActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
     </application>
 
 </manifest>
