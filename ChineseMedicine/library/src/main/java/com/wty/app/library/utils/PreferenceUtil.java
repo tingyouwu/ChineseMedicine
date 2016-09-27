@@ -17,6 +17,7 @@ public class PreferenceUtil {
 	public static String LastAccount = "laseAccount";//由服务器分配的表示账号唯一性
 	public static String IsAutoLogin = "IsAutoLogin";//是否自动登陆
 	public static String LogoUrl = "logourl";//头像
+	public static String IsFirstLogin = "isFirstLogin";//是否是第一次安装应用程序
 
 	private SharedPreferences mSharedPreferences;
 
@@ -75,5 +76,9 @@ public class PreferenceUtil {
 
 	public String getLastName(){
 		return mSharedPreferences.getString(LastName, null);
+	}
+
+	public boolean isFirstLogin(){
+		return mSharedPreferences.getBoolean(IsFirstLogin,true);
 	}
 }
