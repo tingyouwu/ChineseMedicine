@@ -25,7 +25,7 @@ import io.rong.imlib.model.UserInfo;
 		//发送的自定义消息不会在会话页面和会话列表中展示。
 )
 public class CustomzeContactNotificationMessage extends MessageContent {
-	private static final String TAG = "ContactNotificationMessage";
+	private static final String TAG = "CustomzeContactNotificationMessage";
 	public static final String CONTACT_OPERATION_REQUEST = "Request";
 	public static final String CONTACT_OPERATION_ACCEPT_RESPONSE = "AcceptResponse";
 	public static final String CONTACT_OPERATION_REJECT_RESPONSE = "RejectResponse";

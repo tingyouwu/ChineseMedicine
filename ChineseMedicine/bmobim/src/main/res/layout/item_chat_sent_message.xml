@@ -44,7 +44,7 @@
             android:lineSpacingExtra="@dimen/margin_2"
             android:minHeight="@dimen/height_30"
             android:minWidth="80dp"
-            android:text="11111111111111111111111111111111111111111"
+            android:text=""
             android:paddingTop="@dimen/margin_3"
             android:paddingBottom="@dimen/margin_3"
             android:paddingLeft="@dimen/margin_5"

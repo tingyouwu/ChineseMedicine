@@ -1,17 +1,25 @@
 package com.kw.app.chinesemedicine.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
+import com.kw.app.chinesemedicine.data.dalex.local.FileMessageDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.VoiceReadStatusDALEx;
+import com.kw.app.chinesemedicine.record.VoicePlayOnClickListener;
+import com.kw.app.chinesemedicine.record.VoicePlayer;
+import com.kw.app.chinesemedicine.record.VoicePlayerManager;
 import com.wty.app.bmobim.R;
 import com.wty.app.library.adapter.BaseRecyclerViewMultiItemAdapter;
 import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PreferenceUtil;
+import com.wty.app.library.utils.ScreenUtil;
 import com.wty.app.library.utils.TimeUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
 
@@ -20,10 +28,10 @@ import java.util.List;
 import cn.bmob.v3.BmobUser;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
+import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
-import io.rong.message.VoiceMessage;
 
 /**
  * @author :wty
@@ -101,6 +109,7 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
             case TYPE_RECEIVER_VIDEO:
                 break;
             case TYPE_RECEIVER_VOICE:
+                handleReceiveVoiceMessage(helper,item);
                 break;
             case TYPE_SEND_IMAGE:
                 break;
@@ -112,6 +121,7 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
             case TYPE_SEND_VIDEO:
                 break;
             case TYPE_SEND_VOICE:
+                handleSendVoiceMessage(helper,item);
                 break;
             default:
                 break;
@@ -132,13 +142,14 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
         }else if(content instanceof LocationMessage){
             //定位信息
             return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_LOCATION: TYPE_RECEIVER_LOCATION;
-        }else if(content instanceof VoiceMessage){
-            //语音信息
-            return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_VOICE: TYPE_RECEIVER_VOICE;
-        }else {
-            return -1;
+        }else if(content instanceof FileMessage){
+            //文件信息
+            FileMessageDALEx dalex = FileMessageDALEx.get().findById(message.getUId());
+            if(dalex.getType()== FileMessageDALEx.FileMessageType.Voice.code){
+                return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_VOICE: TYPE_RECEIVER_VOICE;
+            }
         }
-
+        return -1;
     }
 
     /**
@@ -183,6 +194,171 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
         TextMessage textMessage = (TextMessage)(msg.getContent());
         TextView content = helper.getView(R.id.tv_message);
         content.setText(textMessage.getContent());
+    }
+
+    /**
+     * @Decription 处理别人发给我的语音信息
+     **/
+    private void handleReceiveVoiceMessage(BaseRecyclerViewHolder holder, final Message msg){
+        TextView duration = holder.getView(R.id.tv_voice_length);
+        ImageView iv_unread = holder.getView(R.id.img_voice_unread);
+        ImageView iv_voice = holder.getView(R.id.iv_voice);
+        ProgressBar progressBar = holder.getView(R.id.progress_load);
+        TextView lengthspace = holder.getView(R.id.tv_lengthspace);
+        LinearLayout layout_voice = holder.getView(R.id.layout_voice);
+        final VoicePlayerManager.Status status;
+        final FileMessageDALEx dalex = FileMessageDALEx.get().findById(msg.getUId());
+        duration.setText(dalex.getDuration()+"''");
+
+        int screenWidth = ScreenUtil.getScreenWidth(mContext);
+        int maxWidth = ScreenUtil.px2dip(mContext,screenWidth)-240;
+        lengthspace.setMaxWidth(ScreenUtil.dp2px(mContext,maxWidth));
+        String lengthFakeText = "";
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<dalex.getDuration()/2;i++){
+            sb.append(" ");
+        }
+        lengthFakeText = sb.toString();
+        lengthspace.setText(lengthFakeText);
+
+        status = VoicePlayerManager.getInstance(mContext).getStatus(msg.getUId());
+
+        layout_voice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isPlaying = (status == VoicePlayerManager.Status.Playing);
+                if(isPlaying){
+                    VoicePlayerManager.getInstance(mContext).stopAndDestory();
+                }else{
+                    VoicePlayerManager.getInstance(mContext).setOnStatusChangeListener(new VoicePlayer.OnStatusChangeListener() {
+                        @Override
+                        public void onCompletion() {
+
+                        }
+
+                        @Override
+                        public void onPlaying(String filePath) {
+                            VoiceReadStatusDALEx.get().updateReadStatus(dalex.getMsgid());
+                        }
+
+                        @Override
+                        public void onStop() {
+
+                        }
+                    });
+                    VoicePlayerManager.getInstance(mContext).play(msg);
+                }
+            }
+        });
+
+        boolean isRead = VoiceReadStatusDALEx.get().isReaded(msg.getUId());
+        if(!isRead){
+            iv_unread.setVisibility(View.VISIBLE);
+        }else{
+            iv_unread.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * @Decription 处理我发出去的语音
+     **/
+    private void handleSendVoiceMessage(BaseRecyclerViewHolder helper, final Message msg){
+        TextView duration = helper.getView(R.id.tv_voice_length);
+        ImageView iv_voice = helper.getView(R.id.iv_voice);
+        ImageView iv_failed_resend = helper.getView(R.id.iv_fail_resend);
+        ProgressBar progressBar = helper.getView(R.id.progress_load);
+        TextView lengthspace = helper.getView(R.id.tv_lengthspace);
+        final LinearLayout layout_voice = helper.getView(R.id.layout_voice);
+        final VoicePlayerManager.Status status;
+        AnimationDrawable anim = null;
+
+        final FileMessageDALEx dalex = FileMessageDALEx.get().findById(msg.getUId());
+        duration.setText(dalex.getDuration()+"''");
+
+        int screenWidth = ScreenUtil.getScreenWidth(mContext);
+        final int maxWidth = ScreenUtil.px2dip(mContext,screenWidth)-240;
+        lengthspace.setMaxWidth(ScreenUtil.dp2px(mContext,maxWidth));
+
+        String lengthFakeText = "";
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<dalex.getDuration()/2;i++){
+                sb.append(" ");
+        }
+        lengthFakeText = sb.toString();
+        lengthspace.setText(lengthFakeText);
+
+        status = VoicePlayerManager.getInstance(mContext).getStatus(msg.getUId());
+
+        boolean isDownloading = (status == VoicePlayerManager.Status.Downloading);
+        final boolean isPlaying = (status == VoicePlayerManager.Status.Playing);
+
+        if(isDownloading){
+            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            progressBar.setVisibility(View.GONE);
+        }
+
+        if(isPlaying){
+            iv_voice.setImageResource(R.drawable.anim_chat_voice_right);
+            anim = (AnimationDrawable) iv_voice.getDrawable();
+            anim.start();
+        }else{
+            iv_voice.setImageResource(R.mipmap.voice_left3);
+        }
+
+        layout_voice.setOnClickListener(new VoicePlayOnClickListener(anim,msg){
+            @Override
+            public void onClick(View v) {
+                if(isPlaying){
+                    VoicePlayerManager.getInstance(mContext).stopAndDestory();
+                    if(getAnim() != null){
+                        getAnim().stop();
+                    }
+                }else{
+                    VoicePlayerManager.getInstance(mContext).setOnStatusChangeListener(new VoicePlayer.OnStatusChangeListener() {
+                        @Override
+                        public void onCompletion() {
+                            if(getAnim() != null){
+                                getAnim().stop();
+                            }
+                        }
+
+                        @Override
+                        public void onPlaying(String filePath) {
+                            VoiceReadStatusDALEx.get().updateReadStatus(dalex.getMsgid());
+                        }
+
+                        @Override
+                        public void onStop() {
+
+                        }
+                    });
+                    VoicePlayerManager.getInstance(mContext).play(msg);
+                }
+            }
+        });
+
+        if(msg.getSentStatus()== Message.SentStatus.FAILED){
+            //发送失败
+            iv_failed_resend.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }else if(msg.getSentStatus()== Message.SentStatus.SENDING){
+            //发送中
+            iv_failed_resend.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+        }else if(msg.getSentStatus()== Message.SentStatus.RECEIVED || msg.getSentStatus()== Message.SentStatus.SENT
+                || msg.getSentStatus()== Message.SentStatus.READ || msg.getSentStatus()== Message.SentStatus.DESTROYED){
+            //对方已接收  已发送  对方已读  对方已销毁
+            iv_failed_resend.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+        }
+
+        iv_failed_resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     /**

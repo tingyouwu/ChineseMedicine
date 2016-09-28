@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -26,11 +28,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.adapter.ChatAdapter;
+import com.kw.app.chinesemedicine.data.dalex.local.FileMessageDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.event.RefreshChatEvent;
 import com.kw.app.chinesemedicine.record.OnRecordChangeListener;
 import com.kw.app.chinesemedicine.record.RecordManager;
-import com.orhanobut.logger.Logger;
 import com.wty.app.bmobim.R;
 import com.wty.app.library.activity.BaseActivity;
 import com.wty.app.library.utils.AppLogUtil;
@@ -43,6 +45,7 @@ import com.wty.app.library.widget.xrecyclerview.XRecyclerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,6 +57,7 @@ import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
+import io.rong.message.FileMessage;
 import io.rong.message.TextMessage;
 
 /**
@@ -290,6 +294,18 @@ public class ChatActivity extends BaseActivity{
                     // 需要重置按钮
                     btn_speak.setPressed(false);
                     btn_speak.setClickable(false);
+                    //取消录音框
+                    layout_record.setVisibility(View.INVISIBLE);
+                    // 发送语音文件
+                    sendVoiceMessage(recordManager.getRecordFilePath(),60);
+                    //是为了防止过了录音时间后，会多发一条语音出去的情况。
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            btn_speak.setClickable(true);
+                        }
+                    }, 1000);
                 }
             }
         });
@@ -461,7 +477,6 @@ public class ChatActivity extends BaseActivity{
                 });
     }
 
-
     /**
      * 发送本地图片地址
      */
@@ -476,8 +491,37 @@ public class ChatActivity extends BaseActivity{
      * @param  length
      * @return void
      */
-    private void sendVoiceMessage(String local, int length) {
+    private void sendVoiceMessage(final String local, int length) {
+        FileMessage fileMessage = FileMessage.obtain(Uri.fromFile(new File(local)));
+        Map<String,Object> map =new HashMap<>();
+        map.put(FileMessageDALEx.FILETYPE, FileMessageDALEx.FileMessageType.Voice.code);//录音文件
+        map.put(FileMessageDALEx.DURATION,length);//时长
+        fileMessage.setExtra(new Gson().toJson(map));
+        Message myMessage = Message.obtain(target.getUserid(), Conversation.ConversationType.PRIVATE, fileMessage);
+        RongIMClient.getInstance().sendMediaMessage(myMessage, "收到一条语音", "", new IRongCallback.ISendMediaMessageCallback() {
+            @Override
+            public void onProgress(Message message, int i) {
+            }
 
+            @Override
+            public void onAttached(Message message) {
+            }
+
+            @Override
+            public void onSuccess(Message message) {
+
+                FileMessageDALEx fileMessageDALEx = FileMessageDALEx.convert(message);
+                fileMessageDALEx.setLocalpath(local);
+                fileMessageDALEx.saveOrUpdate();
+
+                adapter.addOne(message);
+                scrollToBottom();
+            }
+
+            @Override
+            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+            }
+        });
     }
 
     /**
@@ -651,6 +695,7 @@ public class ChatActivity extends BaseActivity{
                             int recordTime = recordManager.stopRecording();
                             if (recordTime > 1) {
                                 // 发送语音文件
+                                sendVoiceMessage(recordManager.getRecordFilePath(),recordTime);
                             } else {// 录音时间过短，则提示录音过短的提示
                                 layout_record.setVisibility(View.GONE);
                                 showShortToast().show();
