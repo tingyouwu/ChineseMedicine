@@ -28,9 +28,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kw.app.chinesemedicine.adapter.ChatAdapter;
+import com.kw.app.chinesemedicine.data.dalex.local.FileMessageDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.kw.app.chinesemedicine.event.RefreshChatEvent;
-import com.kw.app.chinesemedicine.messagecontent.CustomzeFileMessage;
 import com.kw.app.chinesemedicine.record.OnRecordChangeListener;
 import com.kw.app.chinesemedicine.record.RecordManager;
 import com.wty.app.bmobim.R;
@@ -59,7 +59,6 @@ import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
 import io.rong.message.FileMessage;
 import io.rong.message.TextMessage;
-import io.rong.message.VoiceMessage;
 
 /**
  * 聊天界面
@@ -478,7 +477,6 @@ public class ChatActivity extends BaseActivity{
                 });
     }
 
-
     /**
      * 发送本地图片地址
      */
@@ -493,30 +491,35 @@ public class ChatActivity extends BaseActivity{
      * @param  length
      * @return void
      */
-    private void sendVoiceMessage(String local, int length) {
-        CustomzeFileMessage fileMessage = CustomzeFileMessage.obtain(Uri.fromFile(new File(local)));
+    private void sendVoiceMessage(final String local, int length) {
+        FileMessage fileMessage = FileMessage.obtain(Uri.fromFile(new File(local)));
+        Map<String,Object> map =new HashMap<>();
+        map.put(FileMessageDALEx.FILETYPE, FileMessageDALEx.FileMessageType.Voice.code);//录音文件
+        map.put(FileMessageDALEx.DURATION,length);//时长
+        fileMessage.setExtra(new Gson().toJson(map));
         Message myMessage = Message.obtain(target.getUserid(), Conversation.ConversationType.PRIVATE, fileMessage);
         RongIMClient.getInstance().sendMediaMessage(myMessage, "收到一条语音", "", new IRongCallback.ISendMediaMessageCallback() {
             @Override
             public void onProgress(Message message, int i) {
-                AppLogUtil.d("上传..."+i);
             }
 
             @Override
             public void onAttached(Message message) {
-
             }
 
             @Override
             public void onSuccess(Message message) {
-                int i = 0;
-                int j = 0;
+
+                FileMessageDALEx fileMessageDALEx = FileMessageDALEx.convert(message);
+                fileMessageDALEx.setLocalpath(local);
+                fileMessageDALEx.saveOrUpdate();
+
+                adapter.addOne(message);
+                scrollToBottom();
             }
 
             @Override
             public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-                int i = 0;
-                int j = 0;
             }
         });
     }

@@ -4,21 +4,22 @@ import android.content.Context;
 
 import com.kw.app.chinesemedicine.bean.AddFriendMessage;
 import com.kw.app.chinesemedicine.bean.AgreeAddFriendMessage;
-import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
+import com.kw.app.chinesemedicine.data.dalex.local.FileMessageDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.NewFriendDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.SystemMessageDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
+import com.kw.app.chinesemedicine.data.dalex.local.VoiceReadStatusDALEx;
 import com.kw.app.chinesemedicine.event.RefreshChatEvent;
 import com.kw.app.chinesemedicine.event.RefreshEvent;
 import com.kw.app.chinesemedicine.event.RefreshMessageTabEvent;
 import com.kw.app.chinesemedicine.messagecontent.CustomzeContactNotificationMessage;
-import com.kw.app.chinesemedicine.messagecontent.CustomzeFileMessage;
 import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.CommonUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
 import io.rong.imlib.AnnotationNotFoundException;
+import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
@@ -27,7 +28,6 @@ import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
-import io.rong.message.VoiceMessage;
 
 /**
  * @author wty
@@ -37,6 +37,10 @@ public class RongManager {
 
 	private static volatile RongManager sInstance = null;
 	private Context mContext;
+
+	public static RongManager getInstance(){
+		return sInstance;
+	}
 
 	public static RongManager init(Context context) {
 		if (sInstance == null) {
@@ -56,7 +60,6 @@ public class RongManager {
 			//在这里注册自定义消息
 			RongIMClient.getInstance().registerMessageType(CustomzeContactNotificationMessage.class);
 			RongIMClient.getInstance().registerMessageType(FileMessage.class);
-			RongIMClient.getInstance().registerMessageType(CustomzeFileMessage.class);
 		} catch (AnnotationNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -74,12 +77,15 @@ public class RongManager {
 			MessageContent content = message.getContent();
 			if(content instanceof CustomzeContactNotificationMessage){
 				handleCustomzeContactNotificationMessage((CustomzeContactNotificationMessage) content);
-			}else if (content instanceof TextMessage || content instanceof ImageMessage || content instanceof LocationMessage || content instanceof VoiceMessage){
+			}else if (content instanceof TextMessage || content instanceof ImageMessage || content instanceof LocationMessage){
 				handleChatMessage(message);
 				//如果在聊天页面  刷新一下
 				EventBus.getDefault().post(new RefreshChatEvent(message));
 				//刷新消息tab红点状态
 				EventBus.getDefault().post(new RefreshMessageTabEvent());
+			}else if(content instanceof FileMessage){
+				//文件信息  （语音文件  普通文件 ...）
+				handleFileMessage(message);
 			}
 			//发送页面刷新的广播
 			EventBus.getDefault().post(new RefreshEvent());
@@ -145,8 +151,6 @@ public class RongManager {
 				notificationmsg = ((TextMessage)content).getContent();
 			}else if(content instanceof ImageMessage){
 				notificationmsg =  "[图片]";
-			}else if(content instanceof VoiceMessage){
-				notificationmsg = "[语音]";
 			}else if(content instanceof LocationMessage){
 				notificationmsg = "[位置]";
 			}
@@ -157,6 +161,39 @@ public class RongManager {
 			}
 			CMNotificationManager.showNotification(mContext,name,notificationmsg,null);
 		}
+	}
+
+	/**
+	 * @Decription 处理文件信息
+	 **/
+	private void handleFileMessage(Message message){
+		if(CommonUtil.isAppIsInBackground(mContext)){
+			String notificationmsg = "[未知]";
+			String name = "陌生人";
+			//存储一下文件信息
+			FileMessageDALEx filemessage = FileMessageDALEx.convert(message);
+			filemessage.saveOrUpdate();
+			if(filemessage.isVoice()){
+				//语音信息
+				VoiceReadStatusDALEx readStatus = new VoiceReadStatusDALEx();
+				readStatus.setMsgid(message.getUId());
+				readStatus.setStatus(VoiceReadStatusDALEx.Status_Unread);
+				readStatus.saveOrUpdate();
+				notificationmsg = "[语音]";
+			}
+			UserDALEx user = UserDALEx.get().findById(message.getSenderUserId());
+			if(user != null){
+				name = user.getNickname();
+			}
+			CMNotificationManager.showNotification(mContext,name,notificationmsg,null);
+		}
+	}
+
+	/**
+	 * @Decription 下载媒体文件
+	 **/
+	public void downloadMediaFile(final Message message, final IRongCallback.IDownloadMediaMessageCallback callback){
+		RongIMClient.getInstance().downloadMediaMessage(message,callback);
 	}
 
 }
