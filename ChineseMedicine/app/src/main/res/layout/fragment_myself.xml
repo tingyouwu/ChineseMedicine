@@ -10,7 +10,67 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <LinearLayout
+            android:id="@+id/start_user_profile"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_list_item_selector"
+            android:clickable="true"
+            android:orientation="horizontal">
 
+            <com.wty.app.library.widget.SelectableRoundedImageView
+                android:id="@+id/mine_head"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/login_account"
+                android:layout_marginLeft="14dp"
+                android:scaleType="centerCrop"
+                app:sriv_left_bottom_corner_radius="3dip"
+                app:sriv_left_top_corner_radius="3dip"
+                app:sriv_right_bottom_corner_radius="3dip"
+                app:sriv_right_top_corner_radius="3dip" />
 
+            <TextView
+                android:id="@+id/mine_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="14dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="用户名"
+                android:textColor="@color/text_color"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.wty.app.library.widget.HomeItemView
+                android:id="@+id/account_setting"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:itemImage="@drawable/ic_mine_setting"
+                app:itemText="账号设置"/>
+
+            <com.wty.app.library.widget.HomeItemView
+                android:id="@+id/give_advise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:itemImage="@drawable/ic_mine_advise"
+                app:itemText="意见反馈"/>
+
+            <com.wty.app.library.widget.HomeItemView
+                android:id="@+id/about_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:itemImage="@drawable/ic_mine_about"
+                app:itemText="关于我们"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

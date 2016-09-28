@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Environment;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -118,6 +119,19 @@ public class CommonUtil {
 		}
 
 		return isInBackground;
+	}
+
+	/**
+	 * 判断SDCard是否存在,并可写
+	 *
+	 * @return
+	 */
+	public static boolean checkSDCard() {
+		String  flag = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(flag)) {
+			return true;
+		}
+		return false;
 	}
 
 }
