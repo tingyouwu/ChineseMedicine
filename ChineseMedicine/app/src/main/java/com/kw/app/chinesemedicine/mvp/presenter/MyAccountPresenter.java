@@ -42,7 +42,7 @@ public class MyAccountPresenter extends BasePresenter<IMyAccountContract.IMyAcco
                     public void onCallback() {
                         Logger.d("KMA ...uri:"+uri.getPath());
                         Logger.d("KMA ...bomburi:"+bomburi);
-                        PreferenceUtil.getInstance().writePreferences(PreferenceUtil.LogoUrl, uri.getPath());
+
                         ImageLoaderUtil.loadCircle(context, PreferenceUtil.getInstance().getLogoUrl(), R.drawable.login_account,mHeadView);
                     }
                 });

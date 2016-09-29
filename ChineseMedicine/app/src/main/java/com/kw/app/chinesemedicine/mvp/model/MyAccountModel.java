@@ -85,6 +85,7 @@ public class MyAccountModel implements IMyAccountContract.IMyAccountModel {
             @Override
             public void done(BmobException e) {
                 if(e == null){
+                    PreferenceUtil.getInstance().writePreferences(PreferenceUtil.LogoUrl, uri);
                     callBack.onSuccess(uri);
                 }else{
                     callBack.onFaild("头像更新失败:" + e.getMessage());
