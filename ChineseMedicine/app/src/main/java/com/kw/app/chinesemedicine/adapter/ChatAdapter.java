@@ -2,6 +2,7 @@ package com.kw.app.chinesemedicine.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +23,8 @@ import com.wty.app.library.utils.PreferenceUtil;
 import com.wty.app.library.utils.ScreenUtil;
 import com.wty.app.library.utils.TimeUtil;
 import com.wty.app.library.viewholder.BaseRecyclerViewHolder;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -145,8 +148,8 @@ public class ChatAdapter extends BaseRecyclerViewMultiItemAdapter<Message> {
         }else if(content instanceof FileMessage){
             //文件信息
             FileMessageDALEx dalex = FileMessageDALEx.get().findById(message.getUId());
-            if(dalex.getType()== FileMessageDALEx.FileMessageType.Voice.code){
-                return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_VOICE: TYPE_RECEIVER_VOICE;
+            if(dalex != null && dalex.getType()== FileMessageDALEx.FileMessageType.Voice.code) {
+                return message.getSenderUserId().equals(currentUid) ? TYPE_SEND_VOICE : TYPE_RECEIVER_VOICE;
             }
         }
         return -1;

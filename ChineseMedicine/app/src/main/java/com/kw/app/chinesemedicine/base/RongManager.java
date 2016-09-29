@@ -86,6 +86,10 @@ public class RongManager {
 			}else if(content instanceof FileMessage){
 				//文件信息  （语音文件  普通文件 ...）
 				handleFileMessage(message);
+				//如果在聊天页面  刷新一下
+				EventBus.getDefault().post(new RefreshChatEvent(message));
+				//刷新消息tab红点状态
+				EventBus.getDefault().post(new RefreshMessageTabEvent());
 			}
 			//发送页面刷新的广播
 			EventBus.getDefault().post(new RefreshEvent());
@@ -167,7 +171,6 @@ public class RongManager {
 	 * @Decription 处理文件信息
 	 **/
 	private void handleFileMessage(Message message){
-		if(CommonUtil.isAppIsInBackground(mContext)){
 			String notificationmsg = "[未知]";
 			String name = "陌生人";
 			//存储一下文件信息
@@ -185,8 +188,9 @@ public class RongManager {
 			if(user != null){
 				name = user.getNickname();
 			}
-			CMNotificationManager.showNotification(mContext,name,notificationmsg,null);
-		}
+			if(CommonUtil.isAppIsInBackground(mContext)) {
+				CMNotificationManager.showNotification(mContext, name, notificationmsg, null);
+			}
 	}
 
 	/**

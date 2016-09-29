@@ -1,22 +1,26 @@
 package com.kw.app.chinesemedicine.bean;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.kw.app.chinesemedicine.R;
 import com.kw.app.chinesemedicine.activity.ChatActivity;
 import com.kw.app.chinesemedicine.base.BmobUserModel;
 import com.kw.app.chinesemedicine.data.dalex.bmob.UserBmob;
+import com.kw.app.chinesemedicine.data.dalex.local.FileMessageDALEx;
 import com.kw.app.chinesemedicine.data.dalex.local.UserDALEx;
 import com.wty.app.library.callback.ICallBack;
 
-import cn.bmob.v3.exception.BmobException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.MessageContent;
 import io.rong.message.ContactNotificationMessage;
+import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
-import io.rong.message.VoiceMessage;
 
 /**
  * 私聊会话
@@ -83,15 +87,31 @@ public class PrivateConversation extends RongConversation{
                 return ((TextMessage)lastMsg).getContent();
             }else if(lastMsg instanceof ImageMessage){
                 return "[图片]";
-            }else if(lastMsg instanceof VoiceMessage){
-                return "[语音]";
             }else if(lastMsg instanceof LocationMessage){
-                return"[位置]";
+                return "[位置]";
             }else if(lastMsg instanceof ContactNotificationMessage){
                 return ((ContactNotificationMessage)lastMsg).getMessage();
-            }else {
-                return "[未知]";
+            }else if(lastMsg instanceof FileMessage){
+                String extra = ((FileMessage)lastMsg).getExtra();
+                if(!TextUtils.isEmpty(extra)){
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(extra);
+                        if(json.has(FileMessageDALEx.FILETYPE)) {
+                            if(json.getInt(FileMessageDALEx.FILETYPE)== FileMessageDALEx.FileMessageType.Voice.code){
+                                return "[语音]";
+                            }else if(json.getInt(FileMessageDALEx.FILETYPE)== FileMessageDALEx.FileMessageType.Video.code) {
+                                return "[小视频]";
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
+
+            return "[未知]";
 
         }else{//防止消息错乱
             return "";

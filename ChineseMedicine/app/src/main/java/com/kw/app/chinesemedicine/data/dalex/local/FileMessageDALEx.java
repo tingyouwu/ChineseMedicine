@@ -49,7 +49,8 @@ public class FileMessageDALEx extends SqliteBaseDALEx {
         FileMessage fileMessage = (FileMessage) msg.getContent();
         FileMessageDALEx file =new FileMessageDALEx();
         file.setMsgid(msg.getUId());
-        file.setServerpath(fileMessage.getFileUrl().toString());
+        if(fileMessage.getFileUrl() != null)
+            file.setServerpath(fileMessage.getFileUrl().toString());
 
         try {
             String extra = fileMessage.getExtra();
