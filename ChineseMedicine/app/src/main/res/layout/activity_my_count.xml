@@ -23,7 +23,7 @@
             android:textColor="@color/text_color"
             android:textSize="16sp" />
 
-        <com.wty.app.library.widget.SelectableRoundedImageView
+        <ImageView
             android:id="@+id/img_my_portrait"
             android:layout_width="64dp"
             android:layout_height="64dp"
@@ -32,11 +32,7 @@
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14sp"
             android:scaleType="centerCrop"
-            android:src="@drawable/login_account"
-            app:sriv_left_bottom_corner_radius="3dip"
-            app:sriv_left_top_corner_radius="3dip"
-            app:sriv_right_bottom_corner_radius="3dip"
-            app:sriv_right_top_corner_radius="3dip" />
+            android:src="@drawable/login_account" />
 
 
     </RelativeLayout>

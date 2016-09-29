@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,8 +14,9 @@ import com.kw.app.chinesemedicine.activity.MyAccountActivity;
 import com.orhanobut.logger.Logger;
 import com.wty.app.library.fragment.BaseFragment;
 import com.wty.app.library.mvp.presenter.BasePresenter;
+import com.wty.app.library.utils.ImageLoaderUtil;
+import com.wty.app.library.utils.PreferenceUtil;
 import com.wty.app.library.widget.HomeItemView;
-import com.wty.app.library.widget.SelectableRoundedImageView;
 
 import butterknife.Bind;
 
@@ -26,7 +28,7 @@ public class MySelfFragment extends BaseFragment implements View.OnClickListener
     @Bind(R.id.start_user_profile)
     LinearLayout mResetImage;
     @Bind(R.id.mine_head)
-    SelectableRoundedImageView mHeadImage;
+    ImageView mHeadImage;
     @Bind(R.id.mine_name)
     TextView mName;
     @Bind(R.id.account_setting)
@@ -36,7 +38,6 @@ public class MySelfFragment extends BaseFragment implements View.OnClickListener
     @Bind(R.id.about_us)
     HomeItemView mAboutUs;
 
-    private SelectableRoundedImageView imageView;
 
 
     @Override
@@ -56,6 +57,14 @@ public class MySelfFragment extends BaseFragment implements View.OnClickListener
         mSettingAccount.setNextPage(AccountSettingActivity.class);
 
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        //显示我自己的头像
+        ImageLoaderUtil.loadCircle(getContext(), PreferenceUtil.getInstance().getLogoUrl(), R.drawable.login_account,mHeadImage);
+    }
+
 
     @Override
     public void onClick(View v){

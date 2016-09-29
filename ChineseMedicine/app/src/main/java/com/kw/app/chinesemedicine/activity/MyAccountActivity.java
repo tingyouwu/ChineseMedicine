@@ -13,17 +13,20 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
 import com.kw.app.chinesemedicine.R;
+import com.kw.app.chinesemedicine.mvp.contract.IMyAccountContract;
+import com.kw.app.chinesemedicine.mvp.presenter.MyAccountPresenter;
 import com.orhanobut.logger.Logger;
 import com.wty.app.library.activity.BaseActivity;
+import com.wty.app.library.utils.ImageLoaderUtil;
 import com.wty.app.library.utils.PhotoUtils;
 import com.wty.app.library.utils.PreferenceUtil;
 import com.wty.app.library.widget.BottomMenuDialog;
-import com.wty.app.library.widget.SelectableRoundedImageView;
 
 import java.io.IOException;
 
@@ -33,13 +36,13 @@ import butterknife.Bind;
  * 作者：samsung on 2016/9/23 14:02
  * 邮箱：kuangminan456123@163.com
  */
-public class MyAccountActivity extends BaseActivity implements View.OnClickListener{
+public class MyAccountActivity extends BaseActivity<MyAccountPresenter> implements View.OnClickListener,IMyAccountContract.IMyAccountView{
     @Bind(R.id.rl_my_portrait)
     RelativeLayout mMyPortrait;
     @Bind(R.id.rl_my_username)
     RelativeLayout mUserName;
     @Bind(R.id.img_my_portrait)
-    SelectableRoundedImageView mImageView;
+    ImageView mImageView;
     @Bind(R.id.tv_my_username)
     TextView mMyName;
     @Bind(R.id.tv_my_id)
@@ -53,8 +56,8 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
     private PhotoUtils photoUtils;
 
     @Override
-    public Object getPresenter() {
-        return null;
+    public MyAccountPresenter getPresenter() {
+        return new MyAccountPresenter();
     }
 
     @Override
@@ -76,7 +79,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
         mMyName.setOnClickListener(this);
         mMyId.setText(mMyid);
 
-
+        ImageLoaderUtil.loadCircle(this, PreferenceUtil.getInstance().getLogoUrl(), R.drawable.login_account,mImageView);
         setPortraitChangeListener();//回调监听头像
     }
 
@@ -104,15 +107,7 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
                 Logger.d("KMA ...onPhotoResult uri:"+uri);
                 if (uri != null && !TextUtils.isEmpty(uri.getPath())) {
                     selectUri = uri;
-                   // request(GET_QI_NIU_TOKEN);  服务器更新
-                    try {
-                        //需要申请存储权限
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(MyAccountActivity.this.getContentResolver(),uri);
-                        mImageView.setImageBitmap(bitmap);
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-
+                    updateImageToBmob(selectUri);
                 }
             }
 
@@ -121,6 +116,12 @@ public class MyAccountActivity extends BaseActivity implements View.OnClickListe
 
             }
         });
+    }
+
+    private void updateImageToBmob(Uri uri){
+        if(super.submit()){
+            mPresenter.updateHeadImage(this, uri, mImageView);
+        }
     }
 
     /**
