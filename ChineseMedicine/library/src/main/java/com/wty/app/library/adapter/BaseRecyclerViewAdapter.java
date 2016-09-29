@@ -91,6 +91,10 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
 
     }
 
+    public void update(int position) {
+        notifyItemRangeChanged(position,1);
+    }
+
     public void addOne(T item) {
         mData.add(item);
         notifyItemInserted(mData.size());

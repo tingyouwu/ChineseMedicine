@@ -460,11 +460,12 @@ public class ChatActivity extends BaseActivity{
                 "", new IRongCallback.ISendMessageCallback() {
                     @Override
                     public void onAttached(Message message) {
-
+                        //保存数据库成功 那么就应该显示出来
                     }
 
                     @Override
                     public void onSuccess(Message message) {
+                        //发送成功 更新
                         adapter.addOne(message);
                         edit_msg.setText("");
                         scrollToBottom();
@@ -472,7 +473,7 @@ public class ChatActivity extends BaseActivity{
 
                     @Override
                     public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-
+                        //发送失败  需要显示重新发送的按钮
                     }
                 });
     }
@@ -501,25 +502,28 @@ public class ChatActivity extends BaseActivity{
         RongIMClient.getInstance().sendMediaMessage(myMessage, "收到一条语音", "", new IRongCallback.ISendMediaMessageCallback() {
             @Override
             public void onProgress(Message message, int i) {
+                //发送进度 显示转圈圈
             }
 
             @Override
             public void onAttached(Message message) {
+                //保存数据库成功 显示出来
             }
 
             @Override
             public void onSuccess(Message message) {
-
+                //发送成功  隐藏转圈圈
                 FileMessageDALEx fileMessageDALEx = FileMessageDALEx.convert(message);
                 fileMessageDALEx.setLocalpath(local);
                 fileMessageDALEx.saveOrUpdate();
-
                 adapter.addOne(message);
                 scrollToBottom();
             }
 
             @Override
             public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+                //发送失败 显示重新发送的按钮
+                AppLogUtil.d("OnError:"+ errorCode);
             }
         });
     }
