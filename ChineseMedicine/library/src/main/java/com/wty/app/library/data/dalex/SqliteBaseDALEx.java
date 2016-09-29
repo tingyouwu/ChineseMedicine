@@ -481,12 +481,8 @@ public abstract class SqliteBaseDALEx implements Serializable,Cloneable{
 	 * @param listener 回调
 	 **/
 	public <T extends SqliteBaseDALEx> T findById(String id,OnQueryListener listener){
-		String sql = new QueryBuilder()
-							.selectAll()
-							.from(TABLE_NAME)
-							.where(equal(getPrimaryKey(),id))
-							.build();
-		return findOne(sql, listener);
+		String sql = "select * from "+TABLE_NAME+" where "+getPrimaryKey()+" = ?";
+		return findOne(sql,new String[]{id}, listener);
 	}
 
 	/**
