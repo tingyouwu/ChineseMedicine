@@ -80,7 +80,7 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/layout_voice"
+            android:layout_toLeftOf="@id/tv_voice_length"
             android:clickable="true"
             android:scaleType="fitCenter"
             android:src="@drawable/btn_chat_fail_resend"
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/layout_voice"
+            android:layout_toLeftOf="@id/tv_voice_length"
             android:textSize="12sp"
             android:visibility="invisible" />
 
@@ -103,7 +103,7 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/layout_voice"
+            android:layout_toLeftOf="@id/tv_voice_length"
             android:visibility="invisible" />
     </RelativeLayout>
 

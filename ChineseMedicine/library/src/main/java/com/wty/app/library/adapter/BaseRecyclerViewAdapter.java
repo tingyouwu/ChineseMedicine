@@ -85,19 +85,22 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
     }
 
     public void remove(int position) {
+        /**
+         * 先remove,再notifyItemRemoved， 最后再notifyItemRangeChanged
+         remove：把数据从list中remove掉，
+         notifyItemRemoved：显示动画效果
+         notifyItemRangeChanged：对于被删掉的位置及其后range大小范围内的view进行重新onBindViewHolder
+         **/
         mData.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,mData.size()-position);
 
     }
 
-    public void update(int position) {
-        notifyItemRangeChanged(position,1);
-    }
-
     public void addOne(T item) {
         mData.add(item);
         notifyItemInserted(mData.size());
+        notifyItemRangeChanged(mData.size()-1,1);
     }
 
     public void addOne(int position, T item) {

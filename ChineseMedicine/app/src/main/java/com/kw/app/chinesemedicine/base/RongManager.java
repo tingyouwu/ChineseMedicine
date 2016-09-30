@@ -1,6 +1,7 @@
 package com.kw.app.chinesemedicine.base;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.kw.app.chinesemedicine.bean.AddFriendMessage;
 import com.kw.app.chinesemedicine.bean.AgreeAddFriendMessage;
@@ -17,6 +18,7 @@ import com.wty.app.library.utils.AppLogUtil;
 import com.wty.app.library.utils.CommonUtil;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 import io.rong.imlib.AnnotationNotFoundException;
 import io.rong.imlib.IRongCallback;
@@ -174,9 +176,8 @@ public class RongManager {
 			String notificationmsg = "[未知]";
 			String name = "陌生人";
 			//存储一下文件信息
-			FileMessageDALEx filemessage = FileMessageDALEx.convert(message);
-			filemessage.saveOrUpdate();
-			if(filemessage.isVoice()){
+			FileMessageType type = getFileType(message);
+			if(type != null && type== FileMessageType.Voice){
 				//语音信息
 				VoiceReadStatusDALEx readStatus = new VoiceReadStatusDALEx();
 				readStatus.setMsgid(message.getUId());
@@ -198,6 +199,39 @@ public class RongManager {
 	 **/
 	public void downloadMediaFile(final Message message, final IRongCallback.IDownloadMediaMessageCallback callback){
 		RongIMClient.getInstance().downloadMediaMessage(message,callback);
+	}
+
+	/**
+	 * @Decription 获取文件类型
+	 **/
+	public FileMessageType getFileType(Message message){
+		FileMessage fileMessage = (FileMessage) message.getContent();
+		FileMessageType type = null;
+		try {
+			String extra = fileMessage.getExtra();
+			if(!TextUtils.isEmpty(extra)){
+				JSONObject json =new JSONObject(extra);
+				if(json.has(FileMessageDALEx.FILETYPE)) {
+					type = FileMessageType.Voice;
+				}
+
+			}else{
+				AppLogUtil.i("FileMessage 的extra为空");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return type;
+	}
+
+	public enum FileMessageType{
+		Voice(1,"语音"),Video(2,"视频"),File(3,"文件");
+		public int code;
+		public String label;
+		FileMessageType(int code, String label){
+			this.code = code;
+			this.label = label;
+		}
 	}
 
 }
