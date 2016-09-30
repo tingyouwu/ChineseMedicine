@@ -18,19 +18,10 @@ android {
         }
     }
     buildTypes {
-
-        debug {
-            //debug
-        }
-
         release {
             //启用代码混淆
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //移除无用的Resource
-            shrinkResources true
-            //资源文件对齐
-            zipAlignEnabled true
         }
     }
 }

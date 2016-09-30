@@ -21,10 +21,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    android {
-        publishNonDefault true
-    }
 }
 
 dependencies {
@@ -59,4 +55,5 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     //拼音
     compile 'com.github.stuxuhai:jpinyin:1.1.7'
+    compile 'com.android.support:multidex:1.0.1'
 }

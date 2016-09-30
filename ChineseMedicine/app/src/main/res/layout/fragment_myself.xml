@@ -19,18 +19,14 @@
             android:clickable="true"
             android:orientation="horizontal">
 
-            <com.wty.app.library.widget.SelectableRoundedImageView
+            <ImageView
                 android:id="@+id/mine_head"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/login_account"
                 android:layout_marginLeft="14dp"
-                android:scaleType="centerCrop"
-                app:sriv_left_bottom_corner_radius="3dip"
-                app:sriv_left_top_corner_radius="3dip"
-                app:sriv_right_bottom_corner_radius="3dip"
-                app:sriv_right_top_corner_radius="3dip" />
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/mine_name"
